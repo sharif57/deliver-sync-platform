@@ -25,6 +25,11 @@ export default function SignIn() {
         e.preventDefault()
         setError('')
 
+        if (!email) {
+            setError('Please enter your email address')
+            return
+        }
+        router.push(`/auth/forgot-otp?email=${encodeURIComponent(email)}&service=${selectedService}`)
 
 
         console.log('Form submitted:', { email, selectedService })

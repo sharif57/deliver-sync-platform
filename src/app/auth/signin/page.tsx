@@ -39,6 +39,7 @@ export default function SignIn() {
             setError('Please enter a valid email address')
             return
         }
+        router.push('/')
 
         console.log('Form submitted:', { email, password, selectedService })
         // Reset form
