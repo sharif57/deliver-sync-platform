@@ -5,11 +5,11 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Head from 'next/head';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 
-export default function ForgotOTP() {
+function ForgotOTP() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [selectedService, setSelectedService] = useState<'Customer' | 'Driver' | 'Company'>('Customer');
@@ -88,8 +88,8 @@ export default function ForgotOTP() {
                                         <Button
                                             key={service}
                                             className={`px-4 py-2 text-base md:text-lg ${selectedService === service
-                                                    ? 'bg-primary text-white'
-                                                    : 'bg-gray-200 text-gray-700 opacity-50 cursor-not-allowed'
+                                                ? 'bg-primary text-white'
+                                                : 'bg-gray-200 text-gray-700 opacity-50 cursor-not-allowed'
                                                 }`}
                                             disabled={selectedService !== service}
                                         >
@@ -126,7 +126,7 @@ export default function ForgotOTP() {
                                         >
                                             Verify
                                         </Button>
-                                     
+
                                     </div>
                                 </form>
                             </div>
@@ -136,4 +136,10 @@ export default function ForgotOTP() {
             </div>
         </>
     );
+}
+
+export default function Otp() {
+    return <Suspense fallback={<div>Loading...</div>}>
+        <ForgotOTP />
+    </Suspense>
 }

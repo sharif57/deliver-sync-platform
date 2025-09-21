@@ -5,12 +5,12 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Head from 'next/head';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 
-export default function Verify() {
+function Verify() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [selectedService, setSelectedService] = useState<'Customer' | 'Driver' | 'Company'>('Customer');
@@ -89,8 +89,8 @@ export default function Verify() {
                                         <Button
                                             key={service}
                                             className={`px-4 py-2 text-base md:text-lg ${selectedService === service
-                                                    ? 'bg-primary text-white'
-                                                    : 'bg-gray-200 text-gray-700 opacity-50 cursor-not-allowed'
+                                                ? 'bg-primary text-white'
+                                                : 'bg-gray-200 text-gray-700 opacity-50 cursor-not-allowed'
                                                 }`}
                                             disabled={selectedService !== service}
                                         >
@@ -142,4 +142,10 @@ export default function Verify() {
             </div>
         </>
     );
+}
+
+export default function Page() {
+    return <Suspense fallback={<div>Loading...</div>}>
+        <Verify />
+    </Suspense>
 }

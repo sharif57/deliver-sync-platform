@@ -4,10 +4,10 @@ import AuthIcon from '@/components/ui/icon/auth';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import Head from 'next/head';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function CreatePassword() {
+ function CreatePassword() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedService, setSelectedService] = useState<'Customer' | 'Driver' | 'Company'>('Customer');
@@ -168,4 +168,10 @@ export default function CreatePassword() {
       </div>
     </>
   );
+}
+
+export default function Page(){
+  return <Suspense fallback={<div>Loading...</div>}>
+      <CreatePassword />
+  </Suspense>
 }
