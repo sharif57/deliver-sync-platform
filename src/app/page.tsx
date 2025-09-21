@@ -1,11 +1,12 @@
-import { Button } from '@/components/ui/button'
 import React from 'react'
+import Hero from '@/components/home/Hero'
+import HowItWorks from '@/components/home/howitworks'
 
 export default function Home() {
   return (
-    <div>
-      <h1  className="text-3xl bg-primary text-secondary  font-bold underline">hello world</h1>
-      <Button>Click me</Button>
+    <div className='space-y-24'>
+      <Hero />
+      <HowItWorks  />
     </div>
   )
 }

@@ -83,7 +83,7 @@ export default function ResponsiveNavbar() {
                         <Link href="/auth/signin">Log In</Link>
                     </Button>
                     <Button
-                        className="bg-primary text-base md:text-lg font-normal px-4 py-2 md:px-6 md:py-3 text-background"
+                        className="bg-primary text-base md:text-lg font-normal px-4 py-4 md:px-6 md:py-3 text-background"
                         asChild
                     >
                         <Link href="/auth/signup">Sign Up</Link>
