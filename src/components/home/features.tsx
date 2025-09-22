@@ -52,7 +52,7 @@ export default function Features() {
                             <div
                                 key={index}
                                 title={feature.title}
-                                  className={`bg-white p-8 cursor-pointer text-center shadow-xl hover:shadow-md transition-shadow duration-300 ${index % 2 === 1 ? 'rounded-2xl' : 'rounded-full'
+                                  className={`bg-white p-8 cursor-pointer text-center shadow-xl hover:shadow-md transition-shadow duration-300 ${index % 2 === 1 ? 'rounded-2xl' : 'rounded-2xl'
                                     }`}
                             > 
                                 <div className=" flex items-center justify-center mx-auto mb-6">

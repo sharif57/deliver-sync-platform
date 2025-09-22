@@ -2,6 +2,8 @@ import React from 'react'
 import Hero from '@/components/home/Hero'
 import HowItWorks from '@/components/home/howitworks'
 import Features from '@/components/home/features'
+import Users from '@/components/home/users'
+import Contact from '@/components/home/contact'
 
 export default function Home() {
   return (
@@ -9,6 +11,8 @@ export default function Home() {
       <Hero />
       <HowItWorks  />
       <Features />
+      <Users />
+      <Contact />
     </div>
   )
 }
