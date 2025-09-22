@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { CiMenuFries } from 'react-icons/ci';
@@ -60,7 +61,8 @@ export default function ResponsiveNavbar() {
         pathname === '/auth/forgot-pass' ||
         pathname === '/auth/forgot-otp' ||
         pathname === '/auth/new-password' ||
-        pathname === '/auth/verify'
+        pathname === '/auth/verify' ||
+        pathname === '/customer'
     ) {
         return null;
     }
@@ -131,8 +133,8 @@ export default function ResponsiveNavbar() {
                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>Profile</DropdownMenuItem>
-                                    <DropdownMenuItem>{localPath}</DropdownMenuItem>
-                                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                                    <Link href={`/${localPath}`} className='cursor-pointer'><DropdownMenuItem className='capitalize'>{localPath}</DropdownMenuItem></Link>
+                                    <DropdownMenuItem>Change Password</DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem onClick={handleLogout} className='text-destructive cursor-pointer'>Log Out</DropdownMenuItem>
                                 </DropdownMenuContent>
