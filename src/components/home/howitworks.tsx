@@ -1,6 +1,7 @@
 import Customer from "../ui/icon/customer"
 import Driver from "../ui/icon/driver"
 import Company from "../ui/icon/company"
+import SectionHeader from "@/lib/heading";
 
 export default function HowItWorks() {
 
@@ -38,15 +39,14 @@ export default function HowItWorks() {
     return (
         <section className="py-16 px-4 bg-white">
             <div className="max-w-7xl mx-auto">
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <h2 className="text-4xl md:text-4xl font-medium text-secondary mb-4">
-                        How it <span className="text-primary">Works</span>
-                    </h2>
-                    <p className="text-[20px] text-secondary max-w-3xl mx-auto leading-relaxed">
-                        Order your truck parts, request a delivery, and get them at your doorstep - fast, reliable, and hassle-free
-                    </p>
-                </div>
+             
+
+                <SectionHeader
+                    title="How it"
+                    highlightedText="Works"
+                    description="Order your truck parts, request a delivery, and get them at your doorstep - fast, reliable, and hassle-free"
+                />
+
 
                 {/* Three columns */}
                 <div className="grid md:grid-cols-3 gap-8 mb-12">

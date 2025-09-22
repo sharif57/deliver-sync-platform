@@ -50,7 +50,7 @@ export default function ResponsiveNavbar() {
         <div className="relative bg-background">
             <nav className="flex items-center justify-between w-full  container mx-auto px-4 py-4 md:px-6 md:py-5">
                 {/* Logo */}
-                <Link href="/">
+                <Link href="/" title='DeliverSync'>
                     <AuthIcon />
                 </Link>
 
@@ -60,6 +60,7 @@ export default function ResponsiveNavbar() {
                         <li key={index}>
                             <Link
                                 href={`/${item}`}
+                                title={item.replace('-', ' ')}
                                 className={`relative capitalize hover:text-primary transition-colors duration-300 ${pathname === `/${item}` ? 'text-primary font-semibold' : ''
                                     }`}
                             >
@@ -77,13 +78,13 @@ export default function ResponsiveNavbar() {
                 <div className="flex items-center gap-3">
                     <Button
                         variant="outline"
-                        className="text-secondary text-base md:text-lg font-normal px-4 py-2 md:px-6 md:py-3 hover:bg-primary hover:text-background"
+                        className="text-secondary text-base md:text-lg font-normal px-4 py-2 md:px-8 md:py-6 hover:bg-primary hover:text-background"
                         asChild
                     >
                         <Link href="/auth/signin">Log In</Link>
                     </Button>
                     <Button
-                        className="bg-primary text-base md:text-lg font-normal px-4 py-4 md:px-6 md:py-3 text-background"
+                        className="bg-primary text-base md:text-lg font-normal px-4 py-4 md:px-8 md:py-6 text-background"
                         asChild
                     >
                         <Link href="/auth/signup">Sign Up</Link>

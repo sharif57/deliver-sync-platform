@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ResponsiveNavbar from "@/components/shareUi/navbar";
+import Footer from "@/components/shareUi/footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
       >
         <ResponsiveNavbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
