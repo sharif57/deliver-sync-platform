@@ -5,11 +5,32 @@ import AuthIcon from '../ui/icon/auth';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 
 export default function ResponsiveNavbar() {
     const pathname = usePathname();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
+
+    const [localPath, setLocalPath] = useState('');
+
+    useEffect(() => {
+        const storedPath = localStorage.getItem('userRole');
+        if (storedPath) {
+            setLocalPath(storedPath);
+        }
+    }, [pathname === '/' ? null : pathname ]);
+
+    console.log('localPath:', localPath);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -46,6 +67,11 @@ export default function ResponsiveNavbar() {
 
     const items = ['home', 'how-it-works', 'features', 'testimonials', 'contact'];
 
+    const handleLogout = () => {
+        localStorage.removeItem('userRole');
+        // Add any additional logout logic here
+    }
+
     return (
         <div className="relative bg-background">
             <nav className="flex items-center justify-between w-full  container mx-auto px-4 py-4 md:px-6 md:py-5">
@@ -76,23 +102,48 @@ export default function ResponsiveNavbar() {
 
                 {/* Action Buttons */}
                 <div className="flex items-center gap-3">
-                    <Button
-                        variant="outline"
-                        className="text-secondary text-base md:text-lg font-normal px-4 py-2 md:px-8 md:py-6 hover:bg-primary hover:text-background"
-                        asChild
-                    >
-                        <Link href="/auth/signin">Log In</Link>
-                    </Button>
-                    <Button
-                        className="bg-primary text-base md:text-lg font-normal px-4 py-4 md:px-8 md:py-6 text-background"
-                        asChild
-                    >
-                        <Link href="/auth/signup">Sign Up</Link>
-                    </Button>
+                    {
+                        localPath === '' ? (
+                            <div className='flex items-center gap-3'>
+                                <Button
+                                    variant="outline"
+                                    className="text-secondary text-base md:text-lg font-normal px-4 py-2 md:px-8 md:py-6 hover:bg-primary hover:text-background"
+                                    asChild
+                                >
+                                    <Link href="/auth/signin">Log In</Link>
+                                </Button>
+                                <Button
+                                    className="bg-primary text-base md:text-lg font-normal px-4 py-4 md:px-8 md:py-6 text-background"
+                                    asChild
+                                >
+                                    <Link href="/auth/signup">Sign Up</Link>
+                                </Button>
+                            </div>
+                        ) : (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Avatar className="size-10 cursor-pointer">
+                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                                    <DropdownMenuItem>{localPath}</DropdownMenuItem>
+                                    <DropdownMenuItem>Subscription</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={handleLogout} className='text-destructive cursor-pointer'>Log Out</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )
+                    }
                     <CiMenuFries
                         className="text-2xl text-secondary cursor-pointer md:hidden"
                         onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
                     />
+
                 </div>
 
                 {/* Mobile Sidebar */}
