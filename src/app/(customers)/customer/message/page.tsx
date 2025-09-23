@@ -283,7 +283,7 @@ export default function ChatPage() {
   return (
     <>
       <title>Customer Message</title>
-      <div className="flex flex-col ">
+      <div className="flex flex-col container mx-auto ">
         {/* Header */}
         <div className="px-4 sm:px- py-3 sm:py-4 flex items-center justify-between  flex-shrink-0 ">
           <div className="flex items-center space-x-2 sm:space-x-3">
@@ -302,7 +302,7 @@ export default function ChatPage() {
         </div>
 
         {/* Messages Container */}
-        <div className="flex-1 overflow-y-auto container  mx-auto mb-24 h-[300px] rounded-lg bg-white px-4 sm:px-6 py-4 space-y-4">
+        <div className="flex-1 overflow-y-auto  mb-24 h-[300px] rounded-lg bg-white px-4 sm:px-6 py-4 space-y-4">
           {messages.map((message) => (
             <div
               key={message.id}
@@ -338,7 +338,7 @@ export default function ChatPage() {
                   className={`rounded-2xl px-3 sm:px-4 py-2 sm:py-3 ${
                     message.sender === "customer"
                       ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white rounded-br-md"
-                      : "bg-gray-100 text-gray-800 rounded-bl-md border border-gray-200"
+                      : "bg-[#E6EEF780] text-gray-800 rounded-bl-md border border-gray-200"
                   }`}
                 >
                   <p className="text-xs sm:text-sm md:text-base leading-relaxed">{message.text}</p>
@@ -351,15 +351,15 @@ export default function ChatPage() {
         </div>
 
         {/* Fixed Message Input */}
-        <div className="fixed bottom-0 bg-white container rounded-2xl   mx-auto left-0 right-0  px-4  sm:px-6  py-3 sm:py-4 flex-shrink-0">
-          <div className="container mx-auto  flex items-center space-x-2 sm:space-x-3">
+        <div  className="fixed bottom-0 container  bg-white  rounded-2xl   mx-auto left-0 right-0  px-4  sm:px-6  py-3 sm:py-4 flex-shrink-0 ">
+          <div className="  flex items-center space-x-2 sm:space-x-3">
             <Input
               type="text"
               placeholder="Type your message..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="flex-1 bg-gray-50 border-gray-200 rounded-2xl px-3 sm:px-4 py-2 sm:py-8 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+              className="flex-1 bg-[#FDF7E9] border-gray-200 rounded-2xl px-3 sm:px-4 py-2 sm:py-8 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
             />
             <Button
               onClick={handleSendMessage}

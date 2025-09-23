@@ -8,6 +8,7 @@ import PickUp from "@/components/ui/icon/pickUp";
 import Take from "@/components/ui/icon/take";
 import { ArrowLeft, MessageSquareMore, PhoneCall, Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -191,21 +192,22 @@ export default function TrackMyOrder() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row sm:space-x-4 md:space-x-8 max-w-xl mx-auto space-y-4 sm:space-y-0">
-                            <Button className="flex-1 text-base sm:text-lg md:text-xl bg-gradient-to-r from-[#E0B351] to-[#8B6E31] text-white py-4 sm:py-6 rounded-lg font-medium">
-                                <PhoneCall className="size-6 sm:w-6 sm:h-6 mr-2" />
+                            <Button className="flex-1 flex items-center justify-center text-base sm:text-lg md:text-xl bg-gradient-to-r from-[#E0B351] to-[#8B6E31] text-white min-h-[56px] sm:min-h-[60px] rounded-lg font-medium">
+                                <PhoneCall className="size-[22px] mr-2" />
                                 Call Now
                             </Button>
-                            
 
-
-                            <Button
-                                variant="outline"
-                                className="flex-1 border-gray-300 text-secondary text-base sm:text-lg md:text-xl py-4 sm:py-6 rounded-lg font-medium hover:bg-gray-50 bg-transparent"
-                            >
-                                <MessageSquareMore className="size-6 sm:w-6 sm:h-6 mr-2" />
-                                Message Now
-                            </Button>
+                            <Link href="/customer/message" className="flex-1">
+                                <Button
+                                    variant="outline"
+                                    className="flex items-center justify-center w-full border-gray-300 text-secondary text-base sm:text-lg md:text-xl min-h-[56px] sm:min-h-[60px] rounded-lg font-medium hover:bg-gray-50 bg-transparent"
+                                >
+                                    <MessageSquareMore className="size-[22px] mr-2" />
+                                    Message Now
+                                </Button>
+                            </Link>
                         </div>
+
                     </div>
                 </div>
             </div>

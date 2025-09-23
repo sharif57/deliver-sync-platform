@@ -10,17 +10,17 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="bg-heroBg " style={{ height: '600px' }}>
+      <section className="bg-secondary " style={{ height: '600px' }}>
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between h-full">
           {/* Text Content */}
           <div className="flex flex-col lg:flex-row  items-center justify-between  py-12 lg:py-20">
             {/* Left Content */}
             <div className="flex-1 max-w-2xl  lg:pr-12 text-center lg:text-left">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-5xl font-medium text-secondary leading-tight mb-6">
-                Simplify Your Parts Delivery <span className="text-primary">-Track, Manage, Deliver</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-5xl font-medium text-white leading-tight mb-6">
+                Simplify Your Parts Delivery <span className="text-[#EBAD24]">-Track, Manage, Deliver</span>
               </h1>
 
-              <p className="text-lg sm:text-xl font-normal text-secondary mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              <p className="text-lg sm:text-xl font-normal text-white mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
                 A smart platform for Customers, Drivers, and Companies to streamline every delivery
               </p>
 
@@ -36,7 +36,7 @@ export default function HeroSection() {
                   variant="outline"
                   size="lg"
                   onClick={() => setIsVideoModalOpen(true)}
-                  className=" text-xl py-6 font-medium   hover:bg-gray-50 px-8  rounded-sm flex items-center gap-2 transition-all duration-200 bg-transparent"
+                  className=" text-xl py-6 font-medium text-white   hover:bg-gray-50 px-8  rounded-sm flex items-center gap-2 transition-all duration-200 bg-transparent"
                 >
                   Watch Demo
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
