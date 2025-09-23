@@ -11,14 +11,16 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { use, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Clipboard, Building2, Tag, Scale, DollarSign, MapPin, Home } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function DeliveryRequestForm() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         orderId: "eg: #12345",
         companyName: "",
@@ -36,6 +38,7 @@ export default function DeliveryRequestForm() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         console.log("Form submitted:", formData)
+        router.push('/customer/driver-confirmation');
     }
 
     return (
@@ -44,7 +47,7 @@ export default function DeliveryRequestForm() {
             <div className="min-h-screen  py-8 px-4 sm:px-6 lg:px-8">
                 <div className="container mx-auto">
                     <div className="text-center mb-8">
-                        <h1 className="text-2xl font-semibold text-green-600 mb-2">Delivery Request</h1>
+                        <h1 className="text-2xl font-semibold text-primary mb-2">Delivery Request</h1>
                         <p className="text-gray-600 text-sm">Fill in the details below to schedule your delivery</p>
                     </div>
 
@@ -61,7 +64,7 @@ export default function DeliveryRequestForm() {
                                         id="orderId"
                                         value={formData.orderId}
                                         onChange={(e) => handleInputChange("orderId", e.target.value)}
-                                        className="pl-10 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
+                                        className="pl-10 py-5 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
                                     />
                                 </div>
                             </div>
@@ -78,7 +81,7 @@ export default function DeliveryRequestForm() {
                                         placeholder="Enter company name"
                                         value={formData.companyName}
                                         onChange={(e) => handleInputChange("companyName", e.target.value)}
-                                        className="pl-10 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
+                                        className="pl-10 py-5 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
                                     />
                                 </div>
                             </div>
@@ -113,7 +116,7 @@ export default function DeliveryRequestForm() {
                                         placeholder="Write here"
                                         value={formData.productWeight}
                                         onChange={(e) => handleInputChange("productWeight", e.target.value)}
-                                        className="pl-10 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
+                                        className="pl-10 py-5 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
                                     />
                                     <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
                                         (Optional)
@@ -133,7 +136,7 @@ export default function DeliveryRequestForm() {
                                         placeholder="Write the amount"
                                         value={formData.productAmount}
                                         onChange={(e) => handleInputChange("productAmount", e.target.value)}
-                                        className="pl-10 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
+                                        className="pl-10 py-5 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
                                     />
                                     <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
                                         (Optional)
@@ -153,7 +156,7 @@ export default function DeliveryRequestForm() {
                                         placeholder="Enter pickup address"
                                         value={formData.pickupLocation}
                                         onChange={(e) => handleInputChange("pickupLocation", e.target.value)}
-                                        className="pl-10 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
+                                        className="pl-10 py-5 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
                                     />
                                 </div>
                             </div>
@@ -170,7 +173,7 @@ export default function DeliveryRequestForm() {
                                         placeholder="Enter Delivery address"
                                         value={formData.deliveryLocation}
                                         onChange={(e) => handleInputChange("deliveryLocation", e.target.value)}
-                                        className="pl-10 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
+                                        className="pl-10 py-5 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
                                     />
                                 </div>
                             </div>

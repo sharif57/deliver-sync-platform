@@ -88,33 +88,35 @@ export default function CustomerDashboard() {
                                 <h3 className="text-xl font-medium text-secondary  mb-3">Request Delivery</h3>
                                 <p className="text-secondary mb-8  leading-relaxed">Create a new delivery request for truck parts</p>
                                 <Link href={"/customer/request"}>
-                                    <Button className="bg-primary hover:bg-green-700 text-white px-8 py-3 rounded font-medium transition-colors">
+                                <Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
                                         Create New Request
                                     </Button>
-                                    </Link>
+                                </Link>
                             </div>
 
                             {/* History Card */}
                             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center">
-                                <div className="w-12 h-12 bg-[#B443FF] rounded-lg flex items-center justify-center mx-auto mb-6">
+                                <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-6">
                                     <Clock className="w-6 h-6 text-white" />
                                 </div>
                                 <h3 className="text-xl font-medium text-secondary mb-3">History</h3>
                                 <p className="text-secondary mb-8 leading-relaxed">View past orders and delivery records</p>
-                                <Button className="bg-[#B443FF] hover:bg-purple-700 text-white px-8 py-3 rounded font-medium transition-colors">
+                                <Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
                                     View History
                                 </Button>
                             </div>
                         </div>
                         <div className="bg-white rounded-3xl mt-6 p-8 shadow-sm border border-gray-100 text-center">
-                            <div className="w-12 h-12 bg-[#18A0F5] rounded-lg flex items-center justify-center mx-auto mb-6">
+                            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-6">
                                 <LocationEdit className="w-6 h-6 text-white" />
                             </div>
                             <h3 className="text-xl font-medium text-secondary mb-3">Track My Orders</h3>
                             <p className="text-secondary mb-8 leading-relaxed">Monitor real-time delivery status and location</p>
-                            <Button className="bg-[#18A0F5] hover:bg-[#18A0F5] text-white px-8 py-3 rounded font-medium transition-colors">
-                                Track Order’s
-                            </Button>
+                            <Link href={"/customer/track-my-order"}>
+                                <Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
+                                    Track Order’s
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </section>

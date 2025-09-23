@@ -71,7 +71,7 @@ export default function HowItWorks() {
                                 <div className="space-y-4 text-left">
                                     {step.description.map((desc, i) => (
                                         <div key={i} className="flex items-start gap-3">
-                                            <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
+                                            <div className="w-2 h-2 bg-[#B49246] rounded-full mt-2 flex-shrink-0"></div>
                                             <p className="text-[16px] text-secondary font-normal">{desc}</p>
                                         </div>
                                     ))}
