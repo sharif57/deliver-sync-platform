@@ -90,7 +90,7 @@
 //                         </div>
 //                     </div>
 
-                 
+
 //                 </div>
 //             </div>
 //         </>
@@ -104,9 +104,10 @@ import Loading from "@/components/ui/icon/loading";
 import Arrow from "@/components/ui/icon/arrow";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function DriverConfirmationPage() {
-    const router = useRouter();
+  const router = useRouter();
   return (
     <>
       <title>Driver Confirmation</title>
@@ -126,7 +127,7 @@ export default function DriverConfirmationPage() {
               </span>
             </div>
           </div>
-                    <button className="text-gray-600 font-normal text-xs sm:text-2xl hover:text-gray-800">
+          <button className="text-gray-600 font-normal text-xs sm:text-2xl hover:text-gray-800">
             Cancel Request
           </button>
         </div>
@@ -196,18 +197,22 @@ export default function DriverConfirmationPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row sm:space-x-4 md:space-x-8 max-w-xl mx-auto space-y-4 sm:space-y-0">
-                <Button className="flex-1 text-base sm:text-lg md:text-xl bg-primary text-white py-4 sm:py-6 rounded-lg font-medium">
-                  <PhoneCall className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
+              <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-4 max-w-xs sm:max-w-md md:max-w-lg mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
+                <Button
+                  className="flex-1 text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-6 rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
+                >
+                  <PhoneCall className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
                   Call Now
                 </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1 border-gray-300 text-secondary text-base sm:text-lg md:text-xl py-4 sm:py-6 rounded-lg font-medium hover:bg-gray-50 bg-transparent"
-                >
-                  <MessageSquareMore className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
-                  Message Now
-                </Button>
+                <Link href="/customer/message" className="flex-1">
+                  <Button
+                    variant="outline"
+                    className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors w-full"
+                  >
+                    <MessageSquareMore className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
+                    Message Now
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

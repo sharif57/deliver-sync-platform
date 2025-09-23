@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import AuthIcon from "../ui/icon/auth";
+import { usePathname } from "next/navigation";
 
 const GitHubIcon = ({ size = 24, className = "" }) => (
   <svg
@@ -42,6 +43,13 @@ const LinkedInIcon = ({ size = 24, className = "" }) => (
 );
 
 const Footer = () => {
+
+  const pathname = usePathname();
+
+  if (pathname === '/customer/message') {
+    return null;
+  }
+
   return (
     <footer className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black text-gray-900 dark:text-white py-12 px-4 font-inter border-t border-gray-200 dark:border-gray-800">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
