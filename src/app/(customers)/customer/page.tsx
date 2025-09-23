@@ -88,7 +88,7 @@ export default function CustomerDashboard() {
                                 <h3 className="text-xl font-medium text-secondary  mb-3">Request Delivery</h3>
                                 <p className="text-secondary mb-8  leading-relaxed">Create a new delivery request for truck parts</p>
                                 <Link href={"/customer/request"}>
-                                <Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
+                                    <Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
                                         Create New Request
                                     </Button>
                                 </Link>
@@ -101,9 +101,10 @@ export default function CustomerDashboard() {
                                 </div>
                                 <h3 className="text-xl font-medium text-secondary mb-3">History</h3>
                                 <p className="text-secondary mb-8 leading-relaxed">View past orders and delivery records</p>
-                                <Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
+                                <Link href={"/customer/history"}><Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
                                     View History
                                 </Button>
+                                </Link>
                             </div>
                         </div>
                         <div className="bg-white rounded-3xl mt-6 p-8 shadow-sm border border-gray-100 text-center">
