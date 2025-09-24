@@ -10,7 +10,7 @@ interface DeliveryItem {
   id: string;
   orderId: string;
   date: string;
-  status: "Today" | "This Week" | "Calendar" | "All";
+  status: "12$" | "This Week" | "Calendar" | "All";
   statusColor: "orange" | "green" | "blue";
   dateObj: Date;
   link?: string;
@@ -82,7 +82,7 @@ export default function DeliveryHistory() {
     switch (activeFilter) {
       case "Today":
         filtered = deliveryData.filter(
-          (item) => item.status === "Today" || item.status === "This Week",
+          (item) => item.status === "12$" || item.status === "This Week",
         );
         break;
       case "This Week":

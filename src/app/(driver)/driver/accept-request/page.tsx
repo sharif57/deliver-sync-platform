@@ -1,7 +1,6 @@
 'use client';
 import { MessageSquareMore, PhoneCall } from "lucide-react";
 import React from "react";
-import Head from "next/head";
 import { Button } from "@/components/ui/button";
 import Back from "@/components/ui/icon/back";
 import { useRouter } from "next/navigation";
@@ -10,9 +9,7 @@ export default function AcceptRequest() {
     const router = useRouter();
     return (
         <div className="  ">
-            <Head>
-                <title>Accept Request</title>
-            </Head>
+            <title>Accept Request</title>
             <div className=" mx-auto">
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                     <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
@@ -63,6 +60,7 @@ export default function AcceptRequest() {
                                         Picked Parcel
                                     </Button>
                                     <Button
+                                        onClick={() => window.open("tel:+1234567890")}
                                         variant="outline"
                                         className="w-full border-2 border-gray-300 px-14 text-secondary text-base py-5 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
                                         aria-label="Accept request"

@@ -111,17 +111,7 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
         setIsOnline((prev) => !prev);
     };
 
-    const formatTime = (date: Date) => {
-        return date.toLocaleString("en-US", {
-            timeZone: "Asia/Dhaka",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        });
-    };
+
 
 
     const avatarDropdownLinks = [
@@ -161,6 +151,7 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                     <Link href="/" className="flex items-center gap-10">
                         <AuthIcon />
                     </Link>
+
 
                     {/* Right side: Icons and Mobile Menu Toggle */}
                     <div className="flex items-center gap-4">
