@@ -2,6 +2,8 @@
 import AuthIcon from '@/components/ui/icon/auth';
 import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
+import { Switch } from '../ui/switch';
+import { Label } from '../ui/label';
 
 // Using SVG components for icons, similar to lucide-react
 const MenuIcon = ({ className }: { className?: string }) => (
@@ -71,7 +73,7 @@ const AvatarIcon = ({ className }: { className?: string }) => (
 
 
 // --- Main Header Component ---
-const HeaderRole = () => {
+const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) => {
     // State for the main mobile menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     // State for desktop dropdowns
@@ -83,7 +85,43 @@ const HeaderRole = () => {
     const featuresDropdownRef = useRef<HTMLDivElement>(null);
     const avatarDropdownRef = useRef<HTMLDivElement>(null);
     const notificationsDropdownRef = useRef<HTMLDivElement>(null);
+    const [isOnline, setIsOnline] = useState(mode === "online");
+    const [currentTime, setCurrentTime] = useState(new Date());
 
+    // Simulate dynamic status (e.g., go offline after 30 seconds if online)
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (isOnline) {
+            timer = setTimeout(() => {
+                setIsOnline(false);
+            }, 30000); // 30 seconds timeout
+        }
+        return () => clearTimeout(timer); // Cleanup timer on unmount or state change
+    }, [isOnline]);
+
+    // Update current time every second
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+        return () => clearInterval(timer); // Cleanup interval on unmount
+    }, []);
+
+    const toggleOnline = () => {
+        setIsOnline((prev) => !prev);
+    };
+
+    const formatTime = (date: Date) => {
+        return date.toLocaleString("en-US", {
+            timeZone: "Asia/Dhaka",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
+    };
 
 
     const avatarDropdownLinks = [
@@ -127,12 +165,42 @@ const HeaderRole = () => {
                     {/* Right side: Icons and Mobile Menu Toggle */}
                     <div className="flex items-center gap-4">
                         {/* Notification Dropdown */}
-                        <div className="relative hidden sm:block" ref={notificationsDropdownRef}>
-                            {/* <Link href={"/customer/notification"}> */}
+                        <div className="relative hidden  sm:block" ref={notificationsDropdownRef}>
+                            <div className="flex items-center space-x-2">
+                                {/* <div className="flex items-center space-x-2">
+                                    <Switch
+                                        id="airplane-mode"
+                                        checked={isOnline}
+                                        onCheckedChange={toggleOnline} 
+                                        />
+                                    <Label htmlFor="airplane-mode">{isOnline ? "Online" : "Offline"}</Label>
+                                </div> */}
+                                {useSwitch ? (
+                                    <div className="flex items-center space-x-2">
+                                        <Switch
+                                            id="airplane-mode"
+                                            checked={isOnline}
+                                            onCheckedChange={toggleOnline}
+                                            className="w-10 h-6 bg-gray-300 rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none  "
+                                        >
+                                            <span className="block w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ease-in-out data-[state=checked]:translate-x-4" />
+                                        </Switch>
+                                        <Label htmlFor="airplane-mode" className="text-sm font-medium text-gray-700">
+                                            {isOnline ? "Online" : "Offline"}
+                                        </Label>
+                                    </div>
+                                ) : (
+                                    <div className="text-sm font-medium text-gray-700">
+                                        {/* {mode === "online" ? "Online" : "Offline"} */}
+                                    </div>
+                                )}
+
+                                {/* <Link href={"/customer/notification"}> */}
                                 <button onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
                                     <span className="sr-only">View notifications</span>
                                     <BellIcon className="h-6 w-6" />
                                 </button>
+                            </div>
                             {/* </Link> */}
                             <div className={`absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg transition-opacity duration-300 ${isNotificationsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                                 <div className="p-3 flex items-center justify-between">
@@ -154,9 +222,11 @@ const HeaderRole = () => {
 
                         {/* Avatar Dropdown */}
                         <div className="relative hidden sm:block" ref={avatarDropdownRef}>
+
                             <button onClick={() => setIsAvatarOpen(!isAvatarOpen)} className="flex items-center gap-2 focus:outline-none">
                                 <AvatarIcon className="h-9 w-9" />
                             </button>
+
                             <div className={`absolute top-full right-0 mt-2 w-48 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg transition-opacity duration-300 ${isAvatarOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                                 {avatarDropdownLinks.map((item) => (
                                     <a key={item.label} href={item.href} className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -203,7 +273,29 @@ const HeaderRole = () => {
                                     <Link href={"/customer/notification"}>
                                         <BellIcon className="h-6 w-6" />
                                     </Link>
+
                                 </button>
+                            </div>
+                            <div className='mt-3 ml-3'>
+                                {useSwitch ? (
+                                    <div className="flex items-center space-x-2">
+                                        <Switch
+                                            id="airplane-mode"
+                                            checked={isOnline}
+                                            onCheckedChange={toggleOnline}
+                                            className="w-10 h-6 bg-gray-300 rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none  "
+                                        >
+                                            <span className="block w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ease-in-out data-[state=checked]:translate-x-4" />
+                                        </Switch>
+                                        <Label htmlFor="airplane-mode" className="text-sm font-medium text-gray-700">
+                                            {isOnline ? "Online" : "Offline"}
+                                        </Label>
+                                    </div>
+                                ) : (
+                                    <div className="text-sm font-medium text-gray-700">
+                                        {/* {mode === "online" ? "Online" : "Offline"} */}
+                                    </div>
+                                )}
                             </div>
                             <div className="mt-3 space-y-1">
                                 {avatarDropdownLinks.map(item => (

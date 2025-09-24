@@ -1,3 +1,12 @@
+// import React from 'react'
+
+// export default function DeliverHistory() {
+//   return (
+//     <div>
+      
+//     </div>
+//   )
+// }
 
 "use client";
 
@@ -56,7 +65,7 @@ const deliveryData: DeliveryItem[] = [
     date: "15 May 2019",
     status: "Delivered",
     statusColor: "green",
-    link: "/customer/history/delivered",
+    // link: "/customer/history/delivered",
     dateObj: new Date("2019-05-15"),
   },
   {
@@ -73,7 +82,7 @@ const deliveryData: DeliveryItem[] = [
     date: "17 May 2019",
     status: "Delivered",
     statusColor: "green",
-    link: "/customer/history/delivered",
+    // link: "/customer/history/delivered",
     dateObj: new Date("2019-05-17"),
   },
   {
@@ -88,7 +97,7 @@ const deliveryData: DeliveryItem[] = [
 
 type FilterType = "All" | "Calendar" | "Ongoing" | "Delivered";
 
-export default function DeliveryHistory() {
+export default function DeliverHistory() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("All");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -235,9 +244,9 @@ export default function DeliveryHistory() {
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="lg:flex justify-between items-center">
           {/* Header */}
-          <div className="flex items-center justify-between mb-4 sm:mb-6">
-            <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
-              <Back />
+          <div className="flex items-center cursor-pointer justify-between mb-4 sm:mb-6">
+            <div onClick={() => router.back()} className="flex items-center gap-3">
+                <Back />
               <h1 className="text-xl sm:text-2xl md:text-3xl font-medium text-secondary">
                 Delivery History
               </h1>
@@ -289,7 +298,7 @@ export default function DeliveryHistory() {
           ) : (
             filteredData.map((item, index) => (
               <Link
-                href={item.link || "/customer/track-my-order"}
+                href={`/driver/deliveries-history/${item.id}`}
                 key={item.id}
                 className={`flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 m-2 sm:m-4 bg-heroBg rounded-3xl hover:bg-gray-100 transition-colors ${index !== filteredData.length - 1 ? "border-b border-gray-100" : ""
                   }`}

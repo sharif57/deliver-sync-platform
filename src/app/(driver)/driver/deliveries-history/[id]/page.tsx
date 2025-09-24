@@ -2,7 +2,11 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star, PhoneCall, MessageSquareMore, ArrowLeft } from "lucide-react"
+import Back from "@/components/ui/icon/back"
+import Form from "@/components/ui/icon/form"
+import Location from "@/components/ui/icon/location"
+import To from "@/components/ui/icon/to"
+import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star, ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -30,22 +34,34 @@ export default function OrderDetailsCard({
     deliveryLocation = "Badda -1",
 }: OrderDetailsCardProps) {
     const router = useRouter()
+
+    const handmessage = () => {
+        router.push('/customer/message')
+    }
+
     return (
         <div>
             <title>Delivered Order</title>
-            <div className="px- py-3 sm:py-4 flex items-center justify-between ">
-                           <div className="flex items-center space-x-2 sm:space-x-3">
-                               <div onClick={() => router.back()} className="p-1 cursor-pointer">
-                                   <ArrowLeft className="h-5 w-5 text-gray-600" />
-                               </div>
-                               <div className="flex items-center space-x-2">
-                                   <span className="text-secondary font-medium text-sm sm:text-base md:text-lg">
-                                       Delivery History
-                                   </span>
-                               </div>
-                           </div>
-                           
-                       </div>
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
+                    <Back />
+                    <h1 className="text-2xl font-medium text-gray-700 ">Delivery History</h1>
+                </div>
+            </div>
+            {/* <div className="px- py-3 sm:py-4 flex items-center justify-between ">
+                
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div onClick={() => router.back()} className="p-1 cursor-pointer">
+                        <ArrowLeft className="h-5 w-5 text-gray-600" />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <span className="text-secondary font-medium text-sm sm:text-base md:text-lg">
+                            Delivery History
+                        </span>
+                    </div>
+                </div>
+
+            </div> */}
             <Card className="w-full container mx-auto bg-white shadow-lg">
                 <CardContent className="p-6">
                     {/* Order Details Grid */}
@@ -130,17 +146,23 @@ export default function OrderDetailsCard({
                                 />
                             </div>
                             <div>
-                                <h3 className="text-secondary font-medium text-lg sm:text-xl md:text-2xl mb-1">
-                                    Abdur Rahim
-                                </h3>
-                                <p className="text-secondary font-normal text-sm sm:text-base md:text-lg mb-2">
-                                    Toyota
-                                </p>
-                                <div className="flex items-center justify-center space-x-1">
-                                    <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 fill-current" />
-                                    <span className="text-gray-800 font-medium text-base sm:text-lg md:text-xl">
-                                        4.9
-                                    </span>
+
+                                <div className="flex items-center justify-center space-x-1 gap-6">
+                                    <div className="flex items-center gap-2">
+                                        <To />
+                                        <p className="text-secondary font-normal text-sm sm:text-base md:text-lg ">
+                                            Badda-1
+                                        </p>
+                                    </div>
+                                    <p className="">to</p>
+                                    <div className="flex items-center justify-center space-x-1">
+                                        <div className="flex items-center gap-2">
+                                            <Form />
+                                            <p className="text-secondary font-normal text-sm sm:text-base md:text-lg ">
+                                                Gulshan-1
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -148,18 +170,17 @@ export default function OrderDetailsCard({
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-6 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
                             <Button
+                                onClick={handmessage}
                                 variant="outline"
-                                className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py- sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors"
+                                className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors"
                             >
-                                Cancel
+                                Message Now
                             </Button>
-                            <Link href="/customer/driver-confirmation" className="flex-1">
-                                <Button
-                                    className="flex-1 text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#E0B351] to-[#8B6E31] text-white py-3 sm:py-6 rounded-lg font-medium hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors w-full"
-                                >
-                                    Request Again   
-                                </Button>
-                            </Link>
+                            <Button
+                                className="flex-1 text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#E0B351] to-[#8B6E31] text-white py-3 sm:py-6 rounded-lg font-medium hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors"
+                            >
+                                Call Now
+                            </Button>
                         </div>
                     </div>
                 </CardContent>

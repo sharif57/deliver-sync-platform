@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import { ChevronRight, Calendar, X } from "lucide-react";
-import Link from "next/link";
 import Back from "@/components/ui/icon/back";
 import { useRouter } from "next/navigation";
 
@@ -11,7 +10,7 @@ interface DeliveryItem {
   id: string;
   orderId: string;
   date: string;
-  status: "Processing" | "Delivered" | "Ongoing";
+  status: "Today" | "This Week" | "Calendar" | "All";
   statusColor: "orange" | "green" | "blue";
   dateObj: Date;
   link?: string;
@@ -22,7 +21,7 @@ const deliveryData: DeliveryItem[] = [
     id: "1",
     orderId: "12345",
     date: "14 May 2019",
-    status: "Processing",
+    status: "12$",
     statusColor: "orange",
     dateObj: new Date("2019-05-14"),
   },
@@ -30,7 +29,7 @@ const deliveryData: DeliveryItem[] = [
     id: "2",
     orderId: "12345",
     date: "14 May 2019",
-    status: "Processing",
+    status: "12$",
     statusColor: "orange",
     dateObj: new Date("2019-05-14"),
   },
@@ -38,7 +37,7 @@ const deliveryData: DeliveryItem[] = [
     id: "3",
     orderId: "12345",
     date: "15 May 2019",
-    status: "Processing",
+    status: "12$",
     statusColor: "orange",
     dateObj: new Date("2019-05-15"),
   },
@@ -46,47 +45,31 @@ const deliveryData: DeliveryItem[] = [
     id: "4",
     orderId: "12345",
     date: "16 May 2019",
-    status: "Processing",
+    status: "12$",
     statusColor: "orange",
     dateObj: new Date("2019-05-16"),
   },
-  {
-    id: "5",
-    orderId: "12346",
-    date: "15 May 2019",
-    status: "Delivered",
-    statusColor: "green",
-    link: "/customer/history/delivered",
-    dateObj: new Date("2019-05-15"),
-  },
+
   {
     id: "6",
     orderId: "12347",
     date: "16 May 2019",
-    status: "Ongoing",
+    status: "12$",
     statusColor: "blue",
     dateObj: new Date("2019-05-16"),
   },
-  {
-    id: "7",
-    orderId: "12348",
-    date: "17 May 2019",
-    status: "Delivered",
-    statusColor: "green",
-    link: "/customer/history/delivered",
-    dateObj: new Date("2019-05-17"),
-  },
+ 
   {
     id: "8",
     orderId: "12349",
     date: "18 May 2019",
-    status: "Ongoing",
+    status: "12$",
     statusColor: "blue",
     dateObj: new Date("2019-05-18"),
   },
 ];
 
-type FilterType = "All" | "Calendar" | "Ongoing" | "Delivered";
+type FilterType = "All" | "Calendar" | "Today" | "This Week";
 
 export default function DeliveryHistory() {
   const [activeFilter, setActiveFilter] = useState<FilterType>("All");
@@ -97,13 +80,13 @@ export default function DeliveryHistory() {
     let filtered = deliveryData;
 
     switch (activeFilter) {
-      case "Ongoing":
+      case "Today":
         filtered = deliveryData.filter(
-          (item) => item.status === "Processing" || item.status === "Ongoing",
+          (item) => item.status === "Today" || item.status === "This Week",
         );
         break;
-      case "Delivered":
-        filtered = deliveryData.filter((item) => item.status === "Delivered");
+      case "This Week":
+        filtered = deliveryData.filter((item) => item.status === "This Week");
         break;
       case "Calendar":
         if (selectedDate) {
@@ -231,7 +214,7 @@ export default function DeliveryHistory() {
 
   return (
     <div className="min-h-screen ">
-      <title>Delivery History</title>
+      <title>Earning History</title>
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="lg:flex justify-between items-center">
           {/* Header */}
@@ -239,7 +222,7 @@ export default function DeliveryHistory() {
             <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
               <Back />
               <h1 className="text-xl sm:text-2xl md:text-3xl font-medium text-secondary">
-                Delivery History
+                Earning History
               </h1>
             </div>
           </div>
@@ -247,7 +230,7 @@ export default function DeliveryHistory() {
           {/* Filter Tabs */}
           <div className="mb-4 sm:mb-6">
             <div className="flex gap-2 sm:gap-4 ">
-              {(["All", "Calendar", "Ongoing", "Delivered"] as FilterType[]).map((filter) => (
+              {(["All", "Calendar", "Today", "This Week"] as FilterType[]).map((filter) => (
                 <div key={filter} className="relative flex-shrink-0">
                   <button
                     onClick={() => {
@@ -288,8 +271,7 @@ export default function DeliveryHistory() {
             </div>
           ) : (
             filteredData.map((item, index) => (
-              <Link
-                href={item.link || "/customer/track-my-order"}
+              <div
                 key={item.id}
                 className={`flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 m-2 sm:m-4 bg-heroBg rounded-3xl hover:bg-gray-100 transition-colors ${index !== filteredData.length - 1 ? "border-b border-gray-100" : ""
                   }`}
@@ -312,7 +294,7 @@ export default function DeliveryHistory() {
                 <div className="bg-white p-2 rounded-lg">
                   <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
                 </div>
-              </Link>
+              </div>
             ))
           )}
         </div>

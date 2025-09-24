@@ -1,19 +1,27 @@
+'use client';
 import Counter from '@/components/shareUi/counter'
 import { Button } from '@/components/ui/button'
 import Car from '@/components/ui/icon/car'
 import House from '@/components/ui/icon/house'
 import Money from '@/components/ui/icon/money'
-import { DollarSign, History, Plus } from 'lucide-react'
+import { DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function Driver() {
+    const router = useRouter()
 
     const items = [
         { title: "Total Earnings", count: 12, icon: <Money /> },
         { title: "Pending Deliveries", count: 2, icon: <Money /> },
         { title: "Completed Deliveries", count: 2, icon: <Money /> },
     ]
+
+    const handmessage = () => {
+        router.push('/customer/message')
+    }
+
 
     return (
         <>
@@ -32,7 +40,7 @@ export default function Driver() {
                 <div>
                     <h1 className='text-2xl font-medium text-secondary'>Actions</h1>
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
-                        <div className='bg-white  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
+                        <Link href={'/driver/deliveries-history'} className='bg-white  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 <Plus className='size-[35px]' />
 
@@ -40,22 +48,22 @@ export default function Driver() {
                             <div>
                                 <h3 className='text-xl font-normal text-secondary'>Delivery History</h3>
                             </div>
-                        </div>
-                        <div className='bg-white  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
+                        </Link>
+                        <Link href={'/driver/earning-history'} className='bg-white  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 <DollarSign className='size-[35px]' />
                             </div>
                             <div>
                                 <h3 className='text-xl font-normal text-secondary'>My Earnings</h3>
                             </div>
-                        </div>
-                        <div className='bg-white  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
+                        </Link>
+                        <div onClick={handmessage} className='bg-white cursor-pointer  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
                             <div className='text-gray-500 dark:text-gray-400'>
-                                <History className='size-[35px]' />
+                                <MessageCircleMore  className='size-[35px]' />
 
                             </div>
                             <div>
-                                <h3 className='text-xl font-normal text-secondary'>History</h3>
+                                <h3 className='text-xl font-normal text-secondary'>Message</h3>
                             </div>
                         </div>
                     </div>

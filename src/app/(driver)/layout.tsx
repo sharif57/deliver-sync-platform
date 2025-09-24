@@ -20,7 +20,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased bg-roleBg`}
       >
-        <HeaderRole />
+        <HeaderRole mode="online" useSwitch={true} />
         <div className="container mx-auto p-6 space-y-6 min-h-[calc(100vh-200px)]">
           {children}
         </div>
