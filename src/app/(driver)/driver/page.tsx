@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button'
 import Car from '@/components/ui/icon/car'
 import House from '@/components/ui/icon/house'
 import Money from '@/components/ui/icon/money'
-import {  DollarSign, History, Plus } from 'lucide-react'
+import { DollarSign, History, Plus } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 
 export default function Driver() {
@@ -124,16 +125,21 @@ export default function Driver() {
                                 <div className="flex-1 flex flex-col items-center justify-center">
                                     <div className="flex flex-col gap-4 w-full max-w-sm">
                                         <Button
-                                            className="flex-1 text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition"
+                                            variant="outline"
+                                            className="w-full border-2 border-gray-300 px-14 text-secondary text-base py-5 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
+                                            aria-label="Accept request"
                                         >
                                             Decline
                                         </Button>
-                                        <Button
-                                            variant="outline"
-                                            className="flex-1 border-2 border-gray-300 px-14 text-secondary text-base py-3 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
-                                        >
-                                            Accept
-                                        </Button>
+                                        <Link href="/driver/accept-request" className="w-full">
+
+                                            <Button
+                                                className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-6 rounded-lg font-medium hover:bg-primary/90 transition"
+                                                aria-label="Decline request"
+                                            >
+                                                Accept
+                                            </Button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
