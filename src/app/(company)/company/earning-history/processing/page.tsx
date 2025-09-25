@@ -9,11 +9,9 @@
 // }
 
 "use client"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Back from "@/components/ui/icon/back"
-import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star, PhoneCall, MessageSquareMore } from "lucide-react"
-import Image from "next/image"
+import { FileText, Building2, Tag, DollarSign, MapPin, Home, PhoneCall, MessageSquareMore } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 interface OrderDetailsCardProps {
@@ -40,9 +38,9 @@ export default function Processing({
 }: OrderDetailsCardProps) {
     const router = useRouter()
 
-    const handmessage = () => {
-        router.push('/customer/message')
-    }
+    // const handmessage = () => {
+    //     router.push('/customer/message')
+    // }
 
     return (
         <div>

@@ -6,8 +6,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Clipboard, Building2, Tag, Scale, DollarSign, MapPin, Home, ArrowLeft } from "lucide-react"
-import Arrow from "@/components/ui/icon/arrow"
+import { Clipboard, Building2, Tag, Scale, DollarSign, MapPin, Home } from "lucide-react"
 import Back from "@/components/ui/icon/back"
 
 export default function DriverRequestForm() {

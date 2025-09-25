@@ -6,7 +6,7 @@ import { Textarea } from '../ui/textarea'
 
 export default function Contact() {
     return (
-        <div className='bg-featuresBg py-16'>
+        <div id="contact" className='bg-featuresBg py-16'>
             <SectionHeader title="Contact With Us" highlightedText="" description="Have a question, feedback, or need help? We are ready here to assist you" />
             <div className='flex justify-between max-w-7xl mx-auto px-4 md:px-6 lg:px-8 items-center gap-6 flex-col md:flex-row'>
                 <div className=' bg-white p-10 flex justify-center items-center w-[370px]  h-[521px] rounded-r-[70px] border-2 border-[#F6D99A]'>

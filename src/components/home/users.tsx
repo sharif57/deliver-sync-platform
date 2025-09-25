@@ -381,7 +381,7 @@ export default function Users() {
     };
 
     return (
-        <>
+        <div id="testimonials">
             <SectionHeader title="User" highlightedText="Say" description="Order your truck parts, request a delivery, and get them at your doorstep - fast, reliable, and hassle-free" />
             <section className="w-full flex-col items-center justify-center  overflow-hidden">
                 <div
@@ -444,7 +444,7 @@ export default function Users() {
                     </div>
                 </div>
             </section>
-        </>
+        </div>
     );
 }
 

@@ -3,9 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Back from "@/components/ui/icon/back"
-import Form from "@/components/ui/icon/form"
-import To from "@/components/ui/icon/to"
-import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star } from "lucide-react"
+import { FileText, Building2, Tag, DollarSign, MapPin, Home } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 

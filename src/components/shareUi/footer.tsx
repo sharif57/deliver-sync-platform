@@ -2,6 +2,7 @@
 import React from "react";
 import AuthIcon from "../ui/icon/auth";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const GitHubIcon = ({ size = 24, className = "" }) => (
   <svg
@@ -51,11 +52,11 @@ const Footer = () => {
   }
 
   return (
-    <footer className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black text-gray-900 dark:text-white py-12 px-4 font-inter border-t border-gray-200 dark:border-gray-800">
+    <footer className="bg-[#261B02] text-white  py-12 px-4 font-inter border-t border-gray-200 dark:border-gray-800">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         <div className="space-y-4">
           <AuthIcon />
-          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+          <p className=" dark:text-gray-300 text-sm leading-relaxed">
             Innovating for a better tomorrow. We are committed to delivering
             high-quality solutions that empower businesses and individuals.
           </p>
@@ -88,7 +89,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Home
               </a>
@@ -96,7 +97,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
               >
                 About Us
               </a>
@@ -104,7 +105,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Services
               </a>
@@ -112,7 +113,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Portfolio
               </a>
@@ -120,7 +121,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Blog
               </a>
@@ -132,64 +133,50 @@ const Footer = () => {
             Resources
           </h3>
           <ul className="space-y-3">
+           
             <li>
-              <a
-                href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
-              >
-                Support
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+              <Link
+                href="/privacy-policy"
+                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
               >
                 FAQs
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+              <Link
+                href="/privacy-policy"
+                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Privacy Policy
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+              <Link
+                href="/privacy-policy"
+                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Terms of Service
-              </a>
+              </Link>
             </li>
-            <li>
-              <a
-                href="#"
-                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
-              >
-                Careers
-              </a>
-            </li>
+           
           </ul>
         </div>
         <div className="space-y-4">
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             Contact Us
           </h3>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className=" dark:text-gray-300">
             123 Tech Avenue, Innovation City, 98765
           </p>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className=" dark:text-gray-300">
             Email: info@yourbrand.com
           </p>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className=" dark:text-gray-300">
             Phone: +1 (555) 123-4567
           </p>
         </div>
       </div>
-      <div className="text-center text-gray-500 dark:text-gray-400 text-sm pt-10 mt-10 border-t border-gray-200 dark:border-gray-700">
+      <div className="text-center   text-sm pt-10 mt-10 border-t border-gray-200 dark:border-gray-700">
         <p>
           &copy; {new Date().getFullYear()} Your Brand. All rights reserved.
         </p>

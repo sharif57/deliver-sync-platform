@@ -86,7 +86,7 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
     const avatarDropdownRef = useRef<HTMLDivElement>(null);
     const notificationsDropdownRef = useRef<HTMLDivElement>(null);
     const [isOnline, setIsOnline] = useState(mode === "online");
-    const [currentTime, setCurrentTime] = useState(new Date());
+    const [, setCurrentTime] = useState(new Date());
 
     // Simulate dynamic status (e.g., go offline after 30 seconds if online)
     useEffect(() => {
@@ -115,9 +115,8 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
 
 
     const avatarDropdownLinks = [
-        { href: "#", label: "Profile" },
+        { href: "/profile", label: "Profile" },
         { href: "/", label: "Home" },
-        { href: "#", label: "Settings" },
         { href: "#", label: "Logout" },
     ];
 

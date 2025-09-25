@@ -43,7 +43,7 @@ export default function Features() {
     ]
 
     return (
-        <div className=" mx-auto px-4 bg-featuresBg py-16">
+        <div id="features" className=" mx-auto px-4 bg-featuresBg py-16">
             <SectionHeader title="Key" highlightedText="Features" description="From order placement to successful delivery - everything managed in one smart platform" />
             <section className="py-1 px-4">
                 <div className=" max-w-7xl mx-auto">

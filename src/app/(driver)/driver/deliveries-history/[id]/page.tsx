@@ -4,11 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Back from "@/components/ui/icon/back"
 import Form from "@/components/ui/icon/form"
-import Location from "@/components/ui/icon/location"
 import To from "@/components/ui/icon/to"
-import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star, ArrowLeft } from "lucide-react"
+import { FileText, Building2, Tag, DollarSign, MapPin, Home } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 interface OrderDetailsCardProps {

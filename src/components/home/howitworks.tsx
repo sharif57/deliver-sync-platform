@@ -39,7 +39,7 @@ export default function HowItWorks() {
 
 
     return (
-        <section className="py-16 px-4 bg-white">
+        <section id="how-it-works" className="py-16 px-4 bg-white">
             <div className="max-w-7xl mx-auto">
              
 

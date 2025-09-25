@@ -6,11 +6,9 @@ import Completes from '@/components/ui/icon/Completes';
 import Times from '@/components/ui/icon/times';
 import { ChevronRight, DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function Company() {
-    const router = useRouter()
 
     const items = [
         { title: "Total Order Today", count: 12, icon: <Calculator /> },
@@ -19,9 +17,9 @@ export default function Company() {
         { title: "Canceled Order", count: 2, icon: <Canceleds /> },
     ]
 
-    const handmessage = () => {
-        router.push('/customer/message')
-    }
+    // const handmessage = () => {
+    //     router.push('/customer/message')
+    // }
 
     const orders = [
         { id: '1', date: '14 May 2019', title: 'Engine oil', status: 'Processing' },

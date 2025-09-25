@@ -10,7 +10,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="bg-secondary " style={{ height: '600px' }}>
+      <section id="home" className="bg-secondary " style={{ height: '600px' }}>
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between h-full">
           {/* Text Content */}
           <div className="flex flex-col lg:flex-row  items-center justify-between  py-12 lg:py-20">

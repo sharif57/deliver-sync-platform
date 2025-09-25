@@ -1,14 +1,9 @@
-
-
-
-
 'use client';
 import { Button } from '@/components/ui/button'
 import AuthIcon from '@/components/ui/icon/auth'
 import { Label } from '@/components/ui/label'
 import { ArrowLeft, Eye, EyeOff, Trash, Upload } from 'lucide-react'
 import Image from 'next/image'
-import Head from 'next/head'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -158,12 +153,12 @@ export default function SignUp() {
 
     return (
         <>
-            <Head>
+            {/* <Head> */}
                 <title>Sign Up</title>
-            </Head>
-            <div className="bg-authBg min-h-screen">
+            {/* </Head> */}
+            <div className="bg-authBg ">
                 <div className="p-4 max-w-6xl flex flex-col mx-auto">
-                    <div onClick={() => router.back()} className="flex items-center gap-4 mb-4">
+                    <div onClick={() => router.back()} className="flex items-center gap-4 mb-4 ">
                         <ArrowLeft className="cursor-pointer w-6 h-6" />
                         <AuthIcon />
                     </div>
@@ -186,7 +181,7 @@ export default function SignUp() {
                                         <Button
                                             key={service}
                                             className={`px-4 py-2 text-base md:text-lg ${selectedService === service
-                                                ? 'bg-primary text-white'
+                                                ? 'bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white'
                                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                                 }`}
                                             onClick={() => handleServiceSelect(service as 'Customer' | 'Driver' | 'Company')}
@@ -238,9 +233,7 @@ export default function SignUp() {
 
                                     {(selectedService === 'Customer' || selectedService === 'Driver') && (
                                         <div>
-                                            {/* <Label className="text-base md:text-lg px-2 font-normal text-secondary">
-                                                {selectedService === 'Customer' ? 'Name' : 'Driver Name'}
-                                            </Label> */}
+                                           
                                             <input
                                                 type="text"
                                                 placeholder={`Enter your ${selectedService === 'Customer' ? 'name' : 'driver name'}`}
@@ -435,7 +428,7 @@ export default function SignUp() {
                                     <div>
                                         <Button
                                             type="submit"
-                                            className="bg-primary text-base md:text-xl font-medium text-white w-full py-4 md:py-6 mt-4"
+                                            className="bg-gradient-to-r from-[#EFB639] to-[#C59325] text-base md:text-xl font-medium text-white w-full py-4 md:py-6 mt-4"
                                         >
                                             Sign Up
                                         </Button>

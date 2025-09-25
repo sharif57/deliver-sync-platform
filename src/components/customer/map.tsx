@@ -13,7 +13,7 @@ interface TimelineProps {
     className?: string
 }
 
-const Card = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+const Card = ({ children}: { children: React.ReactNode; className?: string }) => (
     <div
         // className={`rounded-2xl bg-white p-12 text-sm leading-7 text-gray-700 shadow-lg shadow-black/5 dark:bg-gray-950 dark:text-gray-300 dark:shadow-white/5 ${className}`}
     >
@@ -55,7 +55,7 @@ const defaultTimelineData: TimelineItem[] = [
     },
 ]
 
-export default function Map({ data = defaultTimelineData, className = "" }: TimelineProps) {
+export default function Map({ data = defaultTimelineData }: TimelineProps) {
     return (
         <div
 

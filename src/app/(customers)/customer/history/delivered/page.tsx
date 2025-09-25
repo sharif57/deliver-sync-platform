@@ -2,7 +2,7 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star, PhoneCall, MessageSquareMore, ArrowLeft } from "lucide-react"
+import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star, ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
