@@ -45,7 +45,7 @@ export default function Features() {
     return (
         <div className=" mx-auto px-4 bg-featuresBg py-16">
             <SectionHeader title="Key" highlightedText="Features" description="From order placement to successful delivery - everything managed in one smart platform" />
-            <section className="py-16 px-4">
+            <section className="py-1 px-4">
                 <div className=" max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-12">
                         {features.map((feature, index) => (
@@ -65,7 +65,7 @@ export default function Features() {
                     </div>
 
                     <div className="text-center">
-                        <button className="bg-primary  text-white font-semibold px-24 py-4 rounded-lg text-lg transition-colors duration-200">
+                        <button className="bg-gradient-to-r from-[#EFB639]  to-[#C59325]  text-white font-semibold px-24 py-4 rounded-lg text-lg transition-colors duration-200">
                             Watch Demo
                         </button>
                     </div>

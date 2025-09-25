@@ -139,7 +139,7 @@ export default function Processing({
                                     </div>
                                     <div className="flex items-center justify-between mb-4">
                                         <h1 className="text-2xl font-medium text-gray-800">
-                                            Rider: Sharif Mahamud
+                                            Rider: Mehedi Hasan
                                         </h1>
                                         <div className="bg-gradient-to-r from-[#EFB639] to-[#C59325] flex items-center gap-4 rounded-lg p-2 px-4">
                                             <PhoneCall className="w-5 h-5 text-black p-1 rounded-full bg-white" />

@@ -1,7 +1,9 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Back from "@/components/ui/icon/back"
 import { Trash2 } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 interface Notification {
@@ -67,6 +69,7 @@ const initialNotifications: Notification[] = [
 
 
 export default function NotificationPanel() {
+  const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications)
 
   const deleteNotification = (id: string) => {
@@ -76,18 +79,23 @@ export default function NotificationPanel() {
   return (
     <>
     <title>Notification</title>
-      <div className="w-full  rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="w-full   overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Notification</h2>
-        </div>
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+                           <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
+                               <Back />
+                               <h1 className="text-xl sm:text-2xl md:text-3xl font-medium text-secondary">
+                                   Notification
+                               </h1>
+                           </div>
+                       </div>
 
         {/* Notification List */}
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y divide-gray-200 space-y-2 bg-white p-4 rounded-2xl">
           {notifications.map((notification) => (
             <div
               key={notification.id}
-              className="px-6 py-4 flex cursor-pointer items-center justify-between hover:bg-gray-50 transition-colors"
+              className="px-6 py-4 flex cursor-pointer rounded-lg items-center justify-between bg-featuresBg  hover:bg-gray-50 transition-colors"
             >
               <div className="flex items-center space-x-4">
 
@@ -103,14 +111,14 @@ export default function NotificationPanel() {
                   <div className="text-gray-900 font-medium text-sm">
                     {notification.orderId} - {notification.status}
                   </div>
-                  <div className="text-green-600 text-sm mt-1">{notification.timestamp}</div>
+                  <div className="text-primary text-sm mt-1">{notification.timestamp}</div>
                 </div>
               </div>
 
               {/* Delete Button */}
               <button
                 onClick={() => deleteNotification(notification.id)}
-                className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                className="p-2 text-red-500 hover:text-red-700 bg-white  hover:bg-red-50 rounded-md transition-colors"
                 aria-label="Delete notification"
               >
                 <Trash2 className="w-4 h-4" />

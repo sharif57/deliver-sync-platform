@@ -172,7 +172,7 @@ export default function DetailsCard({
                                     </Button>
                                     <Button
                                         onClick={() => window.location.href = "tel:123456789"}
-                                        className="flex-1 text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#E0B351] to-[#8B6E31] text-white py-3 sm:py-6 rounded-lg font-medium hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors"
+                                        className="flex-1 text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 sm:py-6 rounded-lg font-medium hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors"
                                     >
                                         Call Now
                                     </Button>

@@ -192,7 +192,7 @@ export default function TrackMyOrder() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row sm:space-x-4 md:space-x-8 max-w-xl mx-auto space-y-4 sm:space-y-0">
-                            <Button className="flex-1 flex items-center justify-center text-base sm:text-lg md:text-xl bg-gradient-to-r from-[#E0B351] to-[#8B6E31] text-white min-h-[56px] sm:min-h-[60px] rounded-lg font-medium">
+                            <Button onClick={() => window.location.href = "tel:123456789"} className="flex-1 flex items-center justify-center text-base sm:text-lg md:text-xl bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white min-h-[56px] sm:min-h-[60px] rounded-lg font-medium">
                                 <PhoneCall className="size-[22px] mr-2" />
                                 Call Now
                             </Button>

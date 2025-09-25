@@ -4,6 +4,7 @@ import HowItWorks from '@/components/home/howitworks'
 import Features from '@/components/home/features'
 import Users from '@/components/home/users'
 import Contact from '@/components/home/contact'
+import { DeliverySignup } from '@/components/home/Streamline'
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Features />
       <Users />
       <Contact />
+      <DeliverySignup />
     </div>
   )
 }

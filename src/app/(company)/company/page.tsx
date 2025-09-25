@@ -27,8 +27,8 @@ export default function Company() {
         { id: '1', date: '14 May 2019', title: 'Engine oil', status: 'Processing' },
         { id: '2', date: '14 May 2019', title: 'Engine oil', status: 'Processing' },
         { id: '3', date: '15 May 2019', title: 'Engine oil', status: 'Processing' },
-        { id: '4', date: '16 May 2019', title: 'Engine oil', status: 'Delivered' },
-        { id: '5', date: '17 May 2019', title: 'Engine oil', status: 'Delivered' },
+        { id: '4', date: '16 May 2019', title: 'Engine oil', status: 'Processing' },
+        { id: '5', date: '17 May 2019', title: 'Engine oil', status: 'Processing' },
     ]
 
 
@@ -49,7 +49,7 @@ export default function Company() {
                 <div>
                     <h1 className='text-2xl font-medium text-secondary'>Actions</h1>
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
-                        <Link href={'/company/deliveries-history'} className='bg-white  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
+                        <Link href={'/company/hire-driver'} className='bg-white  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 <Plus className='size-[35px]' />
 
@@ -66,7 +66,7 @@ export default function Company() {
                                 <h3 className='text-xl font-normal text-secondary'>Delivery History</h3>
                             </div>
                         </Link>
-                        <div onClick={handmessage} className='bg-white cursor-pointer  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
+                        <Link href={'/company/message-list'}  className='bg-white cursor-pointer  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 <MessageCircleMore className='size-[35px]' />
 
@@ -74,7 +74,7 @@ export default function Company() {
                             <div>
                                 <h3 className='text-xl font-normal text-secondary'>Message</h3>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                 </div>
                 <div>
@@ -87,7 +87,7 @@ export default function Company() {
                                 className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 sm:p-2  "
                             >
                                 <Link
-                                    href={`/driver/deliveries-history/${order.id}`}
+                                    href={`/company/earning-history/processing`}
                                     className="flex items-center w-full justify-between px-2 sm:px-4  py-2 sm:py-3 bg-[#FDF7E9] rounded-lg hover:bg-[#FBE8C6] transition-colors duration-200"
                                 >
                                     <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">

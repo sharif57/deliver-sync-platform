@@ -88,7 +88,7 @@ export default function CustomerDashboard() {
                                 <h3 className="text-xl font-medium text-secondary  mb-3">Request Delivery</h3>
                                 <p className="text-secondary mb-8  leading-relaxed">Create a new delivery request for truck parts</p>
                                 <Link href={"/customer/request"}>
-                                    <Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
+                                    <Button className=" text-white bg-gradient-to-r from-[#EFB639] to-[#C59325] px-8 py-3 rounded font-medium transition-colors">
                                         Create New Request
                                     </Button>
                                 </Link>
@@ -101,7 +101,7 @@ export default function CustomerDashboard() {
                                 </div>
                                 <h3 className="text-xl font-medium text-secondary mb-3">History</h3>
                                 <p className="text-secondary mb-8 leading-relaxed">View past orders and delivery records</p>
-                                <Link href={"/customer/history"}><Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
+                                <Link href={"/customer/history"}><Button className=" text-white bg-gradient-to-r from-[#EFB639] to-[#C59325] px-8 py-3 rounded font-medium transition-colors">
                                     View History
                                 </Button>
                                 </Link>
@@ -114,7 +114,7 @@ export default function CustomerDashboard() {
                             <h3 className="text-xl font-medium text-secondary mb-3">Track My Orders</h3>
                             <p className="text-secondary mb-8 leading-relaxed">Monitor real-time delivery status and location</p>
                             <Link href={"/customer/track-my-order"}>
-                                <Button className=" text-white bg-gradient-to-r from-[#E0B351] to-[#8B6E31] px-8 py-3 rounded font-medium transition-colors">
+                                <Button className=" text-white bg-gradient-to-r from-[#EFB639] to-[#C59325] px-8 py-3 rounded font-medium transition-colors">
                                     Track Order’s
                                 </Button>
                             </Link>

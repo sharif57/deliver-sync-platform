@@ -24,11 +24,11 @@
 
 
 :root {
-  --primary: #B49246;
+  --primary: #D69D21;
   --secondary: #333333;
   --authBg: #FBFFFD;
   --heroBg: #F9F6ED;
-  --featuresBg: #F9F6ED;
+  --featuresBg: #FDF7E9;
   --roleBg: #efefefef;
   --btn: linear-gradient(180deg, #B49246 0%, #B49246 100%);
   --radius: 0.625rem;

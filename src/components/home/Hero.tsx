@@ -27,7 +27,7 @@ export default function HeroSection() {
               <div className="flex mt-20 flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button
                   size="lg"
-                  className="bg-primary  text-white px-8  text-xl py-6 font-medium rounded-sm hover:shadow-xl transition-all duration-200"
+                  className="bg-gradient-to-r from-[#EFB639]  to-[#C59325]  text-white px-8  text-xl py-6 font-medium rounded-sm hover:shadow-xl transition-all duration-200"
                 >
                   Get Started
                 </Button>

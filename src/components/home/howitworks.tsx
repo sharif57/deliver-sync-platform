@@ -1,7 +1,9 @@
+'use client';
 import Customer from "../ui/icon/customer"
 import Driver from "../ui/icon/driver"
 import Company from "../ui/icon/company"
 import SectionHeader from "@/lib/heading";
+import Link from "next/link";
 
 export default function HowItWorks() {
 
@@ -83,11 +85,11 @@ export default function HowItWorks() {
 
 
                 {/* Join Now Button */}
-                <div className="text-center">
-                    <button className="bg-primary  text-white font-semibold px-24 py-4 rounded-lg text-lg transition-colors duration-200">
+                <Link href="/auth/signin" className="text-center flex items-center justify-center">
+                    <button className="bg-gradient-to-r from-[#EFB639]  to-[#C59325]  text-white font-semibold px-24 py-4 rounded-lg text-lg transition-colors duration-200">
                         Join Now
                     </button>
-                </div>
+                </Link>
             </div>
         </section>
     )
