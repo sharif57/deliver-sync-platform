@@ -63,19 +63,19 @@ const Footer = () => {
           <div className="flex space-x-5 pt-2">
             <a
               href="#"
-              className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-teal-400 transition-transform transform hover:scale-110"
+              className="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-teal-400 transition-transform transform hover:scale-110"
             >
               <GitHubIcon size={28} />
             </a>
             <a
               href="#"
-              className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-teal-400 transition-transform transform hover:scale-110"
+              className="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-teal-400 transition-transform transform hover:scale-110"
             >
               <TwitterIcon size={28} />
             </a>
             <a
               href="#"
-              className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-teal-400 transition-transform transform hover:scale-110"
+              className="text-gray-500 hover:text-primary  dark:text-gray-400 dark:hover:text-teal-400 transition-transform transform hover:scale-110"
             >
               <LinkedInIcon size={28} />
             </a>
@@ -89,7 +89,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Home
               </a>
@@ -97,7 +97,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 About Us
               </a>
@@ -105,7 +105,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Services
               </a>
@@ -113,7 +113,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Portfolio
               </a>
@@ -121,7 +121,7 @@ const Footer = () => {
             <li>
               <a
                 href="#"
-                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Blog
               </a>
@@ -137,7 +137,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/privacy-policy"
-                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 FAQs
               </Link>
@@ -145,7 +145,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/privacy-policy"
-                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Privacy Policy
               </Link>
@@ -153,7 +153,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/privacy-policy"
-                className=" dark:text-gray-300 hover:text-blue-600 dark:hover:text-teal-400 transition-colors duration-300"
+                className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Terms of Service
               </Link>

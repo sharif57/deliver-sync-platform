@@ -417,7 +417,7 @@ export default function Users() {
                                 onClick={() => changeSlide(activeIndex - 1)}
                                 className="p-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                             >
-                                <ChevronLeftIcon className="w-6 h-6" />
+                                <ChevronLeftIcon className="w-6 h-6 text-red-400" />
                             </button>
 
                             <div className="flex items-center justify-center gap-2">

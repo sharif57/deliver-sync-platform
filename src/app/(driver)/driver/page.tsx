@@ -1,6 +1,5 @@
 'use client';
 import Counter from '@/components/shareUi/counter'
-import { Button } from '@/components/ui/button'
 import Car from '@/components/ui/icon/car'
 import House from '@/components/ui/icon/house'
 import Loading from '@/components/ui/icon/loading';
