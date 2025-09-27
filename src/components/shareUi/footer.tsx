@@ -82,7 +82,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          <h3 className="text-xl font-bold ">
             Quick Links
           </h3>
           <ul className="space-y-3">
@@ -129,7 +129,7 @@ const Footer = () => {
           </ul>
         </div>
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          <h3 className="text-xl font-bold  ">
             Resources
           </h3>
           <ul className="space-y-3">
@@ -162,7 +162,7 @@ const Footer = () => {
           </ul>
         </div>
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          <h3 className="text-xl font-bold ">
             Contact Us
           </h3>
           <p className=" dark:text-gray-300">

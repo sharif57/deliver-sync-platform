@@ -3,11 +3,12 @@ import Counter from '@/components/shareUi/counter'
 import { Button } from '@/components/ui/button'
 import Car from '@/components/ui/icon/car'
 import House from '@/components/ui/icon/house'
+import Loading from '@/components/ui/icon/loading';
 import Money from '@/components/ui/icon/money'
 import { DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Driver() {
     const router = useRouter()
@@ -21,6 +22,17 @@ export default function Driver() {
     const handmessage = () => {
         router.push('/customer/message')
     }
+
+    const [isSearching, setIsSearching] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsSearching(false);
+        }, 3000);
+
+        // Cleanup timer on component unmount
+        return () => clearTimeout(timer);
+    }, []);
 
 
     return (
@@ -59,7 +71,7 @@ export default function Driver() {
                         </Link>
                         <div onClick={handmessage} className='bg-white cursor-pointer  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
                             <div className='text-gray-500 dark:text-gray-400'>
-                                <MessageCircleMore  className='size-[35px]' />
+                                <MessageCircleMore className='size-[35px]' />
 
                             </div>
                             <div>
@@ -68,91 +80,100 @@ export default function Driver() {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h1 className="text-2xl font-medium text-secondary mb-4">New Request</h1>
-
-                    <div className="bg-white rounded-3xl shadow-sm">
-                        <div className="py-8 px-6">
-                            {/* Header */}
-                            <h1 className="text-secondary text-center text-3xl md:text-4xl font-medium mb-8">
-                                New Delivery Request
-                            </h1>
-
-                            {/* Main Flex Container */}
-                            <div className="flex flex-col md:flex-row md:justify-between gap-8">
-                                {/* Left Side (Locations + Details) */}
-                                <div className="flex-1">
-                                    {/* Locations */}
-                                    <div className="space-y-6">
-                                        <div className="flex items-center gap-4">
-                                            <Car />
-                                            <div>
-                                                <h2 className="text-secondary text-xl md:text-2xl font-medium">
-                                                    Pickup Location
-                                                </h2>
-                                                <p className="text-[#545454] text-sm md:text-base">
-                                                    123 Main Street, City, Country
-                                                </p>
-                                            </div>
+                <div className=" flex items-center justify-center  ">
+                    {isSearching ? (
+                        // Searching State (First 3 seconds)
+                        <div className='container'>
+                            <h1 className="text-2xl font-medium text-secondary mb-4 text-start">Wait for delivery request</h1>
+                            <div className="bg-white rounded-3xl shadow-sm py-10">
+                                <div className="py-8 px-6">
+                                    <div className="flex flex-col justify-center items-center space-y-10">
+                                        <p className="text-4xl text-center font-medium text-secondary">
+                                            We’re <span className="text-primary font-medium">Searching</span> a order for you…
+                                        </p>
+                                        <div className="flex justify-center">
+                                            <Loading />
                                         </div>
-
-                                        <div className="flex items-center gap-4">
-                                            <House />
-                                            <div>
-                                                <h2 className="text-secondary text-xl md:text-2xl font-medium">
-                                                    Drop-off Location
-                                                </h2>
-                                                <p className="text-[#545454] text-sm md:text-base">
-                                                    456 Park Avenue, City, Country
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Divider */}
-                                    <hr className="border-gray-200 my-6" />
-
-                                    {/* Package Details */}
-                                    <div className="space-y-4 text-secondary">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-lg">Package: Truck Alternator</span>
-                                            <span className="font-semibold text-xl">15 KG</span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-lg">Distance</span>
-                                            <span className="font-semibold text-xl">12 KM</span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-lg">Estimate Payment</span>
-                                            <span className="font-semibold text-xl">$12</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Right Side (Buttons) */}
-                                <div className="flex-1 flex flex-col items-center justify-center">
-                                    <div className="flex flex-col gap-4 w-full max-w-sm">
-                                        <Button
-                                            variant="outline"
-                                            className="w-full border-2 border-gray-300 px-14 text-secondary text-base py-5 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
-                                            aria-label="Accept request"
-                                        >
-                                            Decline
-                                        </Button>
-                                        <Link href="/driver/accept-request" className="w-full">
-
-                                            <Button
-                                                className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-6 rounded-lg font-medium hover:bg-primary/90 transition"
-                                                aria-label="Decline request"
-                                            >
-                                                Accept
-                                            </Button>
-                                        </Link>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    ) : (
+                        // Delivery Request State (After 3 seconds)
+                        <div className='container'>
+                            <h1 className="text-2xl font-medium text-secondary mb-4 text-start">New Request</h1>
+                            <div className="bg-white rounded-3xl shadow-sm">
+                                <div className="py-8 px-6">
+                                    <h1 className="text-secondary text-center text-3xl md:text-4xl font-medium mb-8">
+                                        New Delivery Request
+                                    </h1>
+                                    <div className="flex flex-col md:flex-row md:justify-between gap-8">
+                                        {/* Left Side (Locations + Details) */}
+                                        <div className="flex-1">
+                                            <div className="space-y-6">
+                                                <div className="flex items-center gap-4">
+                                                    <Car />
+                                                    <div>
+                                                        <h2 className="text-secondary text-xl md:text-2xl font-medium">
+                                                            Pickup Location
+                                                        </h2>
+                                                        <p className="text-[#545454] text-sm md:text-base">
+                                                            123 Main Street, City, Country
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-4">
+                                                    <House />
+                                                    <div>
+                                                        <h2 className="text-secondary text-xl md:text-2xl font-medium">
+                                                            Drop-off Location
+                                                        </h2>
+                                                        <p className="text-[#545454] text-sm md:text-base">
+                                                            456 Park Avenue, City, Country
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr className="border-gray-200 my-6" />
+                                            <div className="space-y-4 text-secondary">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-lg">Package: Truck Alternator</span>
+                                                    <span className="font-semibold text-xl">15 KG</span>
+                                                </div>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-lg">Distance</span>
+                                                    <span className="font-semibold text-xl">12 KM</span>
+                                                </div>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-lg">Estimate Payment</span>
+                                                    <span className="font-semibold text-xl">$12</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* Right Side (Buttons) */}
+                                        <div className="flex-1 flex flex-col items-center justify-center">
+                                            <div className="flex flex-col gap-4 w-full max-w-sm">
+                                                <button
+                                                    className="w-full border-2 border-gray-300 px-14  text-secondary text-base py-3 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
+                                                    aria-label="Decline request"
+                                                >
+                                                    Decline
+                                                </button>
+                                                <Link href="/driver/accept-request" className="w-full">
+                                                    <button
+                                                        className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition"
+                                                        aria-label="Accept request"
+                                                    >
+                                                        Accept
+                                                    </button>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div >
         </>

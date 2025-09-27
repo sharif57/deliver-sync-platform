@@ -415,7 +415,7 @@ export default function Users() {
                         <div className="flex items-center justify-center gap-6 mt-6">
                             <button
                                 onClick={() => changeSlide(activeIndex - 1)}
-                                className="p-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="p-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                             >
                                 <ChevronLeftIcon className="w-6 h-6" />
                             </button>
@@ -426,7 +426,7 @@ export default function Users() {
                                         key={index}
                                         onClick={() => changeSlide(index)}
                                         className={`h-2 rounded-full transition-all duration-300 focus:outline-none ${activeIndex === index
-                                            ? "w-6 bg-pink-400"
+                                            ? "w-6 bg-primary"
                                             : "w-2 bg-gray-300 dark:bg-neutral-600 hover:bg-gray-400 dark:hover:bg-neutral-500"
                                             }`}
                                         aria-label={`Go to slide ${index + 1}`}
@@ -436,7 +436,7 @@ export default function Users() {
 
                             <button
                                 onClick={() => changeSlide(activeIndex + 1)}
-                                className="p-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="p-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                             >
                                 <ChevronRightIcon className="w-6 h-6" />
                             </button>

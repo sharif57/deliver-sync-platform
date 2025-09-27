@@ -389,6 +389,7 @@ export default function ResponsiveNavbar() {
                 </button>
               </li>
             ))}
+            {/* <li className="capitalize cursor-pointer">{localPath}</li> */}
           </ul>
         </aside>
 

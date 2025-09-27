@@ -56,7 +56,7 @@ export default function HowItWorks() {
                         <div
                             key={index}
                             title={step.title}
-                            className="bg-heroBg cursor-pointer hover:shadow-lg hover:shadow-heroBg rounded-2xl text-center py-5 border shadow-xl h-[400px]"
+                            className="bg-featuresBg cursor-pointer hover:shadow-lg hover:shadow-heroBg rounded-2xl text-center py-5 border shadow-xl h-[400px]"
                         >
                             {/* Icon */}
                             <div className="flex items-center justify-center mx-auto mb-6">
