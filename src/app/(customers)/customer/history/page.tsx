@@ -4,8 +4,8 @@
 import { useState } from "react";
 import { ChevronRight, Calendar, X } from "lucide-react";
 import Link from "next/link";
-import Back from "@/components/ui/icon/back";
 import { useRouter } from "next/navigation";
+import PageHeader from "@/components/shareUi/onBack";
 
 interface DeliveryItem {
   id: string;
@@ -235,14 +235,15 @@ export default function DeliveryHistory() {
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="lg:flex justify-between items-center">
           {/* Header */}
-          <div className="flex items-center justify-between mb-4 sm:mb-6">
+          {/* <div className="flex items-center justify-between mb-4 sm:mb-6">
             <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
               <Back />
               <h1 className="text-xl sm:text-2xl md:text-3xl font-medium text-secondary">
                 Delivery History
               </h1>
             </div>
-          </div>
+          </div> */}
+          <PageHeader title="Delivery History" onBack={() => router.back()} />
 
           {/* Filter Tabs */}
           <div className="mb-4 sm:mb-6">

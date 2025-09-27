@@ -1,26 +1,25 @@
 
 "use client";
 
+import PageHeader from "@/components/shareUi/onBack";
 import { Button } from "@/components/ui/button";
 import Location from "@/components/ui/icon/location";
 import Ok from "@/components/ui/icon/ok";
 import PickUp from "@/components/ui/icon/pickUp";
 import Take from "@/components/ui/icon/take";
-import { ArrowLeft, MessageSquareMore, PhoneCall, Star } from "lucide-react";
+import {  MessageSquareMore, PhoneCall, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function TrackMyOrder() {
-    const router = useRouter();
 
     return (
         <div className="min-h-screen ">
             <title>Track My Order</title>
             {/* Header */}
             <div className="px-4 py-3 sm:py-4 flex items-center justify-between ">
-                <div className="flex items-center space-x-2 sm:space-x-3">
+                {/* <div className="flex items-center space-x-2 sm:space-x-3">
                     <div onClick={() => router.back()} className="p-1 cursor-pointer">
                         <ArrowLeft className="h-5 w-5 text-gray-600" />
                     </div>
@@ -29,7 +28,8 @@ export default function TrackMyOrder() {
                             Track Order
                         </span>
                     </div>
-                </div>
+                </div> */}
+                <PageHeader title="Track Order" />
                 <button className="text-gray-600 font-normal text-xs sm:text-sm md:text-base hover:text-gray-800">
                     Cancel Request
                 </button>

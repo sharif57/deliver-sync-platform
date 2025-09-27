@@ -1,11 +1,11 @@
 
 "use client"
+import PageHeader from "@/components/shareUi/onBack"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star, ArrowLeft } from "lucide-react"
+import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 
 interface OrderDetailsCardProps {
     orderId?: string
@@ -29,23 +29,23 @@ export default function OrderDetailsCard({
     pickupLocation = "Gulshan-1",
     deliveryLocation = "Badda -1",
 }: OrderDetailsCardProps) {
-    const router = useRouter()
     return (
         <div>
             <title>Delivered Order</title>
             <div className="px- py-3 sm:py-4 flex items-center justify-between ">
-                           <div className="flex items-center space-x-2 sm:space-x-3">
-                               <div onClick={() => router.back()} className="p-1 cursor-pointer">
-                                   <ArrowLeft className="h-5 w-5 text-gray-600" />
-                               </div>
-                               <div className="flex items-center space-x-2">
-                                   <span className="text-secondary font-medium text-sm sm:text-base md:text-lg">
-                                       Delivery History
-                                   </span>
-                               </div>
-                           </div>
-                           
-                       </div>
+                {/* <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div onClick={() => router.back()} className="p-1 cursor-pointer">
+                        <ArrowLeft className="h-5 w-5 text-gray-600" />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <span className="text-secondary font-medium text-sm sm:text-base md:text-lg">
+                            Delivery History
+                        </span>
+                    </div>
+                </div> */}
+                <PageHeader title="Delivery History" />
+
+            </div>
             <Card className="w-full container mx-auto bg-white shadow-lg">
                 <CardContent className="p-6">
                     {/* Order Details Grid */}
@@ -157,7 +157,7 @@ export default function OrderDetailsCard({
                                 <Button
                                     className="flex-1 text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 sm:py-6 rounded-lg font-medium hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors w-full"
                                 >
-                                    Request Again   
+                                    Request Again
                                 </Button>
                             </Link>
                         </div>

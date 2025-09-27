@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Clipboard, Building2, Tag, Scale, DollarSign, MapPin, Home
  } from "lucide-react"
-import Back from "@/components/ui/icon/back"
+import PageHeader from "@/components/shareUi/onBack"
 
 export default function DriverRequestForm() {
   const [formData, setFormData] = useState({
@@ -42,9 +42,10 @@ export default function DriverRequestForm() {
         <title>Driver Request</title>
       {/* Header */}
       <div className=" px-4 py-4 flex items-center justify-between lg:w-2/3">
-        <button onClick={handleBack} className="mr-4">
+        {/* <button onClick={handleBack} className="mr-4">
           <Back />
-        </button>
+        </button> */}
+        <PageHeader title=""  onBack={handleBack} />
         <div className="space-y-3">
           <h1 className="lg:text-4xl text-2xl font-medium text-center w-full text-primary">Driver Request</h1>
           <p className="lg:text-xl font-normal text-center text-gray-600">Fill in the details below to schedule your delivery</p>

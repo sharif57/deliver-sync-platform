@@ -1,9 +1,8 @@
 "use client"
 
+import PageHeader from "@/components/shareUi/onBack"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import Back from "@/components/ui/icon/back"
 import { Trash2 } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 interface Notification {
@@ -69,7 +68,6 @@ const initialNotifications: Notification[] = [
 
 
 export default function NotificationPanel() {
-  const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications)
 
   const deleteNotification = (id: string) => {
@@ -78,17 +76,20 @@ export default function NotificationPanel() {
 
   return (
     <>
-    <title>Notification</title>
+      <title>Notification</title>
       <div className="w-full   overflow-hidden">
         {/* Header */}
-            <div className="flex items-center justify-between mb-4 sm:mb-6">
-                           <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
-                               <Back />
-                               <h1 className="text-xl sm:text-2xl md:text-3xl font-medium text-secondary">
-                                   Notification
-                               </h1>
-                           </div>
-                       </div>
+        {/* <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
+            <Back />
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-medium text-secondary">
+              Notification
+            </h1>
+          </div>
+        </div> */}
+
+        <PageHeader title="Notification"/>
+
 
         {/* Notification List */}
         <div className="divide-y divide-gray-200 space-y-2 bg-white p-4 rounded-2xl">
