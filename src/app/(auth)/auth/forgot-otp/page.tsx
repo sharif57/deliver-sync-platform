@@ -8,6 +8,9 @@ import Head from 'next/head';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { useVerifyEmailMutation } from '@/redux/feature/authSlice';
+import { toast } from 'sonner';
+import { saveTokens } from '@/service/authService';
 
 function ForgotOTP() {
     const router = useRouter();
@@ -16,11 +19,15 @@ function ForgotOTP() {
     const [otp, setOtp] = useState('');
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const [verifyEmail] = useVerifyEmailMutation();
 
     // Parse query parameters and set initial state
     useEffect(() => {
         const service = searchParams.get('service') as 'Customer' | 'Driver' | 'Company' | null;
         const emailParam = searchParams.get('email');
+        console.log(emailParam)
         if (service && ['Customer', 'Driver', 'Company'].includes(service)) {
             setSelectedService(service);
         }
@@ -29,9 +36,10 @@ function ForgotOTP() {
         }
     }, [searchParams]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
 
         // Validate OTP
         if (!otp || otp.length !== 6) {
@@ -39,11 +47,24 @@ function ForgotOTP() {
             return;
         }
 
+        try {
+            const res = await verifyEmail({ email, otp }).unwrap();
+            console.log(res,'otp')
+            toast.success(res?.message || 'Email verified successfully');
+            localStorage.setItem('verifyToken', res?.access_token || '');
+            router.push(`/auth/new-password?email=${encodeURIComponent(email)}`);
+            setLoading(false);
+        } catch (error) {
+            const errorMessage = error?.data?.message || 'Email verification failed. Please try again.';
+            toast.error(errorMessage);
+            setError(errorMessage);
+            setLoading(false);
+        }
+
         // Simulate OTP verification (replace with actual API call)
         console.log('OTP submitted:', { selectedService, email, otp });
 
         // Redirect to a success page or dashboard (modify as needed)
-        router.push(`/auth/new-password?email=${encodeURIComponent(email)}&service=${selectedService.toString()}`);
 
         // Reset form
         setOtp('');
@@ -83,7 +104,7 @@ function ForgotOTP() {
                                 <p className="text-secondary text-sm md:text-base">
                                     A verification code has been sent to {email || 'your email'}.
                                 </p>
-                                <div className="flex flex-wrap items-center gap-3 mt-8">
+                                {/* <div className="flex flex-wrap items-center gap-3 mt-8">
                                     {['Customer', 'Driver', 'Company'].map((service) => (
                                         <Button
                                             key={service}
@@ -96,7 +117,7 @@ function ForgotOTP() {
                                             {service}
                                         </Button>
                                     ))}
-                                </div>
+                                </div> */}
                             </div>
                             <div>
                                 <form className="flex space-y-10 flex-col gap-6" onSubmit={handleSubmit}>
@@ -124,7 +145,7 @@ function ForgotOTP() {
                                             type="submit"
                                             className="bg-primary text-base md:text-xl font-medium text-white w-full py-4 md:py-6 mt-4"
                                         >
-                                            Verify
+                                            {loading ? 'Verifying...' : 'Verify'}
                                         </Button>
 
                                     </div>

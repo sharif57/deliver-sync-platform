@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import ResponsiveNavbar from "@/components/shareUi/navbar";
 import Footer from "@/components/shareUi/footer";
+import WebVitals from "@/components/web-vitals";
+import Providers from "@/Provider/Providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,11 +26,14 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
-        <div className="pt-16 md:pt-20 mb-8">
-          <ResponsiveNavbar />
-        </div>
-        {children}
-        <Footer />
+        <Providers>
+          <div className="pt-16 md:pt-20 mb-8">
+            <ResponsiveNavbar />
+          </div>
+          <WebVitals />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

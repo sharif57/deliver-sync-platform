@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Head from 'next/head';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useResetPasswordMutation } from '@/redux/feature/authSlice';
+import { toast } from 'sonner';
 
  function CreatePassword() {
   const router = useRouter();
@@ -17,6 +19,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const [resetPassword] =useResetPasswordMutation();
 
   // Parse query parameters and set initial state
   useEffect(() => {
@@ -30,9 +35,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
     }
   }, [searchParams]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     // Validate password and confirm password
     if (!password || !confirmPassword) {
@@ -48,11 +54,24 @@ import { useRouter, useSearchParams } from 'next/navigation';
       return;
     }
 
+    try {
+      const res = await resetPassword({ new_password: password, confirm_password: confirmPassword  }).unwrap();
+      console.log(res,'res')
+      toast.success(res?.message || 'Email sent successfully');
+      localStorage.removeItem('verifyToken');
+      router.push('/auth/signin');
+      setLoading(false);
+    } catch (error) {
+      const errorMessage = error?.data?.message || 'Email verification failed. Please try again.';
+      toast.error(errorMessage);
+      setError(errorMessage);
+      setLoading(false);
+    }
+
     // Simulate password creation (replace with actual API call)
     console.log('Password submitted:', { selectedService, email, password });
 
     // Redirect to dashboard or login page (modify as needed)
-    router.push('/auth/signin');
 
     // Reset form
     setPassword('');
@@ -93,7 +112,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
                 <p className="text-secondary text-sm md:text-base">
                   Set a password for {email || 'your account'}.
                 </p>
-                <div className="flex flex-wrap items-center gap-3 mt-8">
+                {/* <div className="flex flex-wrap items-center gap-3 mt-8">
                   {['Customer', 'Driver', 'Company'].map((service) => (
                     <Button
                       key={service}
@@ -107,7 +126,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
                       {service}
                     </Button>
                   ))}
-                </div>
+                </div> */}
               </div>
               <div>
                 <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
@@ -154,9 +173,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
                   <div>
                     <Button
                       type="submit"
+                      disabled={loading}
                       className="bg-primary text-base md:text-xl font-medium text-white w-full py-4 md:py-6 mt-4"
                     >
-                      Create Password
+                      {loading ? 'Resetting...' : 'Reset Password'}
                     </Button>
                    
                   </div>

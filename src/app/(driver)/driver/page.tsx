@@ -1,9 +1,11 @@
 'use client';
 import Counter from '@/components/shareUi/counter'
 import Car from '@/components/ui/icon/car'
+import Completes from '@/components/ui/icon/Completes';
 import House from '@/components/ui/icon/house'
 import Loading from '@/components/ui/icon/loading';
 import Money from '@/components/ui/icon/money'
+import Times from '@/components/ui/icon/times';
 import { DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -14,8 +16,8 @@ export default function Driver() {
 
     const items = [
         { title: "Total Earnings", count: 12, icon: <Money /> },
-        { title: "Pending Deliveries", count: 2, icon: <Money /> },
-        { title: "Completed Deliveries", count: 2, icon: <Money /> },
+        { title: "Pending Deliveries", count: 2, icon: <Times /> },
+        { title: "Completed Deliveries", count: 2, icon: <Completes /> },
     ]
 
     const handmessage = () => {

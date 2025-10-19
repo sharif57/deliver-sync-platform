@@ -6,14 +6,19 @@ import Image from 'next/image'
 import Head from 'next/head'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
+import { useForgotPasswordMutation } from '@/redux/feature/authSlice';
+import { toast } from 'sonner';
 
-export default function SignIn() {
+export default function ForgotPass() {
 
     const router = useRouter();
 
     const [selectedService, setSelectedService] = useState<'Customer' | 'Driver' | 'Company'>('Customer')
     const [email, setEmail] = useState('')
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+
+    const [forgotPassword] = useForgotPasswordMutation();
 
     const handleServiceSelect = (service: 'Customer' | 'Driver' | 'Company') => {
         setSelectedService(service)
@@ -21,15 +26,28 @@ export default function SignIn() {
 
 
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setError('')
+        setLoading(true)
 
         if (!email) {
             setError('Please enter your email address')
             return
         }
-        router.push(`/auth/forgot-otp?email=${encodeURIComponent(email)}&service=${selectedService}`)
+
+        try {
+            const res = await forgotPassword({ email }).unwrap()
+            console.log(res, 'res')
+            toast.success(res?.message || 'Email sent successfully');
+            setLoading(false)
+            router.push(`/auth/forgot-otp?email=${encodeURIComponent(email)}`)
+        } catch (error) {
+            const errorMessage = error?.data?.message || 'Email verification failed. Please try again.';
+            toast.error(errorMessage);
+            setError(errorMessage);
+            setLoading(false)
+        }
 
 
         console.log('Form submitted:', { email, selectedService })
@@ -46,7 +64,7 @@ export default function SignIn() {
     return (
         <>
             <Head>
-                <title>Sign Up</title>
+                <title>Forgot Password</title>
             </Head>
             <div className="bg-authBg min-h-screen">
                 <div className="p-4 max-w-6xl flex flex-col mx-auto">
@@ -68,7 +86,7 @@ export default function SignIn() {
                         <div className="space-y-8 md:space-y-12 px-4 md:px-0">
                             <div>
                                 <h1 className="text-3xl md:text-5xl font-semibold text-primary mb-4">Forgot Password</h1>
-                                <div className="flex flex-wrap items-center gap-3 mt-8">
+                                {/* <div className="flex flex-wrap items-center gap-3 mt-8">
                                     {['Customer', 'Driver', 'Company'].map((service) => (
                                         <Button
                                             key={service}
@@ -81,7 +99,7 @@ export default function SignIn() {
                                             {service}
                                         </Button>
                                     ))}
-                                </div>
+                                </div> */}
                             </div>
                             <div>
                                 <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
@@ -102,9 +120,10 @@ export default function SignIn() {
                                     <div>
                                         <Button
                                             type="submit"
+                                            disabled={loading}
                                             className="bg-primary text-base md:text-xl font-medium text-white w-full py-4 md:py-6 mt-4"
                                         >
-                                            Send OTP
+                                            {loading ? 'Sending OTP...' : 'Send OTP'}
                                         </Button>
 
                                     </div>

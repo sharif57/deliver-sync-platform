@@ -8,6 +8,9 @@ import Head from 'next/head'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useLoginMutation } from '@/redux/feature/authSlice';
+import { toast } from 'sonner';
+import { saveTokens } from '@/service/authService';
 
 export default function SignIn() {
 
@@ -19,6 +22,10 @@ export default function SignIn() {
     const [error, setError] = useState('')
     const [showPassword, setShowPassword] = useState(false)
 
+    const [loading, setLoading] = useState(false);
+
+    const [login] = useLoginMutation();
+
     const handleServiceSelect = (service: 'Customer' | 'Driver' | 'Company') => {
         setSelectedService(service)
     }
@@ -27,9 +34,10 @@ export default function SignIn() {
         setShowPassword(!showPassword)
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setError('')
+        setLoading(true);
 
         if (!email || !password) {
             setError('Please fill in all fields')
@@ -39,8 +47,24 @@ export default function SignIn() {
             setError('Please enter a valid email address')
             return
         }
+
+        try {
+            const res = await login({ email, password }).unwrap();
+            console.log(res, 'login')
+            toast.success(res?.message || 'Login successful');
+            localStorage.setItem('accessToken', res?.access_token || '');
+            await saveTokens(res?.access_token || '');
+            router.push('/')
+            setLoading(false);
+        } catch (error) {
+            setError('Invalid email or password');
+            console.error('Login error:', error);
+            const errors= error?.data?.message || error?.data?.email || 'Login failed. Please try again.';
+            toast.error(errors);
+            setLoading(false);
+        }
+
         localStorage.setItem('userRole', selectedService.toLowerCase());
-        router.push('/')
 
         console.log('Form submitted:', { email, password, selectedService })
         // Reset form
@@ -79,7 +103,7 @@ export default function SignIn() {
                         <div className="space-y-8 md:space-y-12 px-4 md:px-0">
                             <div>
                                 <h1 className="text-3xl md:text-5xl font-semibold text-primary mb-4">Sign In</h1>
-                                <div className="flex flex-wrap items-center gap-3 mt-8">
+                                {/* <div className="flex flex-wrap items-center gap-3 mt-8">
                                     {['Customer', 'Driver', 'Company'].map((service) => (
                                         <Button
                                             key={service}
@@ -92,7 +116,7 @@ export default function SignIn() {
                                             {service}
                                         </Button>
                                     ))}
-                                </div>
+                                </div> */}
                             </div>
                             <div>
                                 <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
@@ -136,9 +160,10 @@ export default function SignIn() {
                                     <div>
                                         <Button
                                             type="submit"
+                                            disabled={loading}
                                             className="bg-primary text-base md:text-xl font-medium text-white w-full py-4 md:py-6 mt-4"
                                         >
-                                            Sign In
+                                            {loading ? 'Signing In...' : 'Sign In'}
                                         </Button>
                                         <p className="text-secondary text-center mt-4 text-sm md:text-base">
                                             Don’t have an account?{' '}

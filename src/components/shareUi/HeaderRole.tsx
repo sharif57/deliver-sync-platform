@@ -157,14 +157,7 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                         {/* Notification Dropdown */}
                         <div className="relative hidden  sm:block" ref={notificationsDropdownRef}>
                             <div className="flex items-center space-x-2">
-                                {/* <div className="flex items-center space-x-2">
-                                    <Switch
-                                        id="airplane-mode"
-                                        checked={isOnline}
-                                        onCheckedChange={toggleOnline} 
-                                        />
-                                    <Label htmlFor="airplane-mode">{isOnline ? "Online" : "Offline"}</Label>
-                                </div> */}
+                              
                                 {useSwitch ? (
                                     <div className="flex items-center space-x-2">
                                         <Switch
