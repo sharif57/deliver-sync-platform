@@ -1,19 +1,25 @@
+// import React from 'react'
+
+// export default function DeliverTheParcel() {
+//   return (
+//     <div>
+      
+//     </div>
+//   )
+// }
 'use client';
-import { MessageSquareMore, PhoneCall } from "lucide-react";
-import React from "react";
-import { Button } from "@/components/ui/button";
-import PageHeader from "@/components/shareUi/onBack";
-import Link from "next/link";
+import PageHeader from '@/components/shareUi/onBack'
+import { Button } from '@/components/ui/button'
+import { MessageSquareMore, PhoneCall } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
 
-export default function AcceptRequest() {
-
+export default function DeliverTheParcel() {
     return (
-        <div className="  ">
-            <title>Accept Request</title>
-            <div className=" mx-auto">
-
+        <div>
+            <title>Deliver Parcel</title>
+            <div>
                 <PageHeader title="Active Delivery" />
-
                 <div className="bg-white rounded-3xl shadow-lg p-8">
                     <div className="flex flex-col sm:flex-row justify-between gap-14">
                         <div className="w-full sm:w-1/2">
@@ -49,12 +55,12 @@ export default function AcceptRequest() {
                             </div>
                             <div className=" flex  items-center w-1/2 mt-8">
                                 <div className="flex  gap-4 w-full max-w-sm">
-                                    <Link href={'/driver/start-trip'} className="flex-1">
+                                    <Link href={'/driver/picked_order'} className="flex-1">
                                         <Button
                                             className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-6 rounded-lg font-medium hover:bg-primary/90 transition"
                                             aria-label="Decline request"
                                         >
-                                            Picked Parcel
+                                            Deliver the parcel
                                         </Button>
                                     </Link>
                                     <Button
@@ -81,5 +87,5 @@ export default function AcceptRequest() {
                 </div>
             </div>
         </div>
-    );
-}   
+    )
+}

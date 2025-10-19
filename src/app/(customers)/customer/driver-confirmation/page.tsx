@@ -105,6 +105,7 @@ import Arrow from "@/components/ui/icon/arrow";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import PageHeader from "@/components/shareUi/onBack";
 
 export default function DriverConfirmationPage() {
   const router = useRouter();
@@ -113,6 +114,8 @@ export default function DriverConfirmationPage() {
       <title>Driver Confirmation</title>
       <div className="min-h-screen ">
         {/* Header */}
+            {/* <PageHeader title="Request a Delivery"  /> */}
+
         <div className="px-4 py-3 sm:py-4 flex items-center justify-between border-b border-gray-200">
           <div className="flex items-center space-x-2 sm:space-x-3">
             <div onClick={() => router.back()} className="p-1 cursor-pointer">
@@ -135,6 +138,16 @@ export default function DriverConfirmationPage() {
         {/* Main Content */}
         <div className="px-4 py-6 sm:py-8">
           <div className="container mx-auto ">
+            <div className="bg-white rounded-3xl shadow-sm p-4 sm:p-6 mb-6">
+              <p className="text-6xl font-medium text-[#EAAC24] text-center">$ 20.00</p>
+              <div className="lg:w-1/4 mx-auto mt-10">
+                <button className=" text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-  rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
+                >Confirm Now</button>
+              </div>
+            </div>
+            <div className="flex justify-center mb-6 mt-8">
+              <Arrow />
+            </div>
             {/* Finding Driver Section */}
             <div className="text-center mb-6 sm:mb-8">
               <div className="bg-white flex flex-col items-center justify-center rounded-3xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">

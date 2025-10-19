@@ -1,3 +1,4 @@
+'use client';   
 import React from "react";
 import Back from "../ui/icon/back";
 import { useRouter } from "next/navigation";

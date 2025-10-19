@@ -30,7 +30,7 @@ export default function DriverRequestForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Driver request submitted:", formData)
-    router.push("/driver-confirmation")
+    router.push("/customer/driver-confirmation")
   }
 
   const handleBack = () => {

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
+import Cart from '../ui/icon/cart';
 
 // Using SVG components for icons, similar to lucide-react
 const MenuIcon = ({ className }: { className?: string }) => (
@@ -88,7 +89,6 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
     const [isOnline, setIsOnline] = useState(mode === "online");
     const [, setCurrentTime] = useState(new Date());
 
-    // Simulate dynamic status (e.g., go offline after 30 seconds if online)
     useEffect(() => {
         let timer: NodeJS.Timeout;
         if (isOnline) {
@@ -157,7 +157,7 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                         {/* Notification Dropdown */}
                         <div className="relative hidden  sm:block" ref={notificationsDropdownRef}>
                             <div className="flex items-center space-x-2">
-                              
+
                                 {useSwitch ? (
                                     <div className="flex items-center space-x-2">
                                         <Switch
@@ -183,6 +183,9 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                                     <span className="sr-only">View notifications</span>
                                     <BellIcon className="h-6 w-6" />
                                 </button> */}
+
+
+
                                 <button onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} className="relative p-2 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
                                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <g clipPath="url(#clip0_112_52)">
@@ -203,6 +206,10 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                                         5
                                     </span> */}
                                 </button>
+
+                                <Link href={'/customer/wallet'} className='cursor-pointer' title='Cart'>
+                                    <Cart />
+                                </Link>
                             </div>
                             {/* </Link> */}
                             <div className={`absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg transition-opacity duration-300 ${isNotificationsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
