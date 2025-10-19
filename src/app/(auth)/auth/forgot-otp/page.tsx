@@ -54,7 +54,7 @@ function ForgotOTP() {
             localStorage.setItem('verifyToken', res?.access_token || '');
             router.push(`/auth/new-password?email=${encodeURIComponent(email)}`);
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             const errorMessage = error?.data?.message || 'Email verification failed. Please try again.';
             toast.error(errorMessage);
             setError(errorMessage);

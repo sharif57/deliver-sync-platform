@@ -56,7 +56,7 @@ export default function SignIn() {
             await saveTokens(res?.access_token || '');
             router.push('/')
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             setError('Invalid email or password');
             console.error('Login error:', error);
             const errors= error?.data?.message || error?.data?.email || 'Login failed. Please try again.';

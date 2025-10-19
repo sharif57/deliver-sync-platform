@@ -61,7 +61,7 @@ import { toast } from 'sonner';
       localStorage.removeItem('verifyToken');
       router.push('/auth/signin');
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error?.data?.message || 'Email verification failed. Please try again.';
       toast.error(errorMessage);
       setError(errorMessage);

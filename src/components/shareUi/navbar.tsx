@@ -237,6 +237,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUserProfileQuery } from '@/redux/feature/userSlice';
+import { logout } from '@/service/authService';
 
 export default function ResponsiveNavbar() {
   const pathname = usePathname();
@@ -247,6 +248,9 @@ export default function ResponsiveNavbar() {
   // Fetch user profile data using RTK Query
   const { data, isLoading, isError } = useUserProfileQuery(undefined);
   const profile = data?.data;
+  console.log(profile)
+
+  const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL || '';
 
   // Sync local storage with user role
   useEffect(() => {
@@ -317,10 +321,12 @@ export default function ResponsiveNavbar() {
   };
 
   // Handle logout
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem('userRole');
+    localStorage.removeItem('accessToken');
+    await logout();
     setLocalRole(null);
-    window.location.href = '/'; // Redirect to home after logout
+    window.location.href = '/'; 
   };
 
   return (
@@ -385,7 +391,7 @@ export default function ResponsiveNavbar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="size-10 cursor-pointer">
-                  <AvatarImage src={profile.image || 'https://github.com/shadcn.png'} />
+                  <AvatarImage src={IMAGE + profile.image || 'https://github.com/shadcn.png'} />
                   <AvatarFallback>{profile.name ? profile.name[0].toUpperCase() : 'U'}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>

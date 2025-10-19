@@ -42,7 +42,7 @@ export default function ForgotPass() {
             toast.success(res?.message || 'Email sent successfully');
             setLoading(false)
             router.push(`/auth/forgot-otp?email=${encodeURIComponent(email)}`)
-        } catch (error) {
+        } catch (error: any) {
             const errorMessage = error?.data?.message || 'Email verification failed. Please try again.';
             toast.error(errorMessage);
             setError(errorMessage);
