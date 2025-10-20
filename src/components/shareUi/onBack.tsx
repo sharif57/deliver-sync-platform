@@ -4,7 +4,7 @@ import Back from "../ui/icon/back";
 import { useRouter } from "next/navigation";
 
 interface PageHeaderProps {
-    title?: string;
+    title?: React.ReactNode;
     onBack?: () => void;
 }
 

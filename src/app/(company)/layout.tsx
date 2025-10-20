@@ -3,6 +3,7 @@ import "../globals.css";
 import Footer from "@/components/shareUi/footer";
 import HeaderRole from "@/components/shareUi/HeaderRole";
 import Providers from "@/Provider/Providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
                     <div className="container mx-auto p-6 space-y-6 min-h-[calc(100vh-200px)]">
                         {children}
                     </div>
+                    <Toaster position="top-right" richColors />
                     <Footer />
                 </Providers>
             </body>

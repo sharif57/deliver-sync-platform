@@ -583,7 +583,7 @@ export default function SignUp() {
     try {
       const formData = new FormData();
       if (image) {
-        formData.append('image', image); 
+        formData.append('image', image);
       }
       formData.append('role', selectedService.toLowerCase());
       formData.append('email', email);
@@ -595,11 +595,11 @@ export default function SignUp() {
         formData.append('address', deliveryAddress);
       } else if (selectedService === 'Driver') {
         formData.append('name', name);
-        formData.append('driver_license', driverLicense);
-        formData.append('vehicle_type', selectedVehicle);
-        formData.append('vehicle_registration', vehicleRegistration);
+        formData.append('driving_license_number', driverLicense);
+        formData.append('vehicle', selectedVehicle);
+        formData.append('vehicle_registration_number', vehicleRegistration);
       } else if (selectedService === 'Company') {
-          formData.append('name', name);
+        formData.append('name', name);
         //   formData.append('business_address', businessAddress || 'Dhaka, Bangladesh'); 
         //   formData.append('email', email); 
         //   formData.append('password', password); 
@@ -607,8 +607,12 @@ export default function SignUp() {
         //   if (image) {
         //     formData.append('image', image); 
         //   }
-          formData.append('company_name', companyName);
-          formData.append('business_address', businessAddress);
+        // driving_license_number
+        // vehicle_registration_number
+        formData.append('company_name', companyName);
+        formData.append('address', businessAddress);
+        // formData.append('address', deliveryAddress);
+
       }
 
       const res = await register(formData).unwrap();
@@ -621,9 +625,9 @@ export default function SignUp() {
       }).toString();
       router.push(`/auth/verify?${query}`);
     } catch (error: any) {
-        console.log(error?.data?.name[0])
+      console.log(error?.data?.name[0])
       const errorMessage = error?.data?.message || error?.data?.email[0] || error?.data?.name[0] || 'Registration failed. Please try again.';
-      toast.error(errorMessage );
+      toast.error(errorMessage);
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -663,11 +667,10 @@ export default function SignUp() {
                   {['Customer', 'Driver', 'Company'].map((service) => (
                     <Button
                       key={service}
-                      className={`px-4 py-2 text-base md:text-lg ${
-                        selectedService === service
+                      className={`px-4 py-2 text-base md:text-lg ${selectedService === service
                           ? 'bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white'
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
+                        }`}
                       onClick={() => handleServiceSelect(service as 'Customer' | 'Driver' | 'Company')}
                     >
                       {service}
@@ -787,11 +790,10 @@ export default function SignUp() {
                             <Button
                               key={vehicle}
                               type="button"
-                              className={`w-full ${
-                                selectedVehicle === vehicle
+                              className={`w-full ${selectedVehicle === vehicle
                                   ? 'bg-primary text-white'
                                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                              }`}
+                                }`}
                               onClick={() => handleVehicleSelect(vehicle)}
                             >
                               {vehicle}

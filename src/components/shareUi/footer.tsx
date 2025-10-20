@@ -133,7 +133,7 @@ const Footer = () => {
             Resources
           </h3>
           <ul className="space-y-3">
-           
+
             <li>
               <Link
                 href="/privacy-policy"
@@ -158,7 +158,7 @@ const Footer = () => {
                 Terms of Service
               </Link>
             </li>
-           
+
           </ul>
         </div>
         <div className="space-y-4">
@@ -166,19 +166,20 @@ const Footer = () => {
             Contact Us
           </h3>
           <p className=" dark:text-gray-300">
-            123 Tech Avenue, Innovation City, 98765
+            5123 Market St. #22B
+            Charlottesville, California 44635
           </p>
           <p className=" dark:text-gray-300">
-            Email: info@yourbrand.com
+            Email: contact@lift.agencyr.com
           </p>
           <p className=" dark:text-gray-300">
-            Phone: +1 (555) 123-4567
+            Phone: (434) 546-4356
           </p>
         </div>
       </div>
       <div className="text-center   text-sm pt-10 mt-10 border-t border-gray-200 dark:border-gray-700">
         <p>
-          &copy; {new Date().getFullYear()} Your Brand. All rights reserved.
+          &copy; {new Date().getFullYear()} JVAI(Join Venture AI). All rights reserved.
         </p>
         <p className="mt-1">
           Designed with <span className="text-red-500">&hearts;</span> by Deliver Sync

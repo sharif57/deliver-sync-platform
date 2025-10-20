@@ -1,136 +1,56 @@
-// "use client"
 
-// import { ArrowLeft, Phone, MessageCircle, Star, Send, MessageSquareMore, PhoneCall } from "lucide-react"
-// import { Button } from "@/components/ui/button"
-// import Link from "next/link"
-// import Loading from "@/components/ui/icon/loading"
-// import Arrow from "@/components/ui/icon/arrow"
-// import Image from "next/image"
-
-// export default function DriverConfirmationPage() {
-//     return (
-//         <>
-//             <title>Driver Confirmation</title>
-//             <div className="min-h-screen ">
-//                 {/* Header */}
-//                 <div className=" px-4 py-4 flex items-center justify-between border-b border-gray-200">
-//                     <div className="flex items-center space-x-3">
-//                         <Link href="/delivery-request" className="p-1">
-//                             <ArrowLeft className="h-5 w-5 text-gray-600" />
-//                         </Link>
-//                         <div className="flex items-center space-x-2">
-//                             <span className="text-gray-800 font-medium">Request a Delivery</span>
-//                             <span className="text-green-600 font-semibold">#12345</span>
-//                         </div>
-//                     </div>
-//                     <button className="text-gray-600 text-sm hover:text-gray-800">Cancel Request</button>
-//                 </div>
-
-//                 {/* Main Content */}
-//                 <div className="px-4 py-8">
-//                     <div className="container mx-auto">
-//                         {/* Finding Driver Section */}
-//                         <div className="text-center mb-8">
-//                             <div className="bg-white flex flex-col items-center justify-center rounded-3xl shadow-sm p-6 mb-6">
-//                                 <div className=" mb-6">
-//                                     <Loading />
-//                                 </div>
-
-//                                 <p className="text-secondary text-4xl font-medium mb-6">
-//                                     We're <span className="text-primary font-medium">finding</span> a driver for you...
-//                                 </p>
-//                             </div>
-
-//                             {/* Down Arrow */}
-//                             <div className="flex justify-center mb-6">
-//                                 <Arrow />
-//                             </div>
-//                         </div>
-
-//                         {/* Driver Accepted Section */}
-//                         <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
-//                             <div className="text-center mb-4">
-//                                 <p className="text-secondary text-4xl font-medium mb-6">
-//                                     Driver <span className="text-primary font-medium">Rahim</span> accept your delivery request
-//                                 </p>
-//                                 <p className="text-secondary font-normal text-xl mt-1">Arriving in 10 minutes (2.3 Miles)</p>
-//                                 <hr className="my-4 border-gray-200 border" />
-//                             </div>
-
-//                             {/* Driver Profile */}
-//                             <div className="text-center mb-6 ">
-//                                 <div className="size-[200px] mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-4">
-//                                     <Image src="/images/car.png" alt="Profile" width={400} height={400} />
-//                                 </div>
-//                                 <div className="">
-//                                     <h3 className="text-secondary font-medium text-[28px] mb-1">Abdur Rahim</h3>
-//                                     <p className="text-secondary font-normal text-xl mb-2">Toyota</p>
-
-//                                     <div className="flex items-center justify-center space-x-1">
-//                                         <Star className="size-6 text-yellow-400 fill-current" />
-//                                         <span className="text-gray-800 font-medium text-2xl ">4.9</span>
-//                                     </div>
-//                                 </div>
-//                             </div>
-
-//                             {/* Action Buttons */}
-//                             <div className="lg:flex w-full space-x-8 max-w-2xl mx-auto">
-//                                 <Button className="flex-1 text-xl bg-primary text-white py-6 rounded-lg font-medium">
-//                                     <PhoneCall className="size-[22px] mr-2" />
-//                                     Call Now
-//                                 </Button>
-//                                 <Button
-//                                     variant="outline"
-//                                     className="flex-1 border-gray-300 text-secondary text-xl py-6 rounded-lg font-medium hover:bg-gray-50 bg-transparent"
-//                                 >
-//                                     <MessageSquareMore className="size-[22px] mr-2" />
-//                                     Message Now
-//                                 </Button>
-//                             </div>
-//                         </div>
-//                     </div>
-
-
-//                 </div>
-//             </div>
-//         </>
-//     )
-// }
 "use client";
 
-import { ArrowLeft, PhoneCall, MessageSquareMore, Star } from "lucide-react";
+import { PhoneCall, MessageSquareMore, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/ui/icon/loading";
 import Arrow from "@/components/ui/icon/arrow";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageHeader from "@/components/shareUi/onBack";
+import { useCancelOrderMutation } from "@/redux/feature/customerSlice";
+import { toast } from "sonner";
 
 export default function DriverConfirmationPage() {
+
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get('order_id');
+  const id = searchParams.get('id');
+  console.log(id, orderId, '======')
+
+  const [cancelOrder] = useCancelOrderMutation();
+
+  const handleCancelOrder  = async () => {
+    try {
+      const res = await cancelOrder(id).unwrap();
+      console.log('Order cancelled successfully', res);
+      toast.success(res?.message ||'Order cancelled successfully');
+      router.back();  
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Failed to cancel order');
+      console.error('Error cancelling order:', error);
+    }
+  };
+
   const router = useRouter();
   return (
     <>
       <title>Driver Confirmation</title>
       <div className="min-h-screen ">
         {/* Header */}
-            {/* <PageHeader title="Request a Delivery"  /> */}
 
-        <div className="px-4 py-3 sm:py-4 flex items-center justify-between border-b border-gray-200">
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            <div onClick={() => router.back()} className="p-1 cursor-pointer">
-              <ArrowLeft className="h-5 w-5 text-gray-600" />
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-secondary font-medium text-sm sm:text-2xl">
-                Request a Delivery
-              </span>
-              <span className="text-primary font-semibold text-sm sm:text-base">
-                #12345
-              </span>
-            </div>
-          </div>
-          <button className="text-gray-600 font-normal text-xs sm:text-2xl hover:text-gray-800">
+
+        <div className="px-4 py-3 sm:py-4 flex items-center  justify-between border-b border-gray-200">
+          <PageHeader
+            title={
+              <>
+                Request a Delivery <span className="text-[#EAAC24] font-semibold">#{orderId}</span>
+              </>
+            }
+          />
+
+          <button onClick={handleCancelOrder} className="text-gray-600 font-normal text-xs sm:text-xl hover:text-gray-800">
             Cancel Request
           </button>
         </div>
