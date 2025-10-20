@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client";
 
@@ -9,10 +10,11 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageHeader from "@/components/shareUi/onBack";
-import { useCancelOrderMutation } from "@/redux/feature/customerSlice";
+import { useCancelOrderMutation, useConfirmDeliveryMutation, useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice";
 import { toast } from "sonner";
+import { Suspense } from "react";
 
-export default function DriverConfirmationPage() {
+function DriverConfirmationPage() {
 
   const searchParams = useSearchParams();
   const orderId = searchParams.get('order_id');
@@ -20,16 +22,32 @@ export default function DriverConfirmationPage() {
   console.log(id, orderId, '======')
 
   const [cancelOrder] = useCancelOrderMutation();
+  const [confirmDelivery] = useConfirmDeliveryMutation();
+  const { data } = useGetCustomerOrderDetailsQuery(id || '');
+  console.log(data?.data, 'order details ==============>');
+  const orderDetails = data?.data;
 
-  const handleCancelOrder  = async () => {
+  const handleCancelOrder = async () => {
     try {
       const res = await cancelOrder(id).unwrap();
       console.log('Order cancelled successfully', res);
-      toast.success(res?.message ||'Order cancelled successfully');
-      router.back();  
+      toast.success(res?.message || 'Order cancelled successfully');
+      router.back();
     } catch (error: any) {
       toast.error(error?.data?.message || 'Failed to cancel order');
       console.error('Error cancelling order:', error);
+    }
+  };
+
+  const handleConfirmDelivery = async () => {
+    try {
+      const res = await confirmDelivery(id).unwrap();
+      console.log('Order confirmed successfully', res);
+      toast.success(res?.message || 'Order confirmed successfully');
+      // router.back();              
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Failed to confirm order');
+      console.error('Error confirming order:', error);
     }
   };
 
@@ -59,99 +77,116 @@ export default function DriverConfirmationPage() {
         <div className="px-4 py-6 sm:py-8">
           <div className="container mx-auto ">
             <div className="bg-white rounded-3xl shadow-sm p-4 sm:p-6 mb-6">
-              <p className="text-6xl font-medium text-[#EAAC24] text-center">$ 20.00</p>
+              <p className="text-6xl font-medium text-[#EAAC24] text-center">$ {orderDetails?.delivery_fee || 0}</p>
               <div className="lg:w-1/4 mx-auto mt-10">
-                <button className=" text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-  rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
-                >Confirm Now</button>
+                <button onClick={handleConfirmDelivery} className=" text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-  rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
+                >{
+                  data?.data?.status === 'confirmed' ? 'Confirming...' : 'Confirm Delivery'
+                }</button>
               </div>
             </div>
-            <div className="flex justify-center mb-6 mt-8">
-              <Arrow />
-            </div>
-            {/* Finding Driver Section */}
-            <div className="text-center mb-6 sm:mb-8">
-              <div className="bg-white flex flex-col items-center justify-center rounded-3xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-                <div className="mb-4 sm:mb-6 ">
-                  <Loading />
+            {
+              data?.data?.status === 'confirmed' && (
+                <> <div className="flex justify-center mb-6 mt-8">
+                  <Arrow />
                 </div>
-                <p className="text-secondary text-2xl sm:text-3xl md:text-4xl font-medium mb-4 sm:mb-6">
-                  We&lsquo;re{" "}
-                  <span className="text-primary font-medium">finding</span> a
-                  driver for you...
-                </p>
-              </div>
+                  <div className="text-center mb-6 sm:mb-8">
+                    <div className="bg-white flex flex-col items-center justify-center rounded-3xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                      <div className="mb-4 sm:mb-6 ">
+                        <Loading />
+                      </div>
+                      <p className="text-secondary text-2xl sm:text-3xl md:text-4xl font-medium mb-4 sm:mb-6">
+                        We&lsquo;re{" "}
+                        <span className="text-primary font-medium">finding</span> a
+                        driver for you...
+                      </p>
+                    </div>
 
-              {/* Down Arrow */}
-              <div className="flex justify-center mb-4 sm:mb-6 mt-10">
-                <Arrow />
-              </div>
-            </div>
+
+                  </div>
+                </>
+              )
+            }
 
             {/* Driver Accepted Section */}
-            <div className="bg-white rounded-3xl shadow-sm p-4 sm:p-6 mb-6">
-              <div className="text-center mb-4">
-                <p className="text-secondary text-2xl sm:text-3xl md:text-4xl font-medium mb-4 sm:mb-6">
-                  Driver{" "}
-                  <span className="text-primary font-medium">Rahim</span> accepted
-                  your delivery request
-                </p>
-                <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mt-1">
-                  Arriving in 10 minutes (2.3 Miles)
-                </p>
-                <hr className="my-4 border-gray-200 border" />
-              </div>
-
-              {/* Driver Profile */}
-              <div className="text-center mb-4 sm:mb-6">
-                <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-4">
-                  <Image
-                    src="/images/car.png"
-                    alt="Profile"
-                    width={400}
-                    height={400}
-                    className="object-contain w-full h-full"
-                    priority
-                  />
-                </div>
-                <div>
-                  <h3 className="text-secondary font-medium text-xl sm:text-2xl md:text-[28px] mb-1">
-                    Abdur Rahim
-                  </h3>
-                  <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mb-2">
-                    Toyota
-                  </p>
-                  <div className="flex items-center justify-center space-x-1">
-                    <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 fill-current" />
-                    <span className="text-gray-800 font-medium text-lg sm:text-xl md:text-2xl">
-                      4.9
-                    </span>
+            {
+              data?.data?.status === 'assigned' && (
+                <>
+                  {/* Down Arrow */}
+                  <div className="flex justify-center mb-4 sm:mb-6 mt-10">
+                    <Arrow />
                   </div>
-                </div>
-              </div>
+                  <div className="bg-white rounded-3xl shadow-sm p-4 sm:p-6 mb-6">
+                    <div className="text-center mb-4">
+                      <p className="text-secondary text-2xl sm:text-3xl md:text-4xl font-medium mb-4 sm:mb-6">
+                        Driver{" "}
+                        <span className="text-primary font-medium">{orderDetails?.company_name}</span> accepted
+                        your delivery request
+                      </p>
+                      <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mt-1">
+                        Arriving in 10 minutes (2.3 Miles)
+                      </p>
+                      <hr className="my-4 border-gray-200 border" />
+                    </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-4 max-w-xs sm:max-w-md md:max-w-lg mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
-                <Button
-                  onClick={() => window.location.href = "tel:1234567890"}
-                  className="flex-1 text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-6 rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
-                >
-                  <PhoneCall className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
-                  Call Now
-                </Button>
-                <Link href="/customer/message" className="flex-1">
-                  <Button
-                    variant="outline"
-                    className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors w-full"
-                  >
-                    <MessageSquareMore className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
-                    Message Now
-                  </Button>
-                </Link>
-              </div>
-            </div>
+                    {/* Driver Profile */}
+                    <div className="text-center mb-4 sm:mb-6">
+                      <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-4">
+                        <Image
+                          src="/images/car.png"
+                          alt="Profile"
+                          width={400}
+                          height={400}
+                          className="object-contain w-full h-full"
+                          priority
+                        />
+                      </div>
+                      <div>
+                        <h3 className="text-secondary font-medium text-xl sm:text-2xl md:text-[28px] mb-1">
+                          Abdur Rahim
+                        </h3>
+                        <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mb-2">
+                          Toyota
+                        </p>
+                        <div className="flex items-center justify-center space-x-1">
+                          <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 fill-current" />
+                          <span className="text-gray-800 font-medium text-lg sm:text-xl md:text-2xl">
+                            4.9
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-4 max-w-xs sm:max-w-md md:max-w-lg mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
+                      <Button
+                        onClick={() => window.location.href = "tel:1234567890"}
+                        className="flex-1 text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-6 rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
+                      >
+                        <PhoneCall className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
+                        Call Now
+                      </Button>
+                      <Link href="/customer/message" className="flex-1">
+                        <Button
+                          variant="outline"
+                          className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors w-full"
+                        >
+                          <MessageSquareMore className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
+                          Message Now
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              )
+            }
           </div>
         </div>
       </div>
     </>
   );
+}
+
+export default function Pages() {
+  return <Suspense fallback={<Loading />}><DriverConfirmationPage /></Suspense>;
 }

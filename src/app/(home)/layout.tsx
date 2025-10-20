@@ -5,6 +5,7 @@ import ResponsiveNavbar from "@/components/shareUi/navbar";
 import Footer from "@/components/shareUi/footer";
 import WebVitals from "@/components/web-vitals";
 import Providers from "@/Provider/Providers";
+import AutoLocationTracker from "@/tracker/tracker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({
         className={`${inter.className} antialiased`}
       >
         <Providers>
+            <AutoLocationTracker />
           <div className="pt-16 md:pt-20 mb-8">
             <ResponsiveNavbar />
           </div>

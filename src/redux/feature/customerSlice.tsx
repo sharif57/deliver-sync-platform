@@ -31,9 +31,25 @@ export const customerApi = baseApi.injectEndpoints({
       invalidatesTags: ["Customer"],
     }),
 
+    confirmDelivery: builder.mutation({
+      query: (orderId) => ({
+        url: `/order/delivery/confirm/${orderId}/`,
+        method: "POST",
+      }),    
+      invalidatesTags: ["Customer"],
+    }),
+
+    // order/delivery/22/
+    getCustomerOrderDetails: builder.query({
+      query: (orderId) => ({
+        url: `/order/delivery/${orderId}/`,
+        method: "GET",
+      }),
+      providesTags: ["Customer"],
+    }),
 
 
   }),
 });
 
-export const { useCreateOrderMutation, useGetCustomerOrdersQuery, useCancelOrderMutation } = customerApi;
+export const { useCreateOrderMutation, useGetCustomerOrdersQuery, useCancelOrderMutation, useConfirmDeliveryMutation , useGetCustomerOrderDetailsQuery } = customerApi;
