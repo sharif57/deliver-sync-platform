@@ -16,7 +16,7 @@ export default function SignIn() {
 
     const router = useRouter();
 
-    const [selectedService, setSelectedService] = useState<'Customer' | 'Driver' | 'Company'>('Customer')
+    // const [selectedService, setSelectedService] = useState<'Customer' | 'Driver' | 'Company'>('Customer')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
@@ -26,9 +26,9 @@ export default function SignIn() {
 
     const [login] = useLoginMutation();
 
-    const handleServiceSelect = (service: 'Customer' | 'Driver' | 'Company') => {
-        setSelectedService(service)
-    }
+    // const handleServiceSelect = (service: 'Customer' | 'Driver' | 'Company') => {
+    //     setSelectedService(service)
+    // }
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword)
@@ -53,6 +53,7 @@ export default function SignIn() {
             console.log(res, 'login')
             toast.success(res?.message || 'Login successful');
             localStorage.setItem('accessToken', res?.access_token || '');
+            localStorage.setItem('userRole', res?.role || '');
             await saveTokens(res?.access_token || '');
             router.push('/')
             setLoading(false);
@@ -64,9 +65,7 @@ export default function SignIn() {
             setLoading(false);
         }
 
-        localStorage.setItem('userRole', selectedService.toLowerCase());
 
-        console.log('Form submitted:', { email, password, selectedService })
         // Reset form
         setEmail('')
         setPassword('')
@@ -92,10 +91,10 @@ export default function SignIn() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
                         <div className="hidden md:block">
                             <Image
-                                src={imageMap[selectedService]}
+                                src={'/images/customer.png'}
                                 width={500}
                                 height={500}
-                                alt={`${selectedService} auth`}
+                                alt={`$auth`}
                                 className="w-full h-auto object-cover"
                                 priority
                             />

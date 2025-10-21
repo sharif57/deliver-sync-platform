@@ -89,8 +89,8 @@ export default function DriverRegistration() {
   const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL;
 
   return (
-    <div className="flex items-center justify-center px-4 py-8  bg-gray-100">
-      <div className="w-full max-w-md mx-auto space-y-6">
+    <div className="flex items-center justify-center px-4 py-8  ">
+      <div className="w-full max-w-md mx-auto space-y-6 bg-white border border-gray-200 rounded-lg p-6 shadow-md">
         {/* Profile Picture Section */}
         <div className="flex justify-center mb-8">
           <div className="relative">

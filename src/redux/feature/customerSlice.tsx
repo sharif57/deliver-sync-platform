@@ -48,6 +48,8 @@ export const customerApi = baseApi.injectEndpoints({
       providesTags: ["Customer"],
     }),
 
+    // /order/delivery/customer/
+
 
   }),
 });

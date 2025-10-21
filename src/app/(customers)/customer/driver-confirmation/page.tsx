@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { Suspense } from "react";
 
 function DriverConfirmationPage() {
+  const router = useRouter();
 
   const searchParams = useSearchParams();
   const orderId = searchParams.get('order_id');
@@ -50,8 +51,8 @@ function DriverConfirmationPage() {
       console.error('Error confirming order:', error);
     }
   };
+  const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL;
 
-  const router = useRouter();
   return (
     <>
       <title>Driver Confirmation</title>
@@ -79,10 +80,13 @@ function DriverConfirmationPage() {
             <div className="bg-white rounded-3xl shadow-sm p-4 sm:p-6 mb-6">
               <p className="text-6xl font-medium text-[#EAAC24] text-center">$ {orderDetails?.delivery_fee || 0}</p>
               <div className="lg:w-1/4 mx-auto mt-10">
-                <button onClick={handleConfirmDelivery} className=" text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-  rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
-                >{
-                  data?.data?.status === 'confirmed' ? 'Confirming...' : 'Confirm Delivery'
-                }</button>
+                <button 
+                onClick={handleConfirmDelivery}
+                 className=" text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-  rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
+                 disabled={data?.data?.status === 'confirmed'}
+                >
+                  Confirm
+                </button>
               </div>
             </div>
             {
@@ -120,7 +124,7 @@ function DriverConfirmationPage() {
                     <div className="text-center mb-4">
                       <p className="text-secondary text-2xl sm:text-3xl md:text-4xl font-medium mb-4 sm:mb-6">
                         Driver{" "}
-                        <span className="text-primary font-medium">{orderDetails?.company_name}</span> accepted
+                        <span className="text-primary font-medium">{orderDetails?.assign_driver_details?.name}</span> accepted
                         your delivery request
                       </p>
                       <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mt-1">
@@ -131,27 +135,27 @@ function DriverConfirmationPage() {
 
                     {/* Driver Profile */}
                     <div className="text-center mb-4 sm:mb-6">
-                      <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-4">
+                      <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto mb-4  rounded-full flex items-center justify-center p-4">
                         <Image
-                          src="/images/car.png"
+                          src={IMAGE + orderDetails?.assign_driver_details?.image}
                           alt="Profile"
                           width={400}
                           height={400}
-                          className="object-contain w-full h-full"
+                          className="object-contain w-full h-full border rounded-full"
                           priority
                         />
                       </div>
                       <div>
                         <h3 className="text-secondary font-medium text-xl sm:text-2xl md:text-[28px] mb-1">
-                          Abdur Rahim
+                          
                         </h3>
                         <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mb-2">
-                          Toyota
+                          {orderDetails?.assign_driver_details?.vehicle}
                         </p>
                         <div className="flex items-center justify-center space-x-1">
                           <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 fill-current" />
                           <span className="text-gray-800 font-medium text-lg sm:text-xl md:text-2xl">
-                            4.9
+                            {orderDetails?.assign_driver_details?.total_ratings || '0'}
                           </span>
                         </div>
                       </div>
@@ -160,7 +164,7 @@ function DriverConfirmationPage() {
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-4 max-w-xs sm:max-w-md md:max-w-lg mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
                       <Button
-                        onClick={() => window.location.href = "tel:1234567890"}
+                        onClick={() => window.location.href = `tel:${orderDetails?.assign_driver_details?.phone_number}`}
                         className="flex-1 text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-6 rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
                       >
                         <PhoneCall className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />

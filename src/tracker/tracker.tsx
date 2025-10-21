@@ -74,7 +74,7 @@ export default function AutoLocationTracker() {
           const locationData = { latitude, longitude, timestamp: new Date().toISOString() };
           localStorage.setItem("userLocation", JSON.stringify(locationData));
 
-          console.log("Updated Location:", locationData);
+          // console.log("Updated Location:", locationData);
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -82,14 +82,12 @@ export default function AutoLocationTracker() {
       );
     };
 
-    // Run immediately
     fetchLocation();
 
-    // Update every 2 seconds
     const interval = setInterval(fetchLocation, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
-  return null; // This component runs silently in the background
+  return null; 
 }

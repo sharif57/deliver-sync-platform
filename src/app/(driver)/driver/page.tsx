@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import Counter from '@/components/shareUi/counter'
 import Car from '@/components/ui/icon/car'
@@ -6,13 +7,19 @@ import House from '@/components/ui/icon/house'
 import Loading from '@/components/ui/icon/loading';
 import Money from '@/components/ui/icon/money'
 import Times from '@/components/ui/icon/times';
+import { useAcceptDeliveryRequestMutation,  useGetPendingOrdersQuery } from '@/redux/feature/driverSlice';
 import { DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner';
 
 export default function Driver() {
     const router = useRouter()
+
+    const { data, error, isLoading } = useGetPendingOrdersQuery(undefined);
+    console.log(data)
+    const [acceptDeliveryRequest] = useAcceptDeliveryRequestMutation();
 
     const items = [
         { title: "Total Earnings", count: 12, icon: <Money /> },
@@ -22,6 +29,21 @@ export default function Driver() {
 
     const handmessage = () => {
         router.push('/customer/message')
+    }
+
+    const handleAcceptRequest = async (orderId: string) => {
+        try {
+
+            console.log(orderId)
+            const res = await acceptDeliveryRequest(orderId).unwrap();
+            console.log('Delivery request accepted successfully', res);
+            toast.success(res?.message || 'Delivery request accepted successfully');
+            // router.push('/driver/delivery-current');
+
+        } catch (error: any) {
+            toast.error(error?.data?.message || 'Failed to accept delivery request');
+            console.error('Error accepting delivery request:', error);
+        }
     }
 
     const [isSearching, setIsSearching] = useState(true);
@@ -34,6 +56,24 @@ export default function Driver() {
         // Cleanup timer on component unmount
         return () => clearTimeout(timer);
     }, []);
+
+
+    // "id": "24",
+    // "order_id": "454524",
+    // "company_name": "sds",
+    // "description": "sd",
+    // "product_weight": "20.00",
+    // "product_amount": "32.00",
+    // "pickup_location": "sdf",
+    // "delivery_location": "sd",
+    // "delivery_fee": "250.00",
+    // "status": "confirmed",
+    // "expected_delivery_time": null,
+    // "actual_delivery_time": null,
+    // "created_at": "2025-10-20T06:18:54.077027Z",
+    // "updated_at": "2025-10-20T06:30:43.042633Z",
+    // "customer": 35,
+    // "assign_driver": 35
 
 
     return (
@@ -82,7 +122,7 @@ export default function Driver() {
                     </div>
                 </div>
                 <div className=" flex items-center justify-center  ">
-                    {isSearching ? (
+                    {isLoading ? (
                         // Searching State (First 3 seconds)
                         <div className='container'>
                             <h1 className="text-2xl font-medium text-secondary mb-4 text-start">Wait for delivery request</h1>
@@ -101,79 +141,108 @@ export default function Driver() {
                         </div>
                     ) : (
                         // Delivery Request State (After 3 seconds)
-                        <div className='container'>
-                            <h1 className="text-2xl font-medium text-secondary mb-4 text-start">New Request</h1>
-                            <div className="bg-white rounded-3xl shadow-sm">
-                                <div className="py-8 px-6">
-                                    <h1 className="text-secondary text-center text-3xl md:text-4xl font-medium mb-8">
-                                        New Delivery Request
-                                    </h1>
-                                    <div className="flex flex-col md:flex-row md:justify-between gap-8">
-                                        {/* Left Side (Locations + Details) */}
-                                        <div className="flex-1">
-                                            <div className="space-y-6">
-                                                <div className="flex items-center gap-4">
-                                                    <Car />
-                                                    <div>
-                                                        <h2 className="text-secondary text-xl md:text-2xl font-medium">
-                                                            Pickup Location
-                                                        </h2>
-                                                        <p className="text-[#545454] text-sm md:text-base">
-                                                            123 Main Street, City, Country
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-4">
-                                                    <House />
-                                                    <div>
-                                                        <h2 className="text-secondary text-xl md:text-2xl font-medium">
-                                                            Drop-off Location
-                                                        </h2>
-                                                        <p className="text-[#545454] text-sm md:text-base">
-                                                            456 Park Avenue, City, Country
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr className="border-gray-200 my-6" />
-                                            <div className="space-y-4 text-secondary">
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-lg">Package: Truck Alternator</span>
-                                                    <span className="font-semibold text-xl">15 KG</span>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-lg">Distance</span>
-                                                    <span className="font-semibold text-xl">12 KM</span>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-lg">Estimate Payment</span>
-                                                    <span className="font-semibold text-xl">$12</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {/* Right Side (Buttons) */}
-                                        <div className="flex-1 flex flex-col items-center justify-center">
-                                            <div className="flex flex-col gap-4 w-full max-w-sm">
-                                                <button
-                                                    className="w-full border-2 border-gray-300 px-14  text-secondary text-base py-3 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
-                                                    aria-label="Decline request"
-                                                >
-                                                    Decline
-                                                </button>
-                                                <Link href="/driver/accept-request" className="w-full">
-                                                    <button
-                                                        className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition"
-                                                        aria-label="Accept request"
-                                                    >
-                                                        Accept
-                                                    </button>
-                                                </Link>
+                        <>
+                            {
+                                <div className='container'>
+                                    <h1 className="text-2xl font-medium text-secondary mb-4 text-start">New Request</h1>
+                                    <div className="bg-white rounded-3xl shadow-sm">
+                                        <div className="py-8 px-6">
+                                            <h1 className="text-secondary text-center text-3xl md:text-4xl font-medium mb-8">
+                                                New Delivery Request
+                                            </h1>
+                                            <div className='space-y-8 '>
+                                                {
+                                                    data?.data?.map((order: any) => (
+                                                        <div key={order.id} className="flex border p-2 rounded-lg flex-col md:flex-row md:justify-between gap-8">
+                                                            {/* Left Side (Locations + Details) */}
+                                                            <div className="flex-1">
+                                                                <div className="space-y-6">
+                                                                    <div className="flex items-center gap-4">
+                                                                        <Car />
+                                                                        <div>
+                                                                            <h2 className="text-secondary text-xl md:text-2xl font-medium">
+                                                                                Pickup Location
+                                                                            </h2>
+                                                                            <p className="text-[#545454] text-sm md:text-base">
+                                                                                {order?.pickup_location || '123 Main Street, City, Country'}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="flex items-center gap-4">
+                                                                        <House />
+                                                                        <div>
+                                                                            <h2 className="text-secondary text-xl md:text-2xl font-medium">
+                                                                                Drop-off Location
+                                                                            </h2>
+                                                                            <p className="text-[#545454] text-sm md:text-base">
+                                                                                {order?.delivery_location || ''}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <hr className="border-gray-200 my-6" />
+                                                                <div className="space-y-4 text-secondary">
+                                                                    <div className="flex justify-between items-center">
+                                                                        <span className="text-lg">Package: Truck Alternator</span>
+                                                                        <span className="font-semibold text-xl">{order?.product_weight || ''} KG</span>
+                                                                    </div>
+                                                                    <div className="flex justify-between items-center">
+                                                                        <span className="text-lg">Distance</span>
+                                                                        <span className="font-semibold text-xl">12 KM</span>
+                                                                    </div>
+                                                                    <div className="flex justify-between items-center">
+                                                                        <span className="text-lg">Estimate Payment</span>
+                                                                        <span className="font-semibold text-xl">${order?.delivery_fee || ''}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {/* Right Side (Buttons) */}
+                                                            <div className="flex-1 flex flex-col items-center justify-center">
+                                                                <div className="flex flex-col gap-4 w-full max-w-sm">
+                                                                    <button
+                                                                        className="w-full border-2 border-gray-300 px-14  text-secondary text-base py-3 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
+                                                                        aria-label="Decline request"
+                                                                    >
+                                                                        Decline
+                                                                    </button>
+                                                                    {/* <Link href="/driver/accept-request" className="w-full"> */}
+                                                                    <button
+                                                                        onClick={() => handleAcceptRequest(order.id)}
+                                                                        className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition"
+                                                                        aria-label="Accept request"
+                                                                    >
+                                                                        { order.status === 'assigned' ? 'Accepting...' : 'Accept'}
+                                                                    </button>
+                                                                    {/* <button
+                                                                        key={order.id}
+                                                                        onClick={() => handleAcceptRequest(order.id)}
+                                                                        className={`w-full text-base px-14 py-3 rounded-lg font-medium transition ${order.status === "assigned"
+                                                                                ? "bg-gray-400 cursor-not-allowed"
+                                                                                : "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white hover:bg-primary/90"
+                                                                            }`}
+                                                                        disabled={order.status === "assigned"}
+                                                                        aria-label="Accept request"
+                                                                    >
+                                                                        {order.status === "assigned"
+                                                                            ? "Driver Assigned"
+                                                                            : order.status === "confirmed"
+                                                                                ? "Accept"
+                                                                                : order.status === "pending"
+                                                                                    ? "Waiting..."
+                                                                                    : "Accept"}
+                                                                    </button> */}
+                                                                    {/* </Link> */}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            }
+                        </>
                     )}
                 </div>
             </div >
