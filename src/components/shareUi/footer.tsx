@@ -47,7 +47,7 @@ const Footer = () => {
 
   const pathname = usePathname();
 
-  if (pathname === '/customer/message') {
+  if (pathname === '/message') {
     return null;
   }
 

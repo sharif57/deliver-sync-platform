@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // "use client";
 
@@ -234,6 +235,7 @@ import Oks from "@/components/ui/icon/oks";
 import PickUps from "@/components/ui/icon/pickups";
 import Locations from "@/components/ui/icon/locations";
 import Takes from "@/components/ui/icon/takes";
+import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
 
  function TrackMyOrder() {
     const searchParams = useSearchParams();
@@ -246,6 +248,8 @@ import Takes from "@/components/ui/icon/takes";
     const router = useRouter();
     const [isCancelling, setIsCancelling] = useState(false);
     const [cancelOrder] = useCancelOrderMutation();
+
+    const [createRoom] = useCreateRoomMutation();
 
     // Map API statuses to timeline steps
     const getTimelineStatus = (status: string) => {
@@ -284,6 +288,18 @@ import Takes from "@/components/ui/icon/takes";
             setIsCancelling(false);
         }
     };
+
+    const handleCreateRoom = async () => {
+        try {
+            const res = await createRoom({user2: orderDetails?.assign_driver}).unwrap();
+            console.log("Room created successfully", res);
+            toast.success(res?.message || "Room created successfully");
+            router.push(`/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
+        } catch (error: any) {
+            toast.error(error?.data?.error || "Failed to create room");
+            console.error("Error creating room:", error);
+        }
+    }
 
     if (isLoading) {
         return (
@@ -567,15 +583,16 @@ import Takes from "@/components/ui/icon/takes";
                                     Call Now
                                 </Button>
 
-                                <Link href="/customer/message" className="flex-1">
+                                {/* <Link href={`/message?id=${orderDetails.id}`} className="flex-1 cursor-pointer"> */}
                                     <Button
                                         variant="outline"
-                                        className="flex items-center justify-center w-full border-gray-300 text-secondary text-sm sm:text-base md:text-lg min-h-[48px] sm:min-h-[52px] rounded-lg font-medium hover:bg-gray-50 bg-transparent"
+                                        onClick={()=> handleCreateRoom(orderDetails?.id)}
+                                        className="flex items-center justify-center w-full border-gray-300  cursor-pointer text-secondary text-sm sm:text-base md:text-lg min-h-[48px] sm:min-h-[52px] rounded-lg font-medium hover:bg-gray-50 bg-transparent"
                                     >
                                         <MessageSquareMore className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                                         Message Now
                                     </Button>
-                                </Link>
+                                {/* </Link> */}
                             </div>
                         </div>
                     )}

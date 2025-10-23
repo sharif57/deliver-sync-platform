@@ -250,7 +250,6 @@ export default function ResponsiveNavbar() {
   // Fetch user profile data using RTK Query
   const { data, isLoading, isError } = useUserProfileQuery(undefined);
   const profile = data?.data;
-  console.log(profile)
 
   const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL || '';
 

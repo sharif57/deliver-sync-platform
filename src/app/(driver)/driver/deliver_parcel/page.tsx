@@ -65,7 +65,7 @@ export default function DeliverTheParcel() {
                             </div>
                             <div>
                                 <p className="text-[#D69D21] text-[16px] font-normal">ID#12345</p>
-                                <p className="text-secondary text-xl font-normal">Package: {orderDetails?.customer_details?.vehicle} - {orderDetails?.product_weight}kg</p>
+                                <p className="text-secondary text-xl font-normal">weight: {orderDetails?.product_weight}kg</p>
                             </div>
                             <div className="flex items-center gap-2 mt-4">
                                 <svg width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

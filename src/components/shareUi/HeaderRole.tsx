@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import AuthIcon from '@/components/ui/icon/auth';
 import Link from 'next/link';
@@ -5,8 +6,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import Cart from '../ui/icon/cart';
+import { useGetAllNotificationQuery } from '@/redux/feature/notificationSlice';
 
-// Using SVG components for icons, similar to lucide-react
 const MenuIcon = ({ className }: { className?: string }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
         <line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" />
@@ -73,8 +74,11 @@ const AvatarIcon = ({ className }: { className?: string }) => (
 );
 
 
-// --- Main Header Component ---
 const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) => {
+
+
+    const { data } = useGetAllNotificationQuery(undefined);
+
     // State for the main mobile menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     // State for desktop dropdowns
@@ -215,17 +219,18 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                             <div className={`absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg transition-opacity duration-300 ${isNotificationsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                                 <div className="p-3 flex items-center justify-between">
                                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Notifications</p>
-                                    <Link href="/customer/notification" className="text-xs text-blue-500 hover:underline">View all</Link>
+                                    <Link href="/notification" className="text-xs text-blue-500 hover:underline">View all</Link>
                                 </div>
                                 <div className="border-t border-gray-200 dark:border-gray-700">
-                                    <a href="#" className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
-                                        <p className="font-medium">New message</p>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">You have a new message from Jane Doe.</p>
-                                    </a>
-                                    <a href="#" className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
-                                        <p className="font-medium">Server update</p>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">Server #1 will be updated at 3:00 AM.</p>
-                                    </a>
+                                    {
+                                        data?.data?.slice(0, 2).map((item: any) => (
+                                            <a key={item.id} href="#" className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                                <p className="font-medium">{item?.title}</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">{item?.message}</p>
+                                            </a>
+                                           
+                                        ))
+                                    }
                                 </div>
                             </div>
                         </div>
