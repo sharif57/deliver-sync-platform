@@ -4,50 +4,42 @@ import PageHeader from "@/components/shareUi/onBack"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Form from "@/components/ui/icon/form"
+import Loading from "@/components/ui/icon/loading"
 import To from "@/components/ui/icon/to"
+import { useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice"
 import { FileText, Building2, Tag, DollarSign, MapPin, Home } from "lucide-react"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 
-interface OrderDetailsCardProps {
-    orderId?: string
-    companyName?: string
-    productDescription?: string
-    productAmount?: string
-    pickupLocation?: string
-    deliveryLocation?: string
-    driverName?: string
-    driverRating?: number
-    driverImage?: string
-    onCancel?: () => void
-    onRequestAgain?: () => void
-}
 
-export default function OrderDetailsCard({
-    orderId = "#12345",
-    companyName = "TruckParts BD",
-    productDescription = "Engine Oil",
-    productAmount = "$1250",
-    pickupLocation = "Gulshan-1",
-    deliveryLocation = "Badda -1",
-}: OrderDetailsCardProps) {
+
+export default function OrderDetailsCard() {
+
+    const params = useParams();
+    const { id } = params;
+    console.log("Order ID from URL:", id);
     const router = useRouter()
 
+    const { data, isLoading } = useGetCustomerOrderDetailsQuery(id as string)
+    console.log("Order Details Data:", data);
+    const orderDetails = data?.data;
+
     const handmessage = () => {
-        router.push('/customer/message')
+        router.push(`/customer/message?id=${orderDetails?.customer_details?.id}`)
     }
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen"><Loading /></div>;
+    }
+
+    const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL;
 
     return (
         <div>
             <title>Delivered Order</title>
-            {/* <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <div onClick={() => router.back()} className="flex cursor-pointer items-center gap-3">
-                    <Back />
-                    <h1 className="text-2xl font-medium text-gray-700 ">Delivery History</h1>
-                </div>
-            </div> */}
+
             <PageHeader title="Delivered History" />
-         
+
             <Card className="w-full container mx-auto bg-white shadow-lg">
                 <CardContent className="p-6">
                     {/* Order Details Grid */}
@@ -59,7 +51,7 @@ export default function OrderDetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Order ID</label>
                                 <div className="flex items-center gap-3 p-3 bg-featuresBg rounded-lg">
                                     <FileText className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800 font-medium">{orderId}</span>
+                                    <span className="text-gray-800 font-medium">{orderDetails?.order_id}</span>
                                 </div>
                             </div>
 
@@ -68,7 +60,7 @@ export default function OrderDetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Product Short Description</label>
                                 <div className="flex items-center gap-3 p-3 bg-featuresBg rounded-lg">
                                     <Tag className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{productDescription}</span>
+                                    <span className="text-gray-800">{orderDetails?.description}</span>
                                     <span className="text-xs text-gray-500 ml-auto">(Optional)</span>
                                 </div>
                             </div>
@@ -78,7 +70,7 @@ export default function OrderDetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Pickup Location</label>
                                 <div className="flex items-center gap-3 p-3 bg-featuresBg rounded-lg">
                                     <MapPin className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{pickupLocation}</span>
+                                    <span className="text-gray-800">{orderDetails?.pickup_location}</span>
                                 </div>
                             </div>
                         </div>
@@ -87,10 +79,10 @@ export default function OrderDetailsCard({
                         <div className="space-y-6">
                             {/* Company Name */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Customer || Company Name</label>
                                 <div className="flex items-center gap-3 p-3 bg-featuresBg rounded-lg">
                                     <Building2 className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{companyName}</span>
+                                    <span className="text-gray-800">{orderDetails?.customer_details?.name}</span>
                                 </div>
                             </div>
 
@@ -99,7 +91,7 @@ export default function OrderDetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Product Amount</label>
                                 <div className="flex items-center gap-3 p-3 bg-featuresBg rounded-lg">
                                     <DollarSign className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{productAmount}</span>
+                                    <span className="text-gray-800">{orderDetails?.product_amount}</span>
                                     <span className="text-xs text-gray-500 ml-auto">(Optional)</span>
                                 </div>
                             </div>
@@ -109,7 +101,7 @@ export default function OrderDetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Location</label>
                                 <div className="flex items-center gap-3 p-3 bg-featuresBg rounded-lg">
                                     <Home className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{deliveryLocation}</span>
+                                    <span className="text-gray-800">{orderDetails?.delivery_location}</span>
                                 </div>
                             </div>
                         </div>
@@ -122,14 +114,16 @@ export default function OrderDetailsCard({
                         {/* Driver Profile */}
                         <div className="text-center mb-4 sm:mb-6">
                             <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-4">
-                                <Image
-                                    src="/images/car.png"
-                                    alt="Profile"
-                                    width={400}
-                                    height={400}
-                                    className="object-contain w-full h-full"
-                                    priority
-                                />
+                                {orderDetails?.customer_details?.image && (
+                                    <Image
+                                        src={`${IMAGE}${orderDetails?.customer_details?.image}`}
+                                        alt="Profile"
+                                        width={400}
+                                        height={400}
+                                        className="object-contain w-full h-full"
+                                        priority
+                                    />
+                                )}
                             </div>
                             <div>
 
@@ -137,7 +131,7 @@ export default function OrderDetailsCard({
                                     <div className="flex items-center gap-2">
                                         <To />
                                         <p className="text-secondary font-normal text-sm sm:text-base md:text-lg ">
-                                            Badda-1
+                                            {orderDetails?.pickup_location}
                                         </p>
                                     </div>
                                     <p className="">to</p>
@@ -145,7 +139,7 @@ export default function OrderDetailsCard({
                                         <div className="flex items-center gap-2">
                                             <Form />
                                             <p className="text-secondary font-normal text-sm sm:text-base md:text-lg ">
-                                                Gulshan-1
+                                                {orderDetails?.delivery_location}
                                             </p>
                                         </div>
                                     </div>
@@ -163,7 +157,7 @@ export default function OrderDetailsCard({
                                 Message Now
                             </Button>
                             <Button
-                                onClick={() => window.location.href = "tel:123456789"}
+                                onClick={() => window.location.href = `tel:${orderDetails?.customer_details?.phone_number}`}
                                 className="flex-1 text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 sm:py-6 rounded-lg font-medium hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors"
                             >
                                 Call Now

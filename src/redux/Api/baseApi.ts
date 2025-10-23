@@ -22,6 +22,7 @@ export const baseApi = createApi({
     "Driver",
     "Order",
     "Delivery",
+    "Dashboard",
 
   ],
   endpoints: () => ({}),

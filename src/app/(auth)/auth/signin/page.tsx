@@ -53,14 +53,22 @@ export default function SignIn() {
             console.log(res, 'login')
             toast.success(res?.message || 'Login successful');
             localStorage.setItem('accessToken', res?.access_token || '');
-            localStorage.setItem('userRole', res?.role || '');
+            localStorage.setItem('userRole', res?.data?.role || '');
+            const locationData = {
+                latitude: res?.data?.location_latitude,
+                longitude: res?.data?.location_longitude,
+                timestamp: new Date().toISOString(),
+            };
+
+            localStorage.setItem("userLocation", JSON.stringify(locationData));
+
             await saveTokens(res?.access_token || '');
-            router.push('/')
+            router.push(`/auth/enable-location?id=${res?.data?.id}`);
             setLoading(false);
         } catch (error: any) {
             setError('Invalid email or password');
             console.error('Login error:', error);
-            const errors= error?.data?.message || error?.data?.email || 'Login failed. Please try again.';
+            const errors = error?.data?.message || error?.data?.email || 'Login failed. Please try again.';
             toast.error(errors);
             setLoading(false);
         }

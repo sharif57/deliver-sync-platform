@@ -1,20 +1,50 @@
-// import React from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-// export default function DeliverTheParcel() {
-//   return (
-//     <div>
-      
-//     </div>
-//   )
-// }
 'use client';
 import PageHeader from '@/components/shareUi/onBack'
 import { Button } from '@/components/ui/button'
+import { useGetCustomerOrderDetailsQuery } from '@/redux/feature/customerSlice';
+import { useUpdataOrderStatusMutation } from '@/redux/feature/driverSlice';
 import { MessageSquareMore, PhoneCall } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState } from 'react'
+import { toast } from 'sonner';
 
 export default function DeliverTheParcel() {
+    const params = useSearchParams();
+    const id = params.get("id");
+    console.log(id)
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const { data, isLoading, isError } = useGetCustomerOrderDetailsQuery(id as string);
+    const orderDetails = data?.data;
+    console.log(orderDetails)
+
+    const [updataOrderStatus] = useUpdataOrderStatusMutation();
+
+    const handleOnTheWay = async (orderId: string) => {
+        console.log(orderId, 'iddd')
+        setLoading(true);
+        try {
+            const res = await updataOrderStatus({ id, data: { status: 'on_the_way' } }).unwrap();
+            console.log('Delivery request accepted successfully', res);
+            toast.success(res?.message || 'Delivery request accepted successfully');
+            router.push(`/driver/deliver_parcel?id=${id}`);
+            setLoading(false);
+        } catch (error: any) {
+            toast.error(error?.data?.message || 'Failed to accept delivery request');
+            console.error('Error accepting delivery request:', error);
+            setLoading(false);
+        }
+    }
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen"><Loading /></div>;
+    }
+    if (isError) {
+        return <div className="flex items-center justify-center h-screen">data not found</div>;
+    }
     return (
         <div>
             <title>Deliver Parcel</title>

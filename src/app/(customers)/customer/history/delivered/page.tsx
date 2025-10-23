@@ -6,10 +6,11 @@ import { useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice"
 import { FileText, Building2, Tag, DollarSign, MapPin, Home, Star } from "lucide-react"
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
 
 
-export default function OrderDetailsCard() {
+ function OrderDetailsCard() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get("id") || "";
     console.log(orderId, 'order id=============>');
@@ -128,5 +129,14 @@ export default function OrderDetailsCard() {
                 </CardContent>
             </Card>
         </div>
+    )
+}
+
+
+export default function Page() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <OrderDetailsCard />
+        </Suspense>
     )
 }

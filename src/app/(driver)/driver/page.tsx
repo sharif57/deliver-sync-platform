@@ -7,6 +7,7 @@ import House from '@/components/ui/icon/house'
 import Loading from '@/components/ui/icon/loading';
 import Money from '@/components/ui/icon/money'
 import Times from '@/components/ui/icon/times';
+import { useDashboardQuery } from '@/redux/feature/commonSlice';
 import { useAcceptDeliveryRequestMutation,  useGetPendingOrdersQuery } from '@/redux/feature/driverSlice';
 import { DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
@@ -18,13 +19,16 @@ export default function Driver() {
     const router = useRouter()
 
     const { data, error, isLoading } = useGetPendingOrdersQuery(undefined);
-    console.log(data)
     const [acceptDeliveryRequest] = useAcceptDeliveryRequestMutation();
 
+    const {data: dashboardData} = useDashboardQuery(undefined);
+    console.log(dashboardData?.data, '=============>')
+    const dashboard = dashboardData?.data
+
     const items = [
-        { title: "Total Earnings", count: 12, icon: <Money /> },
-        { title: "Pending Deliveries", count: 2, icon: <Times /> },
-        { title: "Completed Deliveries", count: 2, icon: <Completes /> },
+        { title: "Total Earnings", count: dashboard?.total_earning, icon: <Money /> },
+        { title: "Pending Deliveries", count: dashboard?.total_pending_deliveries, icon: <Times /> },
+        { title: "Completed Deliveries", count: dashboard?.total_delivered, icon: <Completes /> },
     ]
 
     const handmessage = () => {
@@ -38,7 +42,7 @@ export default function Driver() {
             const res = await acceptDeliveryRequest(orderId).unwrap();
             console.log('Delivery request accepted successfully', res);
             toast.success(res?.message || 'Delivery request accepted successfully');
-            // router.push('/driver/delivery-current');
+            router.push(`/driver/accept-request?id=${orderId}`);
 
         } catch (error: any) {
             toast.error(error?.data?.message || 'Failed to accept delivery request');
@@ -56,25 +60,6 @@ export default function Driver() {
         // Cleanup timer on component unmount
         return () => clearTimeout(timer);
     }, []);
-
-
-    // "id": "24",
-    // "order_id": "454524",
-    // "company_name": "sds",
-    // "description": "sd",
-    // "product_weight": "20.00",
-    // "product_amount": "32.00",
-    // "pickup_location": "sdf",
-    // "delivery_location": "sd",
-    // "delivery_fee": "250.00",
-    // "status": "confirmed",
-    // "expected_delivery_time": null,
-    // "actual_delivery_time": null,
-    // "created_at": "2025-10-20T06:18:54.077027Z",
-    // "updated_at": "2025-10-20T06:30:43.042633Z",
-    // "customer": 35,
-    // "assign_driver": 35
-
 
     return (
         <>

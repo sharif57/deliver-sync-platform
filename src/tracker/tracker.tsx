@@ -1,93 +1,181 @@
-// "use client";
-// import React, { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-// interface Location {
-//     latitude: number | null;
-//     longitude: number | null;
-// }
+// "use client";
+
+// import { useEffect } from "react";
+// import { useLocationProfileMutation } from "@/redux/feature/userSlice";
+// import { useRouter } from "next/navigation";
+// import { toast } from "sonner"; // Assuming sonner is available
 
 // export default function AutoLocationTracker() {
-//     const [location, setLocation] = useState<Location>({ latitude: null, longitude: null });
-//     console.log(location)
-//     const [error, setError] = useState<string | null>(null);
+//   const router = useRouter();
+//   const [locationProfile] = useLocationProfileMutation();
 
-//     useEffect(() => {
-//         // Function to get user location
-//         const fetchLocation = () => {
-//             if (!navigator.geolocation) {
-//                 setError("Geolocation is not supported by your browser");
-//                 return;
-//             }
+//   useEffect(() => {
+//     // Check for existing location and redirect if present
+//     const savedLocation = localStorage.getItem("userLocation");
+//     if (savedLocation) {
+//       router.push("/");
+//     }
 
-//             navigator.geolocation.getCurrentPosition(
-//                 (position: GeolocationPosition) => {
-//                     setLocation({
-//                         latitude: position.coords.latitude,
-//                         longitude: position.coords.longitude,
-//                     });
-//                     setError(null);
-//                 },
-//                 (err: GeolocationPositionError) => {
-//                     setError(err.message);
-//                 }
-//             );
+//     // Start watching location
+//     if (!navigator.geolocation) {
+//       console.error("Geolocation is not supported by your browser.");
+//       return;
+//     }
+
+//     const id = navigator.geolocation.watchPosition(
+//       async (position) => {
+//         const { latitude, longitude } = position.coords;
+//         const locationData = {
+//           latitude,
+//           longitude,
+//           timestamp: new Date().toISOString(), // e.g., "2025-10-22T15:02:00Z"
 //         };
+//         localStorage.setItem("userLocation", JSON.stringify(locationData));
+//         console.log("Location updated:", locationData);
 
-//         // Call it immediately and then every 2 seconds
-//         fetchLocation();
-//         const interval = setInterval(fetchLocation, 1000); // 2 seconds
+//         // Delay API call by 2 seconds
+//         setTimeout(async () => {
+//           try {
+//             const formData = new FormData();
+//             formData.append("latitude", locationData.latitude.toString());
+//             formData.append("longitude", locationData.longitude.toString());
+//             formData.append("timestamp", locationData.timestamp);
 
-//         return () => clearInterval(interval); // Cleanup on unmount
-//     }, []);
+        
+//             const response = await locationProfile(formData).unwrap();
 
-//     return (
-//         <div className="p-6 text-center">
-//             <h1 className="text-2xl font-bold mb-4">Automatic Location Tracker</h1>
+//             const locationData = {
+//               latitude: response?.data?.location_latitude,
+//               longitude: response?.data?.location_longitude,
+//               timestamp: new Date().toISOString(),
+//             };
 
-//             {location.latitude && location.longitude ? (
-//                 <div>
-//                     <p>Latitude: {location.latitude}</p>
-//                     <p>Longitude: {location.longitude}</p>
-//                 </div>
-//             ) : (
-//                 <p>Fetching location...</p>
-//             )}
+//             localStorage.setItem("userLocation", JSON.stringify(locationData));
 
-//             {error && <p className="text-red-500 mt-4">{error}</p>}
-//         </div>
+//             console.log(response)
+//             localStorage.removeItem("userLocation",);
+//             console.log("Profile updated:", response);
+//             toast.success(response?.message || "Profile updated successfully");
+//           } catch (error: any) {
+//             console.error("Error updating profile:", error);
+//             toast.error(error?.data?.message || "Failed to update profile");
+//           }
+//         }, 1000); // 2-second delay after location update
+//       },
+//       (error) => {
+//         console.error("Error watching location:", error);
+//       },
+//       {
+//         enableHighAccuracy: true,
+//         timeout: 2000, // Update every 2 seconds
+//         maximumAge: 0,
+//       }
 //     );
+
+//     // Cleanup watcher on unmount
+//     return () => {
+//       if (id) {
+//         navigator.geolocation.clearWatch(id);
+//       }
+//     };
+//   }, [locationProfile, router]);
+
+//   return null; // No UI since it's fully automatic
 // }
-// tracker.tsx
+
 "use client";
-import { useEffect } from "react";
+
+import { useEffect, useRef } from "react";
+import { useLocationProfileMutation } from "@/redux/feature/userSlice";
+import { toast } from "sonner";
 
 export default function AutoLocationTracker() {
+  const [locationProfile] = useLocationProfileMutation();
+  const isUpdating = useRef(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    const fetchLocation = () => {
-      if (!navigator.geolocation) return;
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    // Function to fetch and update location
+    const updateLocation = async () => {
+      if (isUpdating.current) return; // prevent overlapping updates
+      isUpdating.current = true;
 
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
+        async (position) => {
+          const { latitude, longitude } = position.coords;
 
-          // Store in localStorage
-          const locationData = { latitude, longitude, timestamp: new Date().toISOString() };
+          const locationData = {
+            latitude,
+            longitude,
+            timestamp: new Date().toISOString(),
+          };
+
+          console.log("📍 Updated Location:", locationData);
           localStorage.setItem("userLocation", JSON.stringify(locationData));
 
-          // console.log("Updated Location:", locationData);
+          try {
+            const formData = new FormData();
+            formData.append("location_latitude", latitude.toString());
+            formData.append("location_longitude", longitude.toString());
+            formData.append("timestamp", locationData.timestamp);
+
+            const response = await locationProfile(formData).unwrap();
+            // console.log("✅ Location sent to API:", response);
+
+            // Save returned coordinates (if backend modifies them)
+            if (
+              response?.data?.location_latitude &&
+              response?.data?.location_longitude
+            ) {
+              const updatedLocation = {
+                latitude: response.data.location_latitude,
+                longitude: response.data.location_longitude,
+                timestamp: new Date().toISOString(),
+              };
+              localStorage.setItem(
+                "userLocation",
+                JSON.stringify(updatedLocation)
+              );
+            }
+
+            toast.success(response?.message || "Location updated successfully");
+          } catch (error: any) {
+            console.error("❌ API Error:", error);
+            toast.error(error?.data?.message || "Failed to update location");
+          } finally {
+            // Unlock update after delay
+            setTimeout(() => {
+              isUpdating.current = false;
+            }, 100000);
+          }
         },
         (error) => {
-          console.error("Error getting location:", error);
-        }
+          console.error("⚠️ Geolocation error:", error);
+          toast.error("Please allow location access to continue.");
+          isUpdating.current = false;
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     };
 
-    fetchLocation();
+    // Run once immediately and then every 10 seconds
+    updateLocation();
+    intervalRef.current = setInterval(updateLocation, 10000);
 
-    const interval = setInterval(fetchLocation, 2000);
+    console.log("📡 Auto location tracking started...");
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      console.log("🧹 Auto location tracking stopped.");
+    };
+  }, [locationProfile]);
 
-  return null; 
+  return null; // Background tracker — no UI
 }

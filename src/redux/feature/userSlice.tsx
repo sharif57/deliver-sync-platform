@@ -14,17 +14,29 @@ export const userApi = baseApi.injectEndpoints({
     }),
 
     updateProfile: builder.mutation({
-      query: (data) => ({
-        url: "/user/update-profile",
+      query: ({data, id}) => ({
+        // /auth/profile/1/update/
+        url: `/auth/profile/${id}/update/`,
         method: "PATCH",
         body: data,
       }),
       invalidatesTags: ["User"],
     }),
 
+    locationProfile: builder.mutation({
+      query: (data) => ({
+        // /auth/profile/1/update/
+        // /auth/profile/update/
+        url: `/auth/profile/update/`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    })
+
 
 
   }),
 });
 
-export const { useUserProfileQuery, useUpdateProfileMutation} = userApi;
+export const { useUserProfileQuery, useUpdateProfileMutation , useLocationProfileMutation} = userApi;

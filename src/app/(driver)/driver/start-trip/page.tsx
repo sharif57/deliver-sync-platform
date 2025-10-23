@@ -1,11 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import PageHeader from '@/components/shareUi/onBack'
 import { Button } from '@/components/ui/button'
+import Loading from '@/components/ui/icon/loading';
+import { useGetCustomerOrderDetailsQuery } from '@/redux/feature/customerSlice';
+import { useUpdataOrderStatusMutation } from '@/redux/feature/driverSlice';
 import { MessageSquareMore, PhoneCall } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState } from 'react'
+import { toast } from 'sonner';
 
 export default function StartTrip() {
+    const params = useSearchParams();
+    const id = params.get("id");
+    console.log(id)
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const { data, isLoading, isError } = useGetCustomerOrderDetailsQuery(id as string);
+    const orderDetails = data?.data;
+    console.log(orderDetails)
+
+    const [updataOrderStatus] = useUpdataOrderStatusMutation();
+
+    const handleOnTheWay = async (orderId: string) => {
+        console.log(orderId, 'iddd')
+        setLoading(true);
+        try {
+            const res = await updataOrderStatus({ id, data: { status: 'on_the_way' } }).unwrap();
+            console.log('Delivery request accepted successfully', res);
+            toast.success(res?.message || 'Delivery request accepted successfully');
+            router.push(`/driver/deliver_parcel?id=${id}`);
+            setLoading(false);
+        } catch (error: any) {
+            toast.error(error?.data?.message || 'Failed to accept delivery request');
+            console.error('Error accepting delivery request:', error);
+            setLoading(false);
+        }
+    }
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen"><Loading /></div>;
+    }
+    if (isError) {
+        return <div className="flex items-center justify-center h-screen">data not found</div>;
+    }
+
     return (
         <div>
             <title>Start Trip</title>
@@ -16,16 +56,16 @@ export default function StartTrip() {
                         <div className="w-full sm:w-1/2">
                             <div className="flex items-center justify-between mb-4">
                                 <h1 className="text-2xl font-medium text-gray-800">
-                                    Customer: Sharif Mahamud
+                                    Customer: {orderDetails?.customer_details?.name}
                                 </h1>
                                 <div className="bg-gradient-to-r from-[#EFB639] to-[#C59325] flex items-center gap-4 rounded-lg p-2 px-4">
-                                    <PhoneCall className="w-5 h-5 text-black p-1 rounded-full bg-white" />
+                                    <PhoneCall onClick={() => window.open(`https://wa.me/${orderDetails?.customer_details?.phone_number}`)} className="w-5 cursor-pointer h-5 text-black p-1 rounded-full bg-white" />
                                     <MessageSquareMore className="w-5 h-5 text-black p-1 rounded-full bg-white" />
                                 </div>
                             </div>
                             <div>
-                                <p className="text-[#D69D21] text-[16px] font-normal">ID#12345</p>
-                                <p className="text-secondary text-xl font-normal">Package: Truck Alternator - 15kg</p>
+                                <p className="text-[#D69D21] text-[16px] font-normal">ID#{orderDetails?.order_id}</p>
+                                <p className="text-secondary text-xl font-normal">Package: {orderDetails?.assign_driver_details?.vehicle} - {orderDetails?.product_weight}kg</p>
                             </div>
                             <div className="flex items-center gap-2 mt-4">
                                 <svg width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -33,7 +73,7 @@ export default function StartTrip() {
                                     <path d="M17.5584 8.15969H16.6809C16.5136 4.45376 13.2921 1.23241 9.58628 1.06504V0.1875H8.59378V1.06504C4.88785 1.23238 1.6665 4.45386 1.49913 8.15969H0.621582V9.1522H1.49913C1.6665 12.8581 4.88795 16.0795 8.59378 16.2469V17.1244H9.58628V16.2469C13.2922 16.0795 16.5136 12.858 16.6809 9.1522H17.5585L17.5584 8.15969ZM9.58628 15.2517V14.4084H8.59378V15.2517C5.34142 15.0093 2.73665 12.4046 2.49425 9.15217H3.33752V8.15966H2.49425C2.73662 4.90731 5.34139 2.30254 8.59378 2.06013V2.9034H9.58628V2.06017C12.8386 2.30254 15.4434 4.90731 15.6858 8.15969H14.8425V9.1522H15.6858C15.4434 12.4046 12.8386 15.0093 9.58628 15.2517Z" fill="#D69D21" />
                                 </svg>
 
-                                <p className="text-secondary text-xl font-normal">Badd -1</p>
+                                <p className="text-secondary text-xl font-normal">{orderDetails?.pickup_location}</p>
                             </div>
                             <div className="flex items-center gap-2 mt-4">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,20 +82,23 @@ export default function StartTrip() {
                                 </svg>
 
 
-                                <p className="text-secondary text-xl font-normal">Gulshan -1</p>
+                                <p className="text-secondary text-xl font-normal">{orderDetails?.delivery_location}</p>
                             </div>
                             <div className=" flex  items-center w-1/2 mt-8">
                                 <div className="flex  gap-4 w-full max-w-sm">
                                     <Link href={'/driver/deliver_parcel'} className="flex-1">
                                         <Button
+                                            onClick={()=> handleOnTheWay(orderDetails?._id)}
+                                            disabled={loading}
                                             className="w-full text-base px-18 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-6 rounded-lg font-medium hover:bg-primary/90 transition"
                                             aria-label="Decline request"
                                         >
-                                            Start Trip
+                                            {loading ? 'Start Trip ...' : 'Start Trip'}
                                         </Button>
                                     </Link>
                                     <Button
-                                        onClick={() => window.open("tel:+1234567890")}
+                                        // onClick={() => window.open("tel:+1234567890")}
+                                        onClick={() => window.open(`https://wa.me/${orderDetails?.customer_details?.phone_number}`)}
                                         variant="outline"
                                         className="w-full flex-1 border-2 border-gray-300 px-14 text-secondary text-base py-5 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
                                         aria-label="Accept request"

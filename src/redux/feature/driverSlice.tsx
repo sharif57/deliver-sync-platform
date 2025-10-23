@@ -33,7 +33,17 @@ export const driverApi = baseApi.injectEndpoints({
             providesTags: ["Driver"],
         }),
 
+        updataOrderStatus: builder.mutation({
+            query: ({ id, data }) => ({
+                // /order/delivery/update/112354/
+                url: `/order/delivery/update/${id}/`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["Driver"],
+        }),
+
     }),
 });
 
-export const { useAcceptDeliveryRequestMutation, useGetDriverOrdersQuery, useGetPendingOrdersQuery } = driverApi;
+export const { useAcceptDeliveryRequestMutation, useGetDriverOrdersQuery, useGetPendingOrdersQuery , useUpdataOrderStatusMutation } = driverApi;

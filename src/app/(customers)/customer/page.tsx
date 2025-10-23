@@ -1,9 +1,11 @@
+'use client';
 import Counter from '@/components/shareUi/counter'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Calculator from '@/components/ui/icon/calcutor';
 import Complete from '@/components/ui/icon/complete';
 import Time from '@/components/ui/icon/time';
+import { useDashboardQuery } from '@/redux/feature/commonSlice';
 import { Clock, LocationEdit, Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
@@ -62,10 +64,13 @@ const activities: Activity[] = [
 ]
 
 export default function CustomerDashboard() {
+    const { data: dashboardData } = useDashboardQuery(undefined);
+    console.log(dashboardData?.data, '=============>')
+    const dashboard = dashboardData?.data
     const counters = [
-        { title: "Today's Order", count: 12, icon: <Calculator /> },
-        { title: "Pending Order", count: 2, icon: <Time /> },
-        { title: "Completed Order", count: 2, icon: <Complete /> },
+        { title: "Today's Order", count: dashboard?.todays_order || 0, icon: <Calculator /> },
+        { title: "Pending Order", count: dashboard?.total_pending_order || 0, icon: <Time /> },
+        { title: "Completed Order", count: dashboard?.total_completed_order || 0, icon: <Complete /> },
     ];
     return (
         <>

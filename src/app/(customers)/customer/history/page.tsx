@@ -1022,7 +1022,6 @@ import { useState } from "react";
 import { ChevronRight, Calendar, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import PageHeader from "@/components/shareUi/onBack";
 import { useGetCustomerOrdersQuery } from "@/redux/feature/customerSlice";
 
@@ -1343,7 +1342,7 @@ export default function DeliveryHistory() {
                     </button>
                   )} */}
                   <Link
-                    href={item.link}
+                    href={item.link ?? `/customer/track-my-order/?id=${item.id}`}
                     className="bg-white p-1.5 sm:p-2 rounded-lg"
                     aria-label="View order details"
                   >
