@@ -3,37 +3,29 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Back from "@/components/ui/icon/back"
+import { useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice"
 import { FileText, Building2, Tag, DollarSign, MapPin, Home } from "lucide-react"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
-interface OrderDetailsCardProps {
-    orderId?: string
-    companyName?: string
-    productDescription?: string
-    productAmount?: string
-    pickupLocation?: string
-    deliveryLocation?: string
-    driverName?: string
-    driverRating?: number
-    driverImage?: string
-    onCancel?: () => void
-    onRequestAgain?: () => void
-}
 
-export default function DetailsCard({
-    orderId = "#12345",
-    companyName = "TruckParts BD",
-    productDescription = "Engine Oil",
-    productAmount = "$1250",
-    pickupLocation = "Gulshan-1",
-    deliveryLocation = "Badda -1",
-}: OrderDetailsCardProps) {
+export default function DetailsCard() {
+
+    const searchParams = useSearchParams();
+    const orderId = searchParams.get("id") || "";
+    console.log(orderId, 'order id=============>');
+    const { data } = useGetCustomerOrderDetailsQuery(orderId);
+    const orderDetails = data?.data;
+    console.log(data?.data)
     const router = useRouter()
+
+
 
     const handmessage = () => {
         router.push('/customer/message')
     }
+
+    const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL
 
     return (
         <div>
@@ -56,7 +48,7 @@ export default function DetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Order ID</label>
                                 <div className="flex items-center gap-3 p-3 bg-[#FDF7E9] rounded-lg">
                                     <FileText className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800 font-medium">{orderId}</span>
+                                    <span className="text-gray-800 font-medium">{orderDetails?.order_id}</span>
                                 </div>
                             </div>
 
@@ -65,7 +57,7 @@ export default function DetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Product Short Description</label>
                                 <div className="flex items-center gap-3 p-3 bg-[#FDF7E9] rounded-lg">
                                     <Tag className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{productDescription}</span>
+                                    <span className="text-gray-800">{orderDetails?.description}</span>
                                     <span className="text-xs text-gray-500 ml-auto">(Optional)</span>
                                 </div>
                             </div>
@@ -75,7 +67,7 @@ export default function DetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Pickup Location</label>
                                 <div className="flex items-center gap-3 p-3 bg-[#FDF7E9] rounded-lg">
                                     <MapPin className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{pickupLocation}</span>
+                                    <span className="text-gray-800">{orderDetails?.pickup_location}</span>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +79,7 @@ export default function DetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
                                 <div className="flex items-center gap-3 p-3 bg-[#FDF7E9] rounded-lg">
                                     <Building2 className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{companyName}</span>
+                                    <span className="text-gray-800">{orderDetails?.company_name || ''}</span>
                                 </div>
                             </div>
 
@@ -96,7 +88,7 @@ export default function DetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Product Amount</label>
                                 <div className="flex items-center gap-3 p-3 bg-[#FDF7E9] rounded-lg">
                                     <DollarSign className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{productAmount}</span>
+                                    <span className="text-gray-800">{orderDetails?.product_amount}</span>
                                     <span className="text-xs text-gray-500 ml-auto">(Optional)</span>
                                 </div>
                             </div>
@@ -106,7 +98,7 @@ export default function DetailsCard({
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Location</label>
                                 <div className="flex items-center gap-3 p-3 bg-[#FDF7E9] rounded-lg">
                                     <Home className="w-5 h-5 text-gray-600" />
-                                    <span className="text-gray-800">{deliveryLocation}</span>
+                                    <span className="text-gray-800">{orderDetails?.delivery_location}</span>
                                 </div>
                             </div>
                         </div>
@@ -122,22 +114,34 @@ export default function DetailsCard({
                                 <div className="text-center mb-4 sm:mb-6">
                                     <h1 className="text-3xl font-medium text-secondary mb-2">Driver</h1>
                                     <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-4">
+                                        {orderDetails?.assign_driver_details?.image ? (
+                                            <Image
+                                                src={`${IMAGE}${orderDetails.assign_driver_details.image}`.trim()}
+                                                alt="Profile"
+                                                width={400}
+                                                height={400}
+                                                className="object-contain w-full rounded-full h-full"
+                                                priority
+                                            />
+                                        ) : (
+                                            <Image
+                                                src="/images/car.png"
+                                                alt="Profile"
+                                                width={400}
+                                                height={400}
+                                                className="object-contain w-full h-full"
+                                                priority
+                                            />
+                                        )}
 
-                                        <Image
-                                            src="/images/car.png"
-                                            alt="Profile"
-                                            width={400}
-                                            height={400}
-                                            className="object-contain w-full h-full"
-                                            priority
-                                        />
+
                                     </div>
                                     <div>
 
                                         <div className="flex flex-col items-center justify-center space-x-1 gap-4">
                                             <div className="flex items-center gap-2">
                                                 <p className="text-secondary font-normal text-sm sm:text-base md:text-2xl ">
-                                                    Abdur Rahim
+                                                    {orderDetails?.assign_driver_details?.name || ''}
                                                 </p>
                                                 <div className="flex items-center gap-2">
                                                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -151,10 +155,10 @@ export default function DetailsCard({
                                                         </defs>
                                                     </svg>
 
-                                                    <span className="text-gray-800 font-medium text-sm sm:text-base md:text-2xl ">4.9</span>
+                                                    <span className="text-gray-800 font-medium text-sm sm:text-base md:text-2xl ">{orderDetails?.assign_driver_details?.average_rating} ({orderDetails?.assign_driver_details?.total_ratings})</span>
                                                 </div>
                                             </div>
-                                            <p className="">Toyota</p>
+                                            <p className="">{orderDetails?.assign_driver_details?.vehicle}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -179,27 +183,38 @@ export default function DetailsCard({
                             <div>
                                 {/* Driver Profile */}
                                 <div className="text-center mb-4 sm:mb-6">
-                                    <h1 className="text-3xl font-medium text-secondary mb-2">Customer</h1>
+                                    <h1 className="text-3xl font-medium text-secondary mb-2 capitalize">{orderDetails?.customer_details?.role}</h1>
                                     <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-4">
-                                        <Image
-                                            src="/images/car.png"
-                                            alt="Profile"
-                                            width={400}
-                                            height={400}
-                                            className="object-contain w-full h-full"
-                                            priority
-                                        />
+                                       {orderDetails?.customer_details?.image ? (
+                                            <Image
+                                                src={`${IMAGE}${orderDetails?.customer_details?.image}`.trim()}
+                                                alt="Profile"
+                                                width={400}
+                                                height={400}
+                                                className="object-contain w-full rounded-full h-full"
+                                                priority
+                                            />
+                                        ) : (
+                                            <Image
+                                                src="/images/car.png"
+                                                alt="Profile"
+                                                width={400}
+                                                height={400}
+                                                className="object-contain w-full h-full"
+                                                priority
+                                            />
+                                        )}
                                     </div>
                                     <div>
 
                                         <div className="flex flex-col items-center justify-center space-x-1 gap-4">
                                             <div className="flex items-center gap-2">
                                                 <p className="text-secondary font-normal text-sm sm:text-base md:text-2xl ">
-                                                    Abdur Rahim
+                                                    {orderDetails?.customer_details?.name}
                                                 </p>
 
                                             </div>
-                                            <p className="">Toyota</p>
+                                            <p className="">{orderDetails?.customer_details?.phone_number}</p>
                                         </div>
                                     </div>
                                 </div>

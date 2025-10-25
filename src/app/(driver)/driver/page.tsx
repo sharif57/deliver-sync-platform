@@ -8,7 +8,7 @@ import Loading from '@/components/ui/icon/loading';
 import Money from '@/components/ui/icon/money'
 import Times from '@/components/ui/icon/times';
 import { useDashboardQuery } from '@/redux/feature/commonSlice';
-import { useAcceptDeliveryRequestMutation,  useGetPendingOrdersQuery } from '@/redux/feature/driverSlice';
+import { useAcceptDeliveryRequestMutation, useGetPendingOrdersQuery } from '@/redux/feature/driverSlice';
 import { DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -18,10 +18,15 @@ import { toast } from 'sonner';
 export default function Driver() {
     const router = useRouter()
 
-    const { data, error, isLoading } = useGetPendingOrdersQuery(undefined);
+    const { data,  isLoading } = useGetPendingOrdersQuery(undefined, {
+        pollingInterval: 1000,      
+        refetchOnFocus: true,        
+        refetchOnReconnect: true
+    });
+    console.log(data?.data)
     const [acceptDeliveryRequest] = useAcceptDeliveryRequestMutation();
 
-    const {data: dashboardData} = useDashboardQuery(undefined);
+    const { data: dashboardData } = useDashboardQuery(undefined);
     console.log(dashboardData?.data, '=============>')
     const dashboard = dashboardData?.data
 
@@ -168,12 +173,12 @@ export default function Driver() {
                                                                 <hr className="border-gray-200 my-6" />
                                                                 <div className="space-y-4 text-secondary">
                                                                     <div className="flex justify-between items-center">
-                                                                        <span className="text-lg">Package: Truck Alternator</span>
+                                                                        <span className="text-lg">Weight</span>
                                                                         <span className="font-semibold text-xl">{order?.product_weight || ''} KG</span>
                                                                     </div>
                                                                     <div className="flex justify-between items-center">
                                                                         <span className="text-lg">Distance</span>
-                                                                        <span className="font-semibold text-xl">12 KM</span>
+                                                                        <span className="font-semibold text-xl">{order?.distance_km || ''} KM</span>
                                                                     </div>
                                                                     <div className="flex justify-between items-center">
                                                                         <span className="text-lg">Estimate Payment</span>
@@ -196,7 +201,7 @@ export default function Driver() {
                                                                         className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition"
                                                                         aria-label="Accept request"
                                                                     >
-                                                                        { order.status === 'assigned' ? 'Accepting...' : 'Accept'}
+                                                                        {order.status === 'assigned' ? 'Accepting...' : 'Accept'}
                                                                     </button>
                                                                     {/* <button
                                                                         key={order.id}

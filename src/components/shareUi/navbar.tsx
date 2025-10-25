@@ -244,11 +244,15 @@ export default function ResponsiveNavbar() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [localRole, setLocalRole] = useState<string | null>(null);
- 
+
 
 
   // Fetch user profile data using RTK Query
-  const { data, isLoading, isError } = useUserProfileQuery(undefined);
+  const { data, isLoading, isError } = useUserProfileQuery(undefined, {
+    pollingInterval: 1000,
+    refetchOnFocus: true,
+    refetchOnReconnect: true
+  });
   const profile = data?.data;
 
   const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL || '';

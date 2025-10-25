@@ -129,7 +129,7 @@ function DriverConfirmationPage() {
                         your delivery request
                       </p>
                       <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mt-1">
-                        Arriving in {orderDetails?.actual_delivery_time} minutes ({orderDetails?.distance_km} km)
+                        Arriving in {orderDetails?.estimated_time_minutes} minutes ({orderDetails?.distance_km} km)
                       </p>
                       <hr className="my-4 border-gray-200 border" />
                     </div>

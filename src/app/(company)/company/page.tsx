@@ -12,7 +12,11 @@ import React from 'react'
 
 export default function Company() {
 
-    const { data, isLoading } = useDashboardQuery(undefined);
+    const { data, isLoading } = useDashboardQuery(undefined, {
+        pollingInterval: 1000,
+        refetchOnFocus: true,
+        refetchOnReconnect: true
+    });
     console.log(data?.data, 'company')
     const companyDetails = data?.data;
 
@@ -36,7 +40,7 @@ export default function Company() {
     ]
 
     if (isLoading) {
-        return <div><Loading /></div>
+        return <div className='flex justify-center items-center h-screen'><Loading /></div>
     }
 
     return (
