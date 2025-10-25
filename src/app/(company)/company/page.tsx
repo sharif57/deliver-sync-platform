@@ -3,18 +3,24 @@ import Counter from '@/components/shareUi/counter'
 import Calculator from '@/components/ui/icon/calcutor';
 import Canceleds from '@/components/ui/icon/Canceleds';
 import Completes from '@/components/ui/icon/Completes';
+import Loading from '@/components/ui/icon/loading';
 import Times from '@/components/ui/icon/times';
+import { useDashboardQuery } from '@/redux/feature/commonSlice';
 import { ChevronRight, DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
 export default function Company() {
 
+    const { data, isLoading } = useDashboardQuery(undefined);
+    console.log(data?.data, 'company')
+    const companyDetails = data?.data;
+
     const items = [
-        { title: "Total Order Today", count: 12, icon: <Calculator /> },
-        { title: "Ongoing Order", count: 2, icon: <Times /> },
-        { title: "Completed Order", count: 2, icon: <Completes /> },
-        { title: "Canceled Order", count: 2, icon: <Canceleds /> },
+        { title: "Total Order Today", count: companyDetails?.todays_order || 0, icon: <Calculator /> },
+        { title: "Ongoing Order", count: companyDetails?.total_ongoing_order || 0, icon: <Times /> },
+        { title: "Completed Order", count: companyDetails?.total_complited_order || 0, icon: <Completes /> },
+        { title: "Canceled Order", count: companyDetails?.total_canceled_order || 0, icon: <Canceleds /> },
     ]
 
     // const handmessage = () => {
@@ -29,6 +35,9 @@ export default function Company() {
         { id: '5', date: '17 May 2019', title: 'Engine oil', status: 'Processing' },
     ]
 
+    if (isLoading) {
+        return <div><Loading /></div>
+    }
 
     return (
         <>
@@ -64,7 +73,7 @@ export default function Company() {
                                 <h3 className='text-xl font-normal text-secondary'>Delivery History</h3>
                             </div>
                         </Link>
-                        <Link href={'/company/message-list'}  className='bg-white cursor-pointer  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
+                        <Link href={'/company/message-list'} className='bg-white cursor-pointer  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 <MessageCircleMore className='size-[35px]' />
 
@@ -81,7 +90,7 @@ export default function Company() {
                     <div className="bg-white rounded-3xl shadow-sm w-full  overflow-hidden  p-4">
                         {orders.map((order) => (
                             <div
-                                key={order.id} 
+                                key={order.id}
                                 className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 sm:p-2  "
                             >
                                 <Link

@@ -8,10 +8,10 @@ import { useUpdataOrderStatusMutation } from '@/redux/feature/driverSlice';
 import { MessageSquareMore, PhoneCall } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { toast } from 'sonner';
 
-export default function StartTrip() {
+function StartTrip() {
     const params = useSearchParams();
     const id = params.get("id");
     console.log(id)
@@ -88,7 +88,7 @@ export default function StartTrip() {
                                 <div className="flex  gap-4 w-full max-w-sm">
                                     <Link href={'/driver/deliver_parcel'} className="flex-1">
                                         <Button
-                                            onClick={()=> handleOnTheWay(orderDetails?._id)}
+                                            onClick={() => handleOnTheWay(orderDetails?._id)}
                                             disabled={loading}
                                             className="w-full text-base px-18 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-6 rounded-lg font-medium hover:bg-primary/90 transition"
                                             aria-label="Decline request"
@@ -121,5 +121,12 @@ export default function StartTrip() {
                 </div>
             </div>
         </div>
+    )
+}
+export default function Trip() {
+    return(
+        <Suspense fallback={<div><Loading /></div>} >
+            <StartTrip />
+        </Suspense>
     )
 }

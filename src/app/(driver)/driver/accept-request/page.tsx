@@ -10,6 +10,7 @@ import { useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice";
 import Loading from "@/components/ui/icon/loading";
 import { useUpdataOrderStatusMutation } from "@/redux/feature/driverSlice";
 import { toast } from "sonner";
+import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
 
 function AcceptRequest() {
     const params = useSearchParams();
@@ -18,8 +19,11 @@ function AcceptRequest() {
     const [loading, setLoading] = useState(false);
     const { data, isLoading, isError } = useGetCustomerOrderDetailsQuery(id as string);
     const orderDetails = data?.data;
+    console.log(orderDetails)
 
     const [updataOrderStatus] = useUpdataOrderStatusMutation();
+    const [createRoom] = useCreateRoomMutation();
+
 
     const handleAcceptDelivery = async (orderId: string) => {
         console.log(orderId, 'iddd')
@@ -36,6 +40,19 @@ function AcceptRequest() {
             setLoading(false);
         }
     }
+
+    const handleCreateRoom = async () => {
+        try {
+            const res = await createRoom({ user2: orderDetails?.customer_details?.id }).unwrap();
+            console.log("Room created successfully", res);
+            toast.success(res?.message || "Room created successfully");
+            router.push(`/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
+        } catch (error: any) {
+            toast.error(error?.data?.error || "Failed to create room");
+            console.error("Error creating room:", error);
+        }
+    }
+
 
     if (isLoading) {
         return <div className="flex items-center justify-center h-screen"><Loading /></div>;
@@ -60,7 +77,7 @@ function AcceptRequest() {
                                 </h1>
                                 <div className="bg-gradient-to-r from-[#EFB639] to-[#C59325] flex items-center gap-4 rounded-lg p-2 px-4">
                                     <PhoneCall onClick={() => window.open(`https://wa.me/${orderDetails?.customer_details?.phone_number}`)} className="w-5 h-5 cursor-pointer text-black p-1 rounded-full bg-white" />
-                                    <MessageSquareMore onClick={() => window.open(`https://wa.me/${orderDetails?.customer_details?.phone_number}`)} className="w-5 cursor-pointer h-5 text-black p-1 rounded-full bg-white" />
+                                    <MessageSquareMore onClick={handleCreateRoom} className="w-5 cursor-pointer h-5 text-black p-1 rounded-full bg-white" />
                                 </div>
                             </div>
                             <div>
@@ -85,14 +102,14 @@ function AcceptRequest() {
                             <div className=" flex  items-center w-1/2 mt-8">
                                 <div className="flex  gap-4 w-full max-w-sm">
                                     {/* <Link href={'/driver/start-trip'} className="flex-1"> */}
-                                        <Button
-                                            onClick={() => handleAcceptDelivery(orderDetails?._id)}
-                                            disabled={loading}
-                                            className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-6 rounded-lg font-medium hover:bg-primary/90 transition"
-                                            aria-label="Decline request"
-                                        >
-                                            {loading ? "Accepting..." : "Accept Request"}
-                                        </Button>
+                                    <Button
+                                        onClick={() => handleAcceptDelivery(orderDetails?._id)}
+                                        disabled={loading}
+                                        className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-6 rounded-lg font-medium hover:bg-primary/90 transition"
+                                        aria-label="Decline request"
+                                    >
+                                        {loading ? "Accepting..." : "Accept Request"}
+                                    </Button>
                                     {/* </Link> */}
                                     <Button
                                         // onClick={() => window.open(`tel: ${orderDetails?.customer_details.phone_number}`)}

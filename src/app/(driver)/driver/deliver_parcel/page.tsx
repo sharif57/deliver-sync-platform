@@ -9,10 +9,10 @@ import { useUpdataOrderStatusMutation } from '@/redux/feature/driverSlice';
 import { MessageSquareMore, PhoneCall } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { toast } from 'sonner';
 
-export default function DeliverTheParcel() {
+ function DeliverTheParcel() {
     const params = useSearchParams();
     const id = params.get("id");
     console.log(id)
@@ -120,5 +120,12 @@ export default function DeliverTheParcel() {
                 </div>
             </div>
         </div>
+    )
+}
+export default function Parcel(){
+    return(
+        <Suspense fallback={<div><Loading /></div>} >
+            <DeliverTheParcel />
+        </Suspense>
     )
 }

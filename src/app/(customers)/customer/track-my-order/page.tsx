@@ -289,7 +289,7 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
         }
     };
 
-    const handleCreateRoom = async () => {
+    const handleCreateRoom = async (id: any) => {
         try {
             const res = await createRoom({user2: orderDetails?.assign_driver}).unwrap();
             console.log("Room created successfully", res);

@@ -15,8 +15,9 @@ import House from "@/components/ui/icon/house"
 import Loading from "@/components/ui/icon/loading"
 import { useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
-export default function ActiveDeliveryPage() {
+ function ActiveDeliveryPage() {
 
     const params = useSearchParams();
     const id = params.get("id");
@@ -95,5 +96,13 @@ export default function ActiveDeliveryPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function ActiveDelivery (){
+    return (
+        <Suspense fallback={<div><Loading /></div>} >
+            <ActiveDeliveryPage />
+        </Suspense>
     )
 }
