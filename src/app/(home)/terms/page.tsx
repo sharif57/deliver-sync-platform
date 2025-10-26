@@ -1,9 +1,9 @@
 "use client"
 
-import { usePrivacyGetQuery } from "@/redux/feature/settingSlice"
+import {  useTramsGetQuery } from "@/redux/feature/settingSlice"
 
 export default function PrivacyPolicy() {
-  const { data } = usePrivacyGetQuery(undefined);
+  const { data } = useTramsGetQuery(undefined);
  
   return (
     <div className="">

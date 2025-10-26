@@ -9,6 +9,7 @@ import Money from '@/components/ui/icon/money'
 import Times from '@/components/ui/icon/times';
 import { useDashboardQuery } from '@/redux/feature/commonSlice';
 import { useAcceptDeliveryRequestMutation, useGetPendingOrdersQuery } from '@/redux/feature/driverSlice';
+import { useUserProfileQuery } from '@/redux/feature/userSlice';
 import { DollarSign, MessageCircleMore, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -29,6 +30,9 @@ export default function Driver() {
     const { data: dashboardData } = useDashboardQuery(undefined);
     console.log(dashboardData?.data, '=============>')
     const dashboard = dashboardData?.data
+
+    const {data: user} = useUserProfileQuery(undefined);
+    console.log(user?.data)
 
     const items = [
         { title: "Total Earnings", count: dashboard?.total_earning, icon: <Money /> },
@@ -71,7 +75,7 @@ export default function Driver() {
             <title>Driver Dashboard</title>
             <div className='space-y-6'>
                 <div>
-                    <h1 className='text-2xl font-medium text-secondary'>Welcome Back, Rahim!</h1>
+                    <h1 className='text-2xl font-medium text-secondary capitalize'>Welcome Back, {user?.data?.name}!</h1>
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                     {

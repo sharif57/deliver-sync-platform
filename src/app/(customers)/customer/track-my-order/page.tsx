@@ -237,11 +237,70 @@ import Locations from "@/components/ui/icon/locations";
 import Takes from "@/components/ui/icon/takes";
 import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
 
- function TrackMyOrder() {
+import GoogleMapReact from "google-map-react";
+
+const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY ?? "";
+
+// Enhanced Marker Component for Google Map
+interface MarkerProps {
+    lat: number;
+    lng: number;
+    text: string;
+    type: "pickup" | "delivery";
+}
+
+const Marker = ({ text, type }: MarkerProps) => (
+    <div className={`flex flex-col items-center ${type === "pickup" ? "text-blue-600" : "text-green-600"}`}>
+        <div className={`relative ${type === "pickup" ? "text-blue-500" : "text-green-500"}`}>
+            {/* Custom SVG markers */}
+            {type === "pickup" ? (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+            ) : (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C7.589 2 4 5.589 4 9.995 3.971 16.44 11.696 21.784 12 22c0 0 8.029-5.56 8-12 0-4.411-3.589-8-8-8zm0 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
+                </svg>
+            )}
+        </div>
+        <div className={`mt-1 px-2 py-1 rounded-full text-xs font-bold text-white ${type === "pickup" ? "bg-blue-500" : "bg-green-500"
+            }`}>
+            {text}
+        </div>
+    </div>
+);
+
+// Route Info Component
+const RouteInfo = ({ distance, duration }: { distance?: string; duration?: string }) => (
+    <div className="absolute top-[300px] bg-white p-3 rounded-lg shadow-lg z-10 border">
+        <div className="flex items-center gap-2 mb-2">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span className="text-sm font-medium">Pickup Location</span>
+        </div>
+        <div className="flex items-center gap-2 mb-2">
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <span className="text-sm font-medium">Delivery Location</span>
+        </div>
+        {distance && duration && (
+            <div className="mt-2 pt-2 border-t">
+                <div className="flex justify-between text-xs">
+                    <span>Distance:</span>
+                    <span className="font-medium">{distance}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                    <span>Estimated Time:</span>
+                    <span className="font-medium">{duration}</span>
+                </div>
+            </div>
+        )}
+    </div>
+);
+
+function TrackMyOrder() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get("id") || "";
     console.log(orderId, "order id=============>");
-    const { data, isLoading, isError } = useGetCustomerOrderDetailsQuery(orderId);
+    const { data, isLoading, isError, refetch } = useGetCustomerOrderDetailsQuery(orderId);
     console.log(data, ">>>>>>>>>>>>>>>>>>track my order");
     const orderDetails = data?.data;
 
@@ -250,6 +309,10 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
     const [cancelOrder] = useCancelOrderMutation();
 
     const [createRoom] = useCreateRoomMutation();
+
+    const [routeInfo, setRouteInfo] = useState<{ distance: string; duration: string } | null>(null);
+    const [mapInstance, setMapInstance] = useState<any>(null);
+    const [mapsInstance, setMapsInstance] = useState<any>(null);
 
     // Map API statuses to timeline steps
     const getTimelineStatus = (status: string) => {
@@ -291,7 +354,7 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
 
     const handleCreateRoom = async (id: any) => {
         try {
-            const res = await createRoom({user2: orderDetails?.assign_driver}).unwrap();
+            const res = await createRoom({ user2: orderDetails?.assign_driver }).unwrap();
             console.log("Room created successfully", res);
             toast.success(res?.message || "Room created successfully");
             router.push(`/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
@@ -300,6 +363,138 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
             console.error("Error creating room:", error);
         }
     }
+
+
+    const handleApiLoaded = ({ map, maps }: { map: any; maps: any }) => {
+        setMapInstance(map);
+        setMapsInstance(maps);
+
+        // Adjust map to fit both pickup and delivery locations
+        if (
+            orderDetails?.pickup_location_lat &&
+            orderDetails?.pickup_location_long &&
+            orderDetails?.delivery_location_lat &&
+            orderDetails?.delivery_location_long
+        ) {
+            const bounds = new maps.LatLngBounds();
+            bounds.extend(
+                new maps.LatLng(
+                    parseFloat(orderDetails.pickup_location_lat),
+                    parseFloat(orderDetails.pickup_location_long)
+                )
+            );
+            bounds.extend(
+                new maps.LatLng(
+                    parseFloat(orderDetails.delivery_location_lat),
+                    parseFloat(orderDetails.delivery_location_long)
+                )
+            );
+            map.fitBounds(bounds, { padding: 50 });
+
+            // Calculate route and draw polyline
+            calculateRoute(map, maps);
+        }
+    };
+
+    const calculateRoute = (map: any, maps: any) => {
+        if (!maps.DirectionsService || !maps.DirectionsRenderer) return;
+
+        const directionsService = new maps.DirectionsService();
+        const directionsRenderer = new maps.DirectionsRenderer({
+            map: map,
+            polylineOptions: {
+                strokeColor: "#4F46E5",
+                strokeOpacity: 0.8,
+                strokeWeight: 6,
+            },
+            suppressMarkers: true,
+        });
+
+        const request = {
+            origin: {
+                lat: parseFloat(orderDetails.pickup_location_lat),
+                lng: parseFloat(orderDetails.pickup_location_long),
+            },
+            destination: {
+                lat: parseFloat(orderDetails.delivery_location_lat),
+                lng: parseFloat(orderDetails.delivery_location_long),
+            },
+            travelMode: maps.TravelMode.DRIVING,
+        };
+
+        directionsService.route(request, (result: any, status: any) => {
+            if (status === maps.DirectionsStatus.OK) {
+                directionsRenderer.setDirections(result);
+
+                // Extract route information
+                const route = result.routes[0].legs[0];
+                setRouteInfo({
+                    distance: route.distance?.text || "Calculating...",
+                    duration: route.duration?.text || "Calculating...",
+                });
+
+                // Adjust map bounds to show entire route
+                const bounds = new maps.LatLngBounds();
+                result.routes[0].legs.forEach((leg: any) => {
+                    bounds.extend(leg.start_location);
+                    bounds.extend(leg.end_location);
+                });
+                map.fitBounds(bounds, { padding: 60 });
+            } else {
+                console.error("Directions request failed:", status);
+                // Fallback to simple polyline
+                drawFallbackPolyline(map, maps);
+            }
+        });
+    };
+
+    const drawFallbackPolyline = (map: any, maps: any) => {
+        const polyline = new maps.Polyline({
+            path: [
+                {
+                    lat: parseFloat(orderDetails.pickup_location_lat),
+                    lng: parseFloat(orderDetails.pickup_location_long),
+                },
+                {
+                    lat: parseFloat(orderDetails.delivery_location_lat),
+                    lng: parseFloat(orderDetails.delivery_location_long),
+                },
+            ],
+            geodesic: true,
+            strokeColor: "#4F46E5",
+            strokeOpacity: 0.6,
+            strokeWeight: 4,
+            strokeDashArray: [5, 5],
+        });
+
+        polyline.setMap(map);
+
+        // Calculate straight line distance
+        const distance = calculateDistance(
+            parseFloat(orderDetails.pickup_location_lat),
+            parseFloat(orderDetails.pickup_location_long),
+            parseFloat(orderDetails.delivery_location_lat),
+            parseFloat(orderDetails.delivery_location_long)
+        );
+
+        setRouteInfo({
+            distance: `${distance} km`,
+            duration: "Route not available",
+        });
+    };
+
+    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): string => {
+        const R = 6371; // Earth's radius in km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c;
+        return distance.toFixed(1);
+    };
 
     if (isLoading) {
         return (
@@ -317,6 +512,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
         );
     }
 
+    const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL;
+
     return (
         <div className="min-h-screen ">
             <title>Track My Order</title>
@@ -327,8 +524,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                     onClick={handleCancelOrder}
                     disabled={["confirmed", "delivered", "cancelled"].includes(orderDetails.status.toLowerCase()) || isCancelling}
                     className={`text-xs mb-4 sm:mb-6 sm:text-sm md:text-base font-medium ${["confirmed", "delivered", "cancelled"].includes(orderDetails.status.toLowerCase()) || isCancelling
-                            ? "text-gray-400 cursor-not-allowed"
-                            : "text-gray-600 hover:text-gray-800"
+                        ? "text-gray-400 cursor-not-allowed"
+                        : "text-gray-600 hover:text-gray-800"
                         }`}
                 >
                     {isCancelling ? "Cancelling..." : "Cancel Request"}
@@ -348,18 +545,81 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
             </div>
 
             {/* Main Content */}
-            <div className="container mx-auto px-3 sm:px-4 md:px-6 mt-4 sm:mt-6 max-w-7xl">
+            <div className="container mx-auto px-3 sm:px-4 md:px-6 mt-4 sm:mt-6 ">
                 <div className="bg-white w-full rounded-t-3xl shadow-sm overflow-hidden">
                     {/* Google Maps Iframe */}
                     <div className="w-full">
-                        <iframe
+                        {/* <iframe
                             src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d35939.61671883658!2d90.406912!3d23.78270515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2sbd!4v1758608180620!5m2!1sen!2sbd"
                             style={{ border: 0, width: "100%", height: "400px", maxHeight: "50vh" }}
                             className="sm:h-[250px] md:h-[300px]"
                             allowFullScreen
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
-                        ></iframe>
+                        ></iframe> */}
+                        <div className="bg-gray-100 rounded- overflow-hidden  border-2 border-gray-200">
+
+                            {orderDetails?.pickup_location_lat &&
+                                orderDetails?.pickup_location_long &&
+                                orderDetails?.delivery_location_lat &&
+                                orderDetails?.delivery_location_long ? (
+                                <div style={{ height: "400px", width: "100%" }} className="rounded-lg overflow-hidden">
+                                    <GoogleMapReact
+                                        bootstrapURLKeys={{ key: GOOGLE_API_KEY }}
+                                        defaultCenter={{
+                                            lat: parseFloat(orderDetails.pickup_location_lat),
+                                            lng: parseFloat(orderDetails.pickup_location_long),
+                                        }}
+                                        defaultZoom={12}
+                                        onGoogleApiLoaded={handleApiLoaded}
+                                        yesIWantToUseGoogleMapApiInternals
+                                        options={{
+                                            styles: [
+                                                {
+                                                    featureType: "all",
+                                                    elementType: "geometry",
+                                                    stylers: [{ color: "#f5f5f5" }],
+                                                },
+                                                {
+                                                    featureType: "all",
+                                                    elementType: "labels.text.fill",
+                                                    stylers: [{ color: "#666666" }],
+                                                },
+                                                {
+                                                    featureType: "road",
+                                                    elementType: "geometry",
+                                                    stylers: [{ color: "#ffffff" }],
+                                                },
+                                            ],
+                                        }}
+                                    >
+                                        <Marker
+                                            lat={parseFloat(orderDetails.pickup_location_lat)}
+                                            lng={parseFloat(orderDetails.pickup_location_long)}
+                                            text="Pickup"
+                                            type="pickup"
+                                        />
+                                        <Marker
+                                            lat={parseFloat(orderDetails.delivery_location_lat)}
+                                            lng={parseFloat(orderDetails.delivery_location_long)}
+                                            text="Delivery"
+                                            type="delivery"
+                                        />
+                                    </GoogleMapReact>
+                                    <RouteInfo
+                                        distance={routeInfo?.distance}
+                                        duration={routeInfo?.duration}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="h-400 flex items-center justify-center bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">
+                                    <p className="text-red-500 text-center p-4">
+                                        Location coordinates are not available.
+                                    </p>
+                                </div>
+                            )}
+
+                        </div>
                     </div>
 
                     {/* Progress Timeline */}
@@ -383,8 +643,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                 <div className="flex-shrink-0 w-8 sm:w-10">
                                     <div
                                         className={`rounded-full flex items-center justify-center ${timelineSteps.includes("Order Placed")
-                                                ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white"
-                                                : "bg-gray-200"
+                                            ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white"
+                                            : "bg-gray-200"
                                             }`}
                                     >
                                         {timelineSteps.includes("Order Placed") ? <Ok /> : <Oks aria-label="Order Placed" />}
@@ -411,8 +671,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                 <div className="w-8 sm:w-10 flex justify-center">
                                     <div
                                         className={`border-t h-8 sm:h-10 md:h-12 border border-dashed ${timelineSteps.includes("Picked Up")
-                                                ? "border-[#EFB639]"
-                                                : "border-gray-200"
+                                            ? "border-[#EFB639]"
+                                            : "border-gray-200"
                                             }`}
                                     ></div>
                                 </div>
@@ -423,8 +683,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                 <div className="flex-shrink-0 w-8 sm:w-10">
                                     <div
                                         className={`rounded-full flex items-center justify-center ${timelineSteps.includes("Picked Up")
-                                                ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white"
-                                                : "bg-gray-200"
+                                            ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white"
+                                            : "bg-gray-200"
                                             }`}
                                     >
                                         {timelineSteps.includes("Picked Up") ? (<PickUp />) : <PickUps aria-label="Picked Up" />}
@@ -451,8 +711,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                 <div className="w-8 sm:w-10 flex justify-center">
                                     <div
                                         className={`border-t h-8 sm:h-10 md:h-12 border border-dashed ${timelineSteps.includes("On the Way")
-                                                ? "border-[#EFB639]"
-                                                : "border-gray-200"
+                                            ? "border-[#EFB639]"
+                                            : "border-gray-200"
                                             }`}
                                     ></div>
                                 </div>
@@ -463,8 +723,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                 <div className="flex-shrink-0 w-8 sm:w-10">
                                     <div
                                         className={`rounded-full flex items-center justify-center ${timelineSteps.includes("On the Way")
-                                                ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white"
-                                                : "bg-gray-200"
+                                            ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white"
+                                            : "bg-gray-200"
                                             }`}
                                     >
                                         {/* {timelineSteps.includes("On the Way") ? <Location /> : <Locations aria-label="On the Way" />} */}
@@ -492,8 +752,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                 <div className="w-8 sm:w-10 flex justify-center">
                                     <div
                                         className={`border-t h-8 sm:h-10 md:h-12 border border-dashed ${timelineSteps.includes("Delivered")
-                                                ? "border-[#EFB639]"
-                                                : "border-gray-200"
+                                            ? "border-[#EFB639]"
+                                            : "border-gray-200"
                                             }`}
                                     ></div>
                                 </div>
@@ -504,8 +764,8 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                 <div className="flex-shrink-0 w-8 sm:w-10">
                                     <div
                                         className={`rounded-full flex items-center justify-center ${timelineSteps.includes("Delivered")
-                                                ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white"
-                                                : "bg-gray-200"
+                                            ? "bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white"
+                                            : "bg-gray-200"
                                             }`}
                                     >
                                         {/* {timelineSteps.includes("confirmed") ? <Take /> : <Takes aria-label="Delivered" />} */}
@@ -541,11 +801,12 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                     {
                                         orderDetails.assign_driver_details.vehicle_image && (
                                             <Image
-                                                src={
-                                                    orderDetails.assign_driver_details.image
-                                                        ? `${process.env.NEXT_PUBLIC_API_URL}${orderDetails.assign_driver_details.image}`
-                                                        : "/images/car.png"
-                                                }
+                                                // src={
+                                                //     orderDetails.assign_driver_details.image
+                                                //         ? `${process.env.NEXT_PUBLIC_API_URL}${orderDetails.assign_driver_details.image}`
+                                                //         : "/images/car.png"
+                                                // }
+                                                src={`${IMAGE}${orderDetails?.assign_driver_details?.image}`}
                                                 alt="Driver Profile"
                                                 width={128}
                                                 height={128}
@@ -565,35 +826,41 @@ import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
                                     <div className="flex items-center justify-center space-x-1">
                                         <Star className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-400 fill-current" />
                                         <span className="text-gray-800 font-medium text-sm sm:text-base md:text-lg">
-                                            {orderDetails.assign_driver_details.rating || "N/A"}
+                                            {orderDetails.assign_driver_details.rating || "0"}
                                         </span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row sm:space-x-4 md:space-x-6 max-w-md mx-auto space-y-3 sm:space-y-0">
+                            <div className="flex flex-col sm:flex-row sm:space-x-4 md:space-x-6 max-w-md mx-auto space-y-3 sm:space-y-0 w-full">
                                 <Button
                                     onClick={() =>
-                                        window.location.href = `tel:${orderDetails.assign_driver_details.phone_number || "123456789"}`
+                                        window.location.href = `tel:${orderDetails?.assign_driver_details?.phone_number || "123456789"}`
                                     }
-                                    className="flex-1 flex items-center justify-center text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white min-h-[48px] sm:min-h-[52px] rounded-lg font-medium hover:bg-gradient-to-r hover:from-[#d4a847] hover:to-[#7a5d29]"
+                                    className="flex-1 flex items-center justify-center text-sm sm:text-base md:text-lg 
+      bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white 
+      min-h-[48px] sm:min-h-[52px] rounded-lg font-medium 
+      hover:bg-gradient-to-r hover:from-[#d4a847] hover:to-[#7a5d29] 
+      w-full"
                                 >
                                     <PhoneCall className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                                     Call Now
                                 </Button>
 
-                                {/* <Link href={`/message?id=${orderDetails.id}`} className="flex-1 cursor-pointer"> */}
-                                    <Button
-                                        variant="outline"
-                                        onClick={()=> handleCreateRoom(orderDetails?.id)}
-                                        className="flex items-center justify-center w-full border-gray-300  cursor-pointer text-secondary text-sm sm:text-base md:text-lg min-h-[48px] sm:min-h-[52px] rounded-lg font-medium hover:bg-gray-50 bg-transparent"
-                                    >
-                                        <MessageSquareMore className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                                        Message Now
-                                    </Button>
-                                {/* </Link> */}
+                                <Button
+                                    variant="outline"
+                                    onClick={() => handleCreateRoom(orderDetails?.id)}
+                                    className="flex-1 flex items-center justify-center text-sm sm:text-base md:text-lg 
+      border border-gray-300 text-secondary min-h-[48px] sm:min-h-[52px] 
+      rounded-lg font-medium hover:bg-gray-50 bg-transparent 
+      w-full"
+                                >
+                                    <MessageSquareMore className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                                    Message Now
+                                </Button>
                             </div>
+
                         </div>
                     )}
                 </div>

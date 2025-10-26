@@ -441,8 +441,11 @@ function ChatPage() {
 
   // Fetch initial messages via REST API
   const { data: apiMessages, isLoading, error, refetch } = useAllMessagesQuery(roomId || "", {
-    skip: !roomId || !token,
+         pollingInterval: 1000,      
+        refetchOnFocus: true,        
+        refetchOnReconnect: true
   });
+
 
   // Send message mutation
   const [sendMessage] = useSendMessageMutation();
@@ -591,9 +594,9 @@ function ChatPage() {
         <PageHeader title="Sharif Mahamud" />
 
         {/* Connection Status */}
-        {connectionError && (
+        {/* {connectionError && (
           <p className="text-center text-red-500 mb-4">{connectionError}</p>
-        )}
+        )} */}
         {!isWsConnected && !connectionError && (
           <p className="text-center text-yellow-500 mb-4">
             Connecting to chat server...
@@ -603,7 +606,6 @@ function ChatPage() {
         {/* Messages Container */}
         <div className="flex-1 overflow-y-auto mb-24 rounded-lg bg-white px-4 sm:px-6 py-4 space-y-4">
           {isLoading && <p className="text-center text-gray-500">Loading messages...</p>}
-          {error && <p className="text-center text-red-500">Error loading messages</p>}
           {messages.map((message) => (
             <div
               key={message.id}
@@ -618,7 +620,8 @@ function ChatPage() {
                 {message.sender === "driver" && (
                   <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden">
                     <img
-                      src={IMAGE ? `${IMAGE}/images/image.png` : "/images/image.png"}
+                      // src={IMAGE ? `${IMAGE}/images/image.png` : "/images/image.png"}
+                      src={"/images/image.png"}
                       // width={400}
                       // height={400}
                       alt="Driver"
@@ -665,7 +668,7 @@ function ChatPage() {
             <Button
               onClick={handleSendMessage}
               className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-[#EFB639] to-[#C59325] rounded-full flex items-center justify-center p-0 hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors"
-              disabled={isLoading || !newMessage.trim() || !isWsConnected || !token}
+              disabled={isLoading || !newMessage.trim()  || !token}
             >
               <Send className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </Button>

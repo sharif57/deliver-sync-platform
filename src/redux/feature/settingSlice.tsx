@@ -11,9 +11,25 @@ export const settingApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
             providesTags: ["Setting"],
-        })
+        }),
+
+        aboutUsGet: builder.query({
+            query: () => ({
+                url: "/settings/about_us/",
+                method: "GET",
+            }),
+            providesTags: ["Setting"],
+        }),
+
+        tramsGet: builder.query({
+            query: () => ({
+                url: "/settings/terms_conditions/",
+                method: "GET",
+            }),
+            providesTags: ["Setting"],
+        }),
 
     }),
 });
 
-export const { usePrivacyGetQuery } = settingApi;
+export const { usePrivacyGetQuery , useAboutUsGetQuery, useTramsGetQuery } = settingApi;

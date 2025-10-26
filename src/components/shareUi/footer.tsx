@@ -136,10 +136,10 @@ const Footer = () => {
 
             <li>
               <Link
-                href="/privacy-policy"
+                href="/about"
                 className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
-                FAQs
+                About Us
               </Link>
             </li>
             <li>
@@ -152,7 +152,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                href="/privacy-policy"
+                href="/terms"
                 className=" dark:text-gray-300 hover:text-primary dark:hover:text-teal-400 transition-colors duration-300"
               >
                 Terms of Service

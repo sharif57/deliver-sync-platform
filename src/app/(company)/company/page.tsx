@@ -7,6 +7,7 @@ import Completes from '@/components/ui/icon/Completes';
 import Loading from '@/components/ui/icon/loading';
 import Times from '@/components/ui/icon/times';
 import { useDashboardQuery } from '@/redux/feature/commonSlice';
+import { useUserProfileQuery } from '@/redux/feature/userSlice';
 import {  DollarSign, Plus } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -20,6 +21,8 @@ export default function Company() {
     });
     console.log(data?.data, 'company')
     const companyDetails = data?.data;
+
+    const {data: user} = useUserProfileQuery(undefined);
 
     const items = [
         { title: "Total Order Today", count: companyDetails?.todays_order || 0, icon: <Calculator /> },
@@ -42,7 +45,7 @@ export default function Company() {
             <title>Company Dashboard</title>
             <div className='space-y-6'>
                 <div>
-                    <h1 className='text-2xl font-medium text-secondary'>Welcome Back, Sharif Mahamud !</h1>
+                    <h1 className='text-2xl font-medium text-secondary capitalize'>Welcome Back, {user?.data?.name} !</h1>
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
                     {

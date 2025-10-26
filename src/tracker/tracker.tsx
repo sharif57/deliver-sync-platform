@@ -117,7 +117,7 @@ export default function AutoLocationTracker() {
             timestamp: new Date().toISOString(),
           };
 
-          console.log("📍 Updated Location:", locationData);
+          // console.log("📍 Updated Location:", locationData);
           localStorage.setItem("userLocation", JSON.stringify(locationData));
 
           try {
