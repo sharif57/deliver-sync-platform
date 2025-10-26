@@ -47,10 +47,10 @@ const Footer = () => {
 
   const pathname = usePathname();
 
-  if (pathname === '/message') {
+  if (pathname === '/message' || pathname === '/driver/message' || pathname === '/company/message') {
     return null;
   }
-
+// company/message?id=556626&room_id=3
   return (
     <footer className="bg-[#261B02] text-white  py-12 px-4 font-inter border-t border-gray-200 dark:border-gray-800">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">

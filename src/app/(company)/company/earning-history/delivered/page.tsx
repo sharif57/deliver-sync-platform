@@ -1,15 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Back from "@/components/ui/icon/back"
+import Loading from "@/components/ui/icon/loading"
+import { useCreateRoomMutation } from "@/redux/feature/chartSlice"
 import { useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice"
 import { FileText, Building2, Tag, DollarSign, MapPin, Home } from "lucide-react"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from "react"
+import { toast } from "sonner"
 
 
-export default function DetailsCard() {
+function DetailsCard() {
 
     const searchParams = useSearchParams();
     const orderId = searchParams.get("id") || "";
@@ -18,11 +23,24 @@ export default function DetailsCard() {
     const orderDetails = data?.data;
     console.log(data?.data)
     const router = useRouter()
+    const [createRoom] = useCreateRoomMutation();
 
 
 
-    const handmessage = () => {
-        router.push('/customer/message')
+    // const handmessage = () => {
+    //     router.push('/customer/message')
+    // }
+
+    const handleCreateRoom = async () => {
+        try {
+            const res = await createRoom({ user2: orderDetails?.assign_driver_details?.id }).unwrap();
+            console.log("Room created successfully", res);
+            toast.success(res?.message || "Room created successfully");
+            router.push(`/company/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
+        } catch (error: any) {
+            toast.error(error?.data?.error || "Failed to create room");
+            console.error("Error creating room:", error);
+        }
     }
 
     const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL
@@ -166,7 +184,7 @@ export default function DetailsCard() {
                                 {/* Action Buttons */}
                                 <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-6 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
                                     <Button
-                                        onClick={handmessage}
+                                        onClick={handleCreateRoom}
                                         variant="outline"
                                         className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors"
                                     >
@@ -185,7 +203,7 @@ export default function DetailsCard() {
                                 <div className="text-center mb-4 sm:mb-6">
                                     <h1 className="text-3xl font-medium text-secondary mb-2 capitalize">{orderDetails?.customer_details?.role}</h1>
                                     <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-4">
-                                       {orderDetails?.customer_details?.image ? (
+                                        {orderDetails?.customer_details?.image ? (
                                             <Image
                                                 src={`${IMAGE}${orderDetails?.customer_details?.image}`.trim()}
                                                 alt="Profile"
@@ -222,7 +240,7 @@ export default function DetailsCard() {
                                 {/* Action Buttons */}
                                 <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-6 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
                                     <Button
-                                        onClick={handmessage}
+                                        // onClick={handmessage}
                                         variant="outline"
                                         className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors"
                                     >
@@ -241,5 +259,12 @@ export default function DetailsCard() {
                 </CardContent>
             </Card>
         </div>
+    )
+}
+export default function CardPage() {
+    return (
+        <Suspense fallback={<Loading />}>
+            <DetailsCard />
+        </Suspense>
     )
 }

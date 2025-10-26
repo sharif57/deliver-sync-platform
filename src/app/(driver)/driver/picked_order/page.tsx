@@ -69,7 +69,7 @@ import { Suspense } from "react"
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-700">Distance:</span>
-                                <span className="font-semibold text-gray-800">12 KM</span>
+                                <span className="font-semibold text-gray-800">{orderDetails?.distance_km} KM</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-700">Delivery Fee:</span>
@@ -89,7 +89,7 @@ import { Suspense } from "react"
                             </div>
                         </div>
 
-                        <button onClick={() => router.push("/driver")} className="w-full sm:w-auto px-8 py-3  bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white font-medium rounded-lg transition-colors">
+                        <button onClick={() => router.push("/driver")} className="w-full cursor-pointer sm:w-auto px-8 py-3  bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white font-medium rounded-lg transition-colors">
                             Take New Delivery
                         </button>
                     </div>

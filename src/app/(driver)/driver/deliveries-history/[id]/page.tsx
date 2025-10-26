@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client"
 import PageHeader from "@/components/shareUi/onBack"
@@ -6,10 +7,12 @@ import { Card, CardContent } from "@/components/ui/card"
 import Form from "@/components/ui/icon/form"
 import Loading from "@/components/ui/icon/loading"
 import To from "@/components/ui/icon/to"
+import { useCreateRoomMutation } from "@/redux/feature/chartSlice"
 import { useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice"
 import { FileText, Building2, Tag, DollarSign, MapPin, Home } from "lucide-react"
 import Image from "next/image"
 import { useParams, useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 
 
@@ -18,14 +21,29 @@ export default function OrderDetailsCard() {
     const params = useParams();
     const { id } = params;
     console.log("Order ID from URL:", id);
-    const router = useRouter()
+    const router = useRouter();
+    const [createRoom] = useCreateRoomMutation();
+
 
     const { data, isLoading } = useGetCustomerOrderDetailsQuery(id as string)
     console.log("Order Details Data:", data);
     const orderDetails = data?.data;
+    console.log(orderDetails, '=============>')
 
-    const handmessage = () => {
-        router.push(`/customer/message?id=${orderDetails?.customer_details?.id}`)
+    // const handmessage = () => {
+    //     router.push(`/driver/message?id=${orderDetails?.customer_details?.id}`)
+    // }
+
+    const handleCreateRoom = async (id: any) => {
+        try {
+            const res = await createRoom({ user2: orderDetails?.customer_details?.id }).unwrap();
+            console.log("Room created successfully", res);
+            toast.success(res?.message || "Room created successfully");
+            router.push(`/driver/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
+        } catch (error: any) {
+            toast.error(error?.data?.error || "Failed to create room");
+            console.error("Error creating room:", error);
+        }
     }
 
     if (isLoading) {
@@ -120,7 +138,7 @@ export default function OrderDetailsCard() {
                                         alt="Profile"
                                         width={400}
                                         height={400}
-                                        className="object-contain w-full h-full"
+                                        className="object-contain rounded-full w-full h-full"
                                         priority
                                     />
                                 )}
@@ -150,15 +168,15 @@ export default function OrderDetailsCard() {
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-6 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
                             <Button
-                                onClick={handmessage}
+                                onClick={() => handleCreateRoom(orderDetails?.id)}
                                 variant="outline"
-                                className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors"
+                                className="flex-1 border cursor-pointer border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors"
                             >
                                 Message Now
                             </Button>
                             <Button
                                 onClick={() => window.location.href = `tel:${orderDetails?.customer_details?.phone_number}`}
-                                className="flex-1 text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 sm:py-6 rounded-lg font-medium hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors"
+                                className="flex-1 cursor-pointer text-sm sm:text-base md:text-lg bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 sm:py-6 rounded-lg font-medium hover:from-[#f0c452] hover:to-[#9b7e41] transition-colors"
                             >
                                 Call Now
                             </Button>

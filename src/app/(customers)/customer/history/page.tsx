@@ -1140,107 +1140,9 @@ export default function DeliveryHistory() {
     }
   };
 
-  const handleConfirmDelivery = async (orderId: string) => {
-    try {
-      console.log(`Confirming delivery for order ${orderId}`);
-      // Replace with your API call to confirm delivery
-      // Example: await confirmDeliveryAPI(orderId);
-    } catch (error) {
-      console.error("Error confirming delivery:", error);
-    }
-  };
 
-  const renderCalendar = () => {
-    const today = new Date();
-    const currentMonth = today.getMonth();
-    const currentYear = today.getFullYear();
 
-    const firstDay = new Date(currentYear, currentMonth, 1);
-    const lastDay = new Date(currentYear, currentMonth + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
 
-    const days = [];
-
-    // Empty cells for days before the first day of the month
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(<div key={`empty-${i}`} className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10"></div>);
-    }
-
-    // Days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentYear, currentMonth, day);
-      const isSelected =
-        selectedDate && date.toDateString() === selectedDate.toDateString();
-      const hasDelivery = deliveryData.some(
-        (item) => item.dateObj.toDateString() === date.toDateString()
-      );
-
-      days.push(
-        <button
-          key={day}
-          onClick={() => {
-            setSelectedDate(date);
-            setActiveFilter("Calendar");
-            setShowCalendar(false);
-          }}
-          className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-xs sm:text-sm rounded-full flex items-center justify-center transition-colors ${
-            isSelected
-              ? "bg-orange-500 text-white"
-              : hasDelivery
-              ? "bg-orange-100 text-orange-600 hover:bg-orange-200"
-              : "hover:bg-gray-100 text-gray-700"
-          }`}
-        >
-          {day}
-        </button>
-      );
-    }
-
-    return (
-      <div className="absolute top-full right-0 sm:left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 sm:p-4 z-50 w-56 sm:w-64 md:w-72 lg:w-80 max-w-[90vw]">
-        <div className="flex items-center justify-between mb-2 sm:mb-3">
-          <h3 className="font-medium text-gray-900 text-xs sm:text-sm md:text-base">
-            {today.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-          </h3>
-          <button
-            onClick={() => setShowCalendar(false)}
-            className="p-1 hover:bg-gray-100 rounded"
-          >
-            <X className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-gray-500" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
-          {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
-            <div
-              key={day}
-              className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-[10px] sm:text-xs md:text-sm font-medium text-gray-500 flex items-center justify-center"
-            >
-              {day}
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-7 gap-1 sm:gap-2">{days}</div>
-
-        {selectedDate && (
-          <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-gray-200">
-            <button
-              onClick={() => {
-                setSelectedDate(null);
-                setActiveFilter("All");
-                setShowCalendar(false);
-              }}
-              className="text-[10px] sm:text-xs md:text-sm text-orange-600 hover:text-orange-700"
-            >
-              Clear selection
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   const filteredData = getFilteredData();
   const router = useRouter();
@@ -1273,17 +1175,17 @@ export default function DeliveryHistory() {
                           : "border border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                       }`}
                     >
-                      {filter === "Calendar" && (
+                      {/* {filter === "" && (
                         <Calendar className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-                      )}
+                      )} */}
                       {filter === "Calendar"
                         ? selectedDate
                           ? selectedDate.toLocaleDateString("en-US", { day: "numeric", month: "short" })
-                          : "Calendar"
+                          : ""
                         : filter}
                     </button>
 
-                    {filter === "Calendar" && showCalendar && renderCalendar()}
+                    {filter === "Calendar" && showCalendar}
                   </div>
                 )
               )}

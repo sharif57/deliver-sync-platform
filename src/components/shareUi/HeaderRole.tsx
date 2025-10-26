@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import AuthIcon from '@/components/ui/icon/auth';
@@ -7,6 +8,11 @@ import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import Cart from '../ui/icon/cart';
 import { useGetAllNotificationQuery } from '@/redux/feature/notificationSlice';
+import { useUserProfileQuery } from '@/redux/feature/userSlice';
+import Image from 'next/image';
+import { logout } from '@/service/authService';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const MenuIcon = ({ className }: { className?: string }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -30,54 +36,13 @@ const BellIcon = ({ className }: { className?: string }) => (
 );
 
 
-const AvatarIcon = ({ className }: { className?: string }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 200 200" width="200" height="200" className={className}>
-        <g clipPath="url(#cs_clip_1_flower-1)">
-            <mask id="cs_mask_1_flower-1" style={{ maskType: 'alpha' }} width="200" height="186" x="0" y="7" maskUnits="userSpaceOnUse">
-                <path fill="#fff" d="M150.005 128.863c66.681 38.481-49.997 105.828-49.997 28.861 0 76.967-116.658 9.62-49.997-28.861-66.681 38.481-66.681-96.207 0-57.727-66.681-38.48 49.997-105.827 49.997-28.86 0-76.967 116.657-9.62 49.997 28.86 66.66-38.48 66.66 96.208 0 57.727z"></path>
-            </mask>
-            <g mask="url(#cs_mask_1_flower-1)">
-                <path fill="#fff" d="M200 0H0v200h200V0z"></path>
-                <path fill="url(#paint0_linear_748_4711)" d="M200 0H0v200h200V0z"></path>
-                <g filter="url(#filter0_f_748_4711)">
-                    <path fill="#FF58E4" d="M130 0H69v113h61V0z"></path>
-                    <path fill="#0CE548" fillOpacity="0.35" d="M196 91H82v102h114V91z"></path>
-                    <path fill="#FFE500" fillOpacity="0.74" d="M113 80H28v120h85V80z"></path>
-                </g>
-            </g>
-        </g>
-        <defs>
-            <filter id="filter0_f_748_4711" width="278" height="310" x="-27" y="-55" colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse">
-                <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
-                <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
-                <feGaussianBlur result="effect1_foregroundBlur_748_4711" stdDeviation="27.5"></feGaussianBlur>
-            </filter>
-            <linearGradient id="paint0_linear_748_4711" x1="186.5" x2="37" y1="37" y2="186.5" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#0E6FFF" stopOpacity="0.51"></stop>
-                <stop offset="1" stopColor="#00F0FF" stopOpacity="0.59"></stop>
-            </linearGradient>
-            <clipPath id="cs_clip_1_flower-1">
-                <path fill="#fff" d="M0 0H200V200H0z"></path>
-            </clipPath>
-        </defs>
-        <g style={{ mixBlendMode: 'overlay' }} mask="url(#cs_mask_1_flower-1)">
-            <path fill="gray" stroke="transparent" d="M200 0H0v200h200V0z" filter="url(#cs_noise_1_flower-1)"></path>
-        </g>
-        <defs>
-            <filter id="cs_noise_1_flower-1" width="100%" height="100%" x="0%" y="0%" filterUnits="objectBoundingBox">
-                <feTurbulence baseFrequency="0.6" numOctaves="5" result="out1" seed="4"></feTurbulence>
-                <feComposite in="out1" in2="SourceGraphic" operator="in" result="out2"></feComposite>
-                <feBlend in="SourceGraphic" in2="out2" mode="overlay" result="out3"></feBlend>
-            </filter>
-        </defs>
-    </svg>
-);
 
 
 const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) => {
 
-
+    const router = useRouter();
     const { data } = useGetAllNotificationQuery(undefined);
+    const { data: profile } = useUserProfileQuery(undefined);
 
     // State for the main mobile menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -116,12 +81,22 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
     };
 
 
+    const handleLogut = async () => {
+        try {
+            const res = await logout();
+            toast.success("Logout successfully!");
+            localStorage.clear();
+            router.push('/');
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    }
 
 
     const avatarDropdownLinks = [
         { href: "/profile", label: "Profile" },
         { href: "/", label: "Home" },
-        { href: "#", label: "Logout" },
+        // { href: , label: "Logout" },
     ];
 
     // Effect to handle clicks outside of dropdowns
@@ -143,7 +118,7 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
         };
     }, []);
 
-
+    const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL || '';
 
     return (
         <header className="bg-white/80 dark:bg-black/80 backdrop-blur-sm sticky py-4 top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800">
@@ -204,16 +179,27 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                                             </clipPath>
                                         </defs>
                                     </svg>
-
+                                    {/* <BellIcon className="size-7" /> */}
 
                                     {/* <span className="absolute -top-1 -right-0 w-5 h-5 border-primary border text-primary  text-xs font-normal rounded-full flex items-center justify-center">
                                         5
                                     </span> */}
                                 </button>
 
-                                <Link href={'/customer/wallet'} className='cursor-pointer' title='Cart'>
+                                <Link
+                                    href={
+                                        profile?.data?.role === "company"
+                                            ? "/company/wallet"
+                                            : profile?.data?.role === "driver"
+                                                ? "/driver/wallet"
+                                                : "/customer/wallet"
+                                    }
+                                    className="cursor-pointer"
+                                    title="Cart"
+                                >
                                     <Cart />
                                 </Link>
+
                             </div>
                             {/* </Link> */}
                             <div className={`absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg transition-opacity duration-300 ${isNotificationsOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
@@ -228,7 +214,7 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                                                 <p className="font-medium">{item?.title}</p>
                                                 <p className="text-xs text-gray-500 dark:text-gray-400">{item?.message}</p>
                                             </a>
-                                           
+
                                         ))
                                     }
                                 </div>
@@ -239,7 +225,8 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                         <div className="relative hidden sm:block" ref={avatarDropdownRef}>
 
                             <button onClick={() => setIsAvatarOpen(!isAvatarOpen)} className="flex items-center gap-2 focus:outline-none">
-                                <AvatarIcon className="h-9 w-9" />
+                                {/* <AvatarIcon className="h-9 w-9" /> */}
+                                <img src={`${IMAGE}${profile?.data?.image}`} alt="avatar" className="w-9 h-9 rounded-full" />
                             </button>
 
                             <div className={`absolute top-full right-0 mt-2 w-48 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg transition-opacity duration-300 ${isAvatarOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
@@ -248,6 +235,10 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                                         {item.label}
                                     </a>
                                 ))}
+
+                                <button onClick={handleLogut} className="block w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                   LogOut
+                                </button>
                             </div>
                         </div>
 
@@ -276,16 +267,17 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                             <div className="flex items-center justify-between px-3">
                                 <div className="flex items-center">
                                     <div className="flex-shrink-0">
-                                        <AvatarIcon className="h-10 w-10" />
+                                        {/* <AvatarIcon className="h-10 w-10" /> */}
+                                        <img src={`${IMAGE}${profile?.data?.image}`} alt="avatar" className="w-9 h-9 rounded-full" />
                                     </div>
                                     <div className="ml-3">
-                                        <div className="text-base font-medium text-gray-800 dark:text-gray-200">Tom Cook</div>
-                                        <div className="text-sm font-medium text-gray-500 dark:text-gray-400">tom@example.com</div>
+                                        <div className="text-base font-medium text-gray-800 dark:text-gray-200">{profile?.data?.name}</div>
+                                        <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{profile?.data?.email}</div>
                                     </div>
                                 </div>
                                 <button className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
                                     <span className="sr-only">View notifications</span>
-                                    <Link href={"/customer/notification"}>
+                                    <Link href={"/notification"}>
                                         <BellIcon className="h-6 w-6" />
                                     </Link>
 
@@ -318,6 +310,9 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                                         {item.label}
                                     </a>
                                 ))}
+                                <button onClick={handleLogut} className="block px-4 w-full py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                   LogOut
+                                </button>
                             </div>
                         </div>
                     </div>

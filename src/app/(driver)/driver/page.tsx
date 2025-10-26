@@ -100,7 +100,7 @@ export default function Driver() {
                                 <h3 className='text-xl font-normal text-secondary'>My Earnings</h3>
                             </div>
                         </Link>
-                        <div onClick={handmessage} className='bg-white cursor-pointer  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
+                        {/* <div onClick={handmessage} className='bg-white cursor-pointer  shadow rounded-3xl p-5 flex flex-col gap-4 items-center space-x-4'>
                             <div className='text-gray-500 dark:text-gray-400'>
                                 <MessageCircleMore className='size-[35px]' />
 
@@ -108,7 +108,7 @@ export default function Driver() {
                             <div>
                                 <h3 className='text-xl font-normal text-secondary'>Message</h3>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className=" flex items-center justify-center  ">
@@ -190,7 +190,7 @@ export default function Driver() {
                                                             <div className="flex-1 flex flex-col items-center justify-center">
                                                                 <div className="flex flex-col gap-4 w-full max-w-sm">
                                                                     <button
-                                                                        className="w-full border-2 border-gray-300 px-14  text-secondary text-base py-3 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
+                                                                        className="w-full border-2 cursor-pointer border-gray-300 px-14  text-secondary text-base py-3 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 transition"
                                                                         aria-label="Decline request"
                                                                     >
                                                                         Decline
@@ -198,7 +198,7 @@ export default function Driver() {
                                                                     {/* <Link href="/driver/accept-request" className="w-full"> */}
                                                                     <button
                                                                         onClick={() => handleAcceptRequest(order.id)}
-                                                                        className="w-full text-base px-14 bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition"
+                                                                        className="w-full text-base px-14 bg-gradient-to-r cursor-pointer from-[#EFB639] to-[#C59325] text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition"
                                                                         aria-label="Accept request"
                                                                     >
                                                                         {order.status === 'assigned' ? 'Accepting...' : 'Accept'}

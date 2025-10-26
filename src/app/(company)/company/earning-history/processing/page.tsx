@@ -486,10 +486,11 @@ import { useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice";
 import { FileText, Building2, Tag, DollarSign, MapPin, Home, PhoneCall, MessageSquareMore } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import GoogleMapReact from "google-map-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import Loading from "@/components/ui/icon/loading";
 
 // Google Maps API Key
-const GOOGLE_API_KEY = "AIzaSyDEOhUOUDVMYiBOHqEtCnyrztCrlOqZ6bo";
+const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY ?? "";
 
 // Enhanced Marker Component for Google Map
 interface MarkerProps {
@@ -505,17 +506,16 @@ const Marker = ({ text, type }: MarkerProps) => (
       {/* Custom SVG markers */}
       {type === "pickup" ? (
         <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
         </svg>
       ) : (
         <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C7.589 2 4 5.589 4 9.995 3.971 16.44 11.696 21.784 12 22c0 0 8.029-5.56 8-12 0-4.411-3.589-8-8-8zm0 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+          <path d="M12 2C7.589 2 4 5.589 4 9.995 3.971 16.44 11.696 21.784 12 22c0 0 8.029-5.56 8-12 0-4.411-3.589-8-8-8zm0 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
         </svg>
       )}
     </div>
-    <div className={`mt-1 px-2 py-1 rounded-full text-xs font-bold text-white ${
-      type === "pickup" ? "bg-blue-500" : "bg-green-500"
-    }`}>
+    <div className={`mt-1 px-2 py-1 rounded-full text-xs font-bold text-white ${type === "pickup" ? "bg-blue-500" : "bg-green-500"
+      }`}>
       {text}
     </div>
   </div>
@@ -547,11 +547,11 @@ const RouteInfo = ({ distance, duration }: { distance?: string; duration?: strin
   </div>
 );
 
-export default function Processing() {
+function Processing() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("id") || "";
   console.log(orderId, "order id=============>");
-  const { data } = useGetCustomerOrderDetailsQuery(orderId, {
+  const { data, isLoading } = useGetCustomerOrderDetailsQuery(orderId, {
     pollingInterval: 10000,
     refetchOnFocus: true,
     refetchOnReconnect: true,
@@ -632,7 +632,7 @@ export default function Processing() {
     directionsService.route(request, (result: any, status: any) => {
       if (status === mapsInstance.DirectionsStatus.OK) {
         directionsRenderer.setDirections(result);
-        
+
         // Extract route information
         const route = result.routes[0].legs[0];
         setRouteInfo({
@@ -690,6 +690,11 @@ export default function Processing() {
     orderDetails?.delivery_location_long,
   ]);
 
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-screen">
+      <Loading />
+    </div>
+  }
   return (
     <div>
       <title>Delivered Processing</title>
@@ -776,7 +781,7 @@ export default function Processing() {
                 <div className="w-full sm:w-1/2">
                   <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-medium text-gray-800">
-                      Customer: {orderDetails?.customer_details?.name || "Sharif Mahamud"}
+                      Customer: {orderDetails?.customer_details?.name || ""}
                     </h1>
                     <div className="bg-gradient-to-r from-[#EFB639] to-[#C59325] flex items-center gap-4 rounded-lg p-2 px-4">
                       <PhoneCall className="w-5 h-5 text-black p-1 rounded-full bg-white" />
@@ -787,9 +792,16 @@ export default function Processing() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-medium text-gray-800">
-                      Rider: {orderDetails?.assign_driver_details?.name || "Mehedi Hasan"}
-                    </h1>
+                    {orderDetails?.assign_driver_details?.name ? (
+                      <h1 className="text-2xl font-medium text-gray-800">
+                        Rider: {orderDetails?.assign_driver_details?.name || ""}
+                      </h1>
+                    ) : (
+                      <h1 className="text-2xl font-medium text-red-300 ">
+                        Rider don't assign
+                      </h1>
+
+                    )}
                     <div className="bg-gradient-to-r from-[#EFB639] to-[#C59325] flex items-center gap-4 rounded-lg p-2 px-4">
                       <PhoneCall className="w-5 h-5 text-black p-1 rounded-full bg-white" />
                       <MessageSquareMore
@@ -908,9 +920,9 @@ export default function Processing() {
                           type="delivery"
                         />
                       </GoogleMapReact>
-                      <RouteInfo 
-                        distance={routeInfo?.distance} 
-                        duration={routeInfo?.duration} 
+                      <RouteInfo
+                        distance={routeInfo?.distance}
+                        duration={routeInfo?.duration}
                       />
                     </div>
                   ) : (
@@ -928,4 +940,12 @@ export default function Processing() {
       </Card>
     </div>
   );
+}
+
+export default function Process() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen"><Loading /></div>}>
+      <Processing />
+    </Suspense>
+  )
 }

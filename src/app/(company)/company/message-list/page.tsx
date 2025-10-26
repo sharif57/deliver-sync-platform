@@ -1,6 +1,7 @@
 'use client';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Back from "@/components/ui/icon/back"
+import { useAllMessagesQuery } from "@/redux/feature/chartSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation"
 
@@ -74,6 +75,11 @@ const messages: MessageItem[] = [
 
 export default function MessageList() {
     const router = useRouter()
+    // const { data: apiMessages, isLoading, isError, error } = useAllMessagesQuery(roomId as string || "", {
+    //     pollingInterval: 1000,
+    //     refetchOnFocus: true,
+    //     refetchOnReconnect: true,
+    // });
     return (
         <>
             <title>Message List</title>

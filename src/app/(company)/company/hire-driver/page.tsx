@@ -449,7 +449,7 @@ import { toast } from "sonner";
 const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY;
 
 // Simple Marker Component for Google Map
-const Marker = ({ text }: { text: string }) => (
+const Marker = ({ text, lat, lng }: { text: string; lat?: number; lng?: number }) => (
   <div className="bg-red-500 text-white rounded-full p-2 text-xs font-bold">
     {text}
   </div>
@@ -797,7 +797,7 @@ export default function DriverRequestForm() {
           <div className="mt-4" style={{ height: "400px", width: "100%" }}>
             <GoogleMapReact
               bootstrapURLKeys={{
-                key: GOOGLE_API_KEY,
+                key: GOOGLE_API_KEY ?? "",
                 libraries: ["places"], // Include Places API
               }}
               defaultCenter={getMapCenter()}
