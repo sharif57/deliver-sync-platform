@@ -36,7 +36,7 @@ function DetailsCard() {
             const res = await createRoom({ user2: orderDetails?.assign_driver_details?.id }).unwrap();
             console.log("Room created successfully", res);
             toast.success(res?.message || "Room created successfully");
-            router.push(`/company/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
+            router.push(`/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
         } catch (error: any) {
             toast.error(error?.data?.error || "Failed to create room");
             console.error("Error creating room:", error);
@@ -240,7 +240,7 @@ function DetailsCard() {
                                 {/* Action Buttons */}
                                 <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-6 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
                                     <Button
-                                        // onClick={handmessage}
+                                        onClick={handleCreateRoom}
                                         variant="outline"
                                         className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors"
                                     >

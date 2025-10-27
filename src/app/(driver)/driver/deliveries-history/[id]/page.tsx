@@ -34,12 +34,12 @@ export default function OrderDetailsCard() {
     //     router.push(`/driver/message?id=${orderDetails?.customer_details?.id}`)
     // }
 
-    const handleCreateRoom = async (id: any) => {
+    const handleCreateRoom = async () => {
         try {
             const res = await createRoom({ user2: orderDetails?.customer_details?.id }).unwrap();
             console.log("Room created successfully", res);
             toast.success(res?.message || "Room created successfully");
-            router.push(`/driver/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
+            router.push(`/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
         } catch (error: any) {
             toast.error(error?.data?.error || "Failed to create room");
             console.error("Error creating room:", error);
