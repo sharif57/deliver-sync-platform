@@ -43,7 +43,15 @@ export const driverApi = baseApi.injectEndpoints({
             invalidatesTags: ["Driver"],
         }),
 
+        earningHistory: builder.query({
+            query: () => ({
+                url: "/driver/earning_history/",
+                method: "GET",
+            }),
+            providesTags: ["Driver"],
+        }),
+
     }),
 });
 
-export const { useAcceptDeliveryRequestMutation, useGetDriverOrdersQuery, useGetPendingOrdersQuery , useUpdataOrderStatusMutation } = driverApi;
+export const { useAcceptDeliveryRequestMutation, useGetDriverOrdersQuery, useGetPendingOrdersQuery, useUpdataOrderStatusMutation , useEarningHistoryQuery } = driverApi;

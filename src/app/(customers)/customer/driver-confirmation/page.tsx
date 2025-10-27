@@ -2,7 +2,7 @@
 
 "use client";
 
-import { PhoneCall, MessageSquareMore, Star } from "lucide-react";
+import { PhoneCall, MessageSquareMore, Star, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/ui/icon/loading";
 import Arrow from "@/components/ui/icon/arrow";
@@ -12,7 +12,8 @@ import Link from "next/link";
 import PageHeader from "@/components/shareUi/onBack";
 import { useCancelOrderMutation, useConfirmDeliveryMutation, useGetCustomerOrderDetailsQuery } from "@/redux/feature/customerSlice";
 import { toast } from "sonner";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
 
 function DriverConfirmationPage() {
   const router = useRouter();
@@ -24,9 +25,29 @@ function DriverConfirmationPage() {
 
   const [cancelOrder] = useCancelOrderMutation();
   const [confirmDelivery] = useConfirmDeliveryMutation();
-  const { data } = useGetCustomerOrderDetailsQuery(id || '');
-  console.log(data?.data, 'order details ==============>');
+  const { data } = useGetCustomerOrderDetailsQuery(id || '', {
+    pollingInterval: 1000,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
   const orderDetails = data?.data;
+  console.log(orderDetails)
+
+  const [createRoom] = useCreateRoomMutation();
+
+
+
+  const handleCreateRoom = async () => {
+    try {
+      const res = await createRoom({ user2: orderDetails?.assign_driver_details?.id }).unwrap();
+      console.log("Room created successfully", res);
+      toast.success(res?.message || "Room created successfully");
+      router.push(`/message?id=${orderDetails.id}&room_id=${res?.room_id}`);
+    } catch (error: any) {
+      toast.error(error?.data?.error || "Failed to create room");
+      console.error("Error creating room:", error);
+    }
+  }
 
   const handleCancelOrder = async () => {
     try {
@@ -51,6 +72,13 @@ function DriverConfirmationPage() {
       console.error('Error confirming order:', error);
     }
   };
+
+  useEffect(() => {
+    if (orderDetails?.status === "delivered") {
+      router.push("/customer");
+    }
+  }, [orderDetails?.status, router]);
+
   const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL;
 
   return (
@@ -80,10 +108,10 @@ function DriverConfirmationPage() {
             <div className="bg-white rounded-3xl shadow-sm p-4 sm:p-6 mb-6">
               <p className="text-6xl font-medium text-[#EAAC24] text-center">$ {orderDetails?.delivery_fee || 0}</p>
               <div className="lg:w-1/4 mx-auto mt-10">
-                <button 
-                onClick={handleConfirmDelivery}
-                 className=" text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-  rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
-                 disabled={data?.data?.status === 'confirmed'}
+                <button
+                  onClick={handleConfirmDelivery}
+                  className=" text-sm sm:text-base md:text-lg bg-primary text-white py-3 sm:py-  rounded-lg font-medium hover:bg-primary-dark transition-colors w-full"
+                  disabled={data?.data?.status === 'confirmed'}
                 >
                   Confirm
                 </button>
@@ -128,7 +156,7 @@ function DriverConfirmationPage() {
                         your delivery request
                       </p>
                       <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mt-1">
-                        Arriving in 10 minutes (2.3 Miles)
+                        Arriving in {orderDetails?.estimated_time_minutes} minutes ({orderDetails?.distance_km} km)
                       </p>
                       <hr className="my-4 border-gray-200 border" />
                     </div>
@@ -147,7 +175,7 @@ function DriverConfirmationPage() {
                       </div>
                       <div>
                         <h3 className="text-secondary font-medium text-xl sm:text-2xl md:text-[28px] mb-1">
-                          
+
                         </h3>
                         <p className="text-secondary font-normal text-base sm:text-lg md:text-xl mb-2">
                           {orderDetails?.assign_driver_details?.vehicle}
@@ -170,22 +198,27 @@ function DriverConfirmationPage() {
                         <PhoneCall className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
                         Call Now
                       </Button>
-                      <Link href="/customer/message" className="flex-1">
-                        <Button
-                          variant="outline"
-                          className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors w-full"
-                        >
-                          <MessageSquareMore className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
-                          Message Now
-                        </Button>
-                      </Link>
+                      {/* <Link href="/customer/message" className="flex-1"> */}
+                      <Button
+                        onClick={handleCreateRoom}
+                        variant="outline"
+                        className="flex-1 border-2 border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors w-full"
+                      >
+                        <MessageSquareMore className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2" />
+                        Message Now
+                      </Button>
+                      {/* </Link> */}
                     </div>
                   </div>
                 </>
               )
             }
           </div>
+
+
         </div>
+
+
       </div>
     </>
   );

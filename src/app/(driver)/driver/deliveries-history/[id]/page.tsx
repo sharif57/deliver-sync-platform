@@ -168,7 +168,7 @@ export default function OrderDetailsCard() {
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row sm:space-x-3 md:space-x-6 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto space-y-3 sm:space-y-0 px-4 sm:px-0">
                             <Button
-                                onClick={() => handleCreateRoom(orderDetails?.id)}
+                                onClick={() => handleCreateRoom()}
                                 variant="outline"
                                 className="flex-1 border cursor-pointer border-gray-300 text-secondary text-sm sm:text-base md:text-lg py-3 sm:py-6 rounded-lg font-medium hover:bg-gray-100 hover:border-gray-400 bg-transparent transition-colors"
                             >

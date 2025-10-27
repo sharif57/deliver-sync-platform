@@ -10,7 +10,7 @@ import Times from '@/components/ui/icon/times';
 import { useDashboardQuery } from '@/redux/feature/commonSlice';
 import { useAcceptDeliveryRequestMutation, useGetPendingOrdersQuery } from '@/redux/feature/driverSlice';
 import { useUserProfileQuery } from '@/redux/feature/userSlice';
-import { DollarSign, MessageCircleMore, Plus } from 'lucide-react'
+import { DollarSign, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -27,12 +27,14 @@ export default function Driver() {
     console.log(data?.data)
     const [acceptDeliveryRequest] = useAcceptDeliveryRequestMutation();
 
-    const { data: dashboardData } = useDashboardQuery(undefined);
-    console.log(dashboardData?.data, '=============>')
+    const { data: dashboardData } = useDashboardQuery(undefined, {
+        pollingInterval: 1000,      
+        refetchOnFocus: true,        
+        refetchOnReconnect: true
+    });
     const dashboard = dashboardData?.data
 
     const {data: user} = useUserProfileQuery(undefined);
-    console.log(user?.data)
 
     const items = [
         { title: "Total Earnings", count: dashboard?.total_earning, icon: <Money /> },
@@ -40,9 +42,6 @@ export default function Driver() {
         { title: "Completed Deliveries", count: dashboard?.total_delivered, icon: <Completes /> },
     ]
 
-    const handmessage = () => {
-        router.push('/customer/message')
-    }
 
     const handleAcceptRequest = async (orderId: string) => {
         try {

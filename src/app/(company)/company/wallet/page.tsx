@@ -6,7 +6,6 @@ import React from 'react'
 export default function Wallet() {
 
     const {data} = useUserProfileQuery(undefined)
-    console.log(data?.data)
     return (
         <div>
             <title>Wallet</title>

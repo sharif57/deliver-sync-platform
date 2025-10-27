@@ -6,6 +6,7 @@ import Footer from "@/components/shareUi/footer";
 import WebVitals from "@/components/web-vitals";
 import Providers from "@/Provider/Providers";
 import AutoLocationTracker from "@/tracker/tracker";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,12 +29,13 @@ export default function RootLayout({
         className={`${inter.className} antialiased`}
       >
         <Providers>
-            <AutoLocationTracker />
+          <AutoLocationTracker />
           <div className="pt-16 md:pt-20 mb-8">
             <ResponsiveNavbar />
           </div>
           <WebVitals />
           {children}
+          <Toaster />
           <Footer />
         </Providers>
       </body>

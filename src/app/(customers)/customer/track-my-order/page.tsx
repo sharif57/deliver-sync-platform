@@ -238,6 +238,7 @@ import Takes from "@/components/ui/icon/takes";
 import { useCreateRoomMutation } from "@/redux/feature/chartSlice";
 
 import GoogleMapReact from "google-map-react";
+import { useRattingMutation } from "@/redux/feature/commonSlice";
 
 const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY ?? "";
 
@@ -300,15 +301,22 @@ function TrackMyOrder() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get("id") || "";
     console.log(orderId, "order id=============>");
-    const { data, isLoading, isError, refetch } = useGetCustomerOrderDetailsQuery(orderId);
+    const { data, isLoading, isError, refetch } = useGetCustomerOrderDetailsQuery(orderId, {
+        pollingInterval: 2000,
+    });
     console.log(data, ">>>>>>>>>>>>>>>>>>track my order");
     const orderDetails = data?.data;
+
+    const [rating, setRating] = useState<number>(0)
+    const [hoverRating, setHoverRating] = useState<number>(0)
+    const [submitted, setSubmitted] = useState(false)
 
     const router = useRouter();
     const [isCancelling, setIsCancelling] = useState(false);
     const [cancelOrder] = useCancelOrderMutation();
 
     const [createRoom] = useCreateRoomMutation();
+    const [ratting] = useRattingMutation();
 
     const [routeInfo, setRouteInfo] = useState<{ distance: string; duration: string } | null>(null);
     const [mapInstance, setMapInstance] = useState<any>(null);
@@ -512,6 +520,28 @@ function TrackMyOrder() {
         );
     }
 
+
+
+    const handleRateNow = async () => {
+        try {
+            const res = await ratting({ id: orderId, data: { rating: displayRating } }).unwrap();
+            console.log(res);
+            toast.success(res?.message || "Order rated successfully");
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error?.data?.message || "Failed to rate order");
+        }
+    }
+
+    const handleLater = () => {
+        setRating(0)
+        setHoverRating(0)
+    }
+
+    const displayRating = hoverRating || rating
+
+
+
     const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL;
 
     return (
@@ -620,6 +650,7 @@ function TrackMyOrder() {
                             )}
 
                         </div>
+
                     </div>
 
                     {/* Progress Timeline */}
@@ -799,7 +830,7 @@ function TrackMyOrder() {
                             <div className="text-center mb-4 sm:mb-6">
                                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-auto mb-4 bg-[#C3DEBC] rounded-full flex items-center justify-center p-3 sm:p-4">
                                     {
-                                        orderDetails.assign_driver_details.vehicle_image && (
+                                        orderDetails.assign_driver_details.image && (
                                             <Image
                                                 // src={
                                                 //     orderDetails.assign_driver_details.image
@@ -826,7 +857,7 @@ function TrackMyOrder() {
                                     <div className="flex items-center justify-center space-x-1">
                                         <Star className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-400 fill-current" />
                                         <span className="text-gray-800 font-medium text-sm sm:text-base md:text-lg">
-                                            {orderDetails.assign_driver_details.rating || "0"}
+                                            {orderDetails.assign_driver_details.average_rating || "0"}
                                         </span>
                                     </div>
                                 </div>
@@ -863,8 +894,81 @@ function TrackMyOrder() {
 
                         </div>
                     )}
+
+                    {
+                        orderDetails?.status === 'delivered' && (
+                            <div className="flex flex-col items-center justify-center gap-8 p-8    max-w-md mx-auto w-full">
+                                {/* Profile Section */}
+                                <div className="flex flex-col items-center gap-4">
+                                    {/* Profile Image */}
+                                    <div className="relative w-32 h-32 rounded-full overflow-hidden  flex items-center justify-center">
+                                        <Image
+                                            src={`${IMAGE}${orderDetails?.assign_driver_details?.image}`}
+                                            alt={"Profile"}
+                                            width={128}
+                                            height={128}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+
+                                    {/* Name and Current Rating */}
+                                    <div className="flex items-center gap-2 justify-center">
+                                        <h2 className="text-2xl font-semibold text-[#333333]">{orderDetails?.assign_driver_details?.name}</h2>
+                                        <Star className="w-6 h-6 fill-primary text-primary" />
+                                        <span className="text-2xl font-medium text-[#333333]">{orderDetails?.assign_driver_details?.average_rating} ({orderDetails?.assign_driver_details?.total_ratings})</span>
+                                    </div>
+                                </div>
+
+                                {/* Rating Stars */}
+                                <div className="flex gap-2">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                            key={star}
+                                            onMouseEnter={() => setHoverRating(star)}
+                                            onMouseLeave={() => setHoverRating(0)}
+                                            onClick={() => setRating(star)}
+                                            className="transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded"
+                                            aria-label={`Rate ${star} stars`}
+                                        >
+                                            <Star
+                                                className={`w-8 h-8 transition-colors ${star <= displayRating ? "fill-primary text-primary" : "fill-gray-300 text-gray-300"
+                                                    }`}
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Buttons */}
+                                <div className="flex gap-4 w-full">
+                                    <Button
+                                        variant="outline"
+                                        onClick={handleLater}
+                                        className="flex-1 text-foreground border-border hover:bg-muted bg-transparent"
+                                    >
+                                        Later
+                                    </Button>
+                                    <Button
+                                        onClick={handleRateNow}
+                                        disabled={rating === 0}
+                                        className="flex-1 bg-primary hover:bg-primary/90 text-white font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        <Star className="w-5 h-5 fill-white" />
+                                        {submitted ? "Rated!" : "Rate Now"}
+                                    </Button>
+                                </div>
+
+                                
+                            </div>
+                        )
+                    }
                 </div>
+
+
+
+
             </div>
+
+
         </div>
     );
 }

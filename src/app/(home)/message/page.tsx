@@ -883,7 +883,7 @@ function ChatPage() {
     }
   };
 
-  const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL || "http://localhost:8000";
+  const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL;
 
   return (
     <>

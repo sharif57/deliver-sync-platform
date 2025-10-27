@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import Counter from '@/components/shareUi/counter'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -5,68 +6,21 @@ import { Button } from '@/components/ui/button';
 import Calculator from '@/components/ui/icon/calcutor';
 import Complete from '@/components/ui/icon/complete';
 import Time from '@/components/ui/icon/time';
+import { timeAgo } from '@/lib/timeAgo';
 import { useDashboardQuery } from '@/redux/feature/commonSlice';
+import { useGetAllNotificationQuery } from '@/redux/feature/notificationSlice';
 import { Clock, LocationEdit, Plus } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
 
-interface Activity {
-    id: string
-    orderId: string
-    status: string
-    timestamp: string
-    statusColor: "green" | "pink" | "gray"
-}
-
-const activities: Activity[] = [
-    {
-        id: "1",
-        orderId: "12345",
-        status: "Delivered Successfully",
-        timestamp: "2 hours ago",
-        statusColor: "green",
-    },
-    {
-        id: "2",
-        orderId: "12345",
-        status: "Delivered Successfully",
-        timestamp: "2 hours ago",
-        statusColor: "green",
-    },
-    {
-        id: "3",
-        orderId: "12345",
-        status: "Delivered Successfully",
-        timestamp: "2 hours ago",
-        statusColor: "pink",
-    },
-    {
-        id: "4",
-        orderId: "12345",
-        status: "Delivered Successfully",
-        timestamp: "2 hours ago",
-        statusColor: "pink",
-    },
-    {
-        id: "5",
-        orderId: "12345",
-        status: "Delivered Successfully",
-        timestamp: "2 hours ago",
-        statusColor: "gray",
-    },
-    {
-        id: "6",
-        orderId: "12345",
-        status: "Delivered Successfully",
-        timestamp: "2 hours ago",
-        statusColor: "gray",
-    },
-]
 
 export default function CustomerDashboard() {
     const { data: dashboardData } = useDashboardQuery(undefined);
-    console.log(dashboardData?.data, '=============>')
+    // console.log(dashboardData?.data, '=============>')
     const dashboard = dashboardData?.data
+
+    const { data: notifications } = useGetAllNotificationQuery(undefined);
+
     const counters = [
         { title: "Today's Order", count: dashboard?.todays_order || 0, icon: <Calculator /> },
         { title: "Pending Order", count: dashboard?.total_pending_order || 0, icon: <Time /> },
@@ -118,7 +72,7 @@ export default function CustomerDashboard() {
                             </div>
                             <h3 className="text-xl font-medium text-secondary mb-3">Track My Orders</h3>
                             <p className="text-secondary mb-8 leading-relaxed">Monitor real-time delivery status and location</p>
-                            <Link href={"/customer/track-my-order"}>
+                            <Link href={"/customer/history"}>
                                 <Button className=" text-white bg-gradient-to-r from-[#EFB639] to-[#C59325] px-8 py-3 rounded font-medium transition-colors">
                                     Track Order’s
                                 </Button>
@@ -134,7 +88,7 @@ export default function CustomerDashboard() {
 
 
                     <div className="space-y-4">
-                        {activities.map((activity) => (
+                        {notifications?.data?.map((activity: any) => (
                             <div key={activity.id} className="flex items-start gap-3 hover:bg-gray-200 cursor-pointer p-2 rounded-lg">
                                 <div>
                                     <Avatar>
@@ -146,9 +100,9 @@ export default function CustomerDashboard() {
 
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xl font-medium text-secondary">
-                                        Order Id#{activity.orderId}- {activity.status}
+                                        Order Id#{activity.data?.order_id} - {activity?.message}
                                     </p>
-                                    <p className="text-[16px] text-[#545454] mt-1">{activity.timestamp}</p>
+                                    <p className="text-[16px] text-[#545454] mt-1">{timeAgo(activity?.created_at)}</p>
                                 </div>
                             </div>
                         ))}
