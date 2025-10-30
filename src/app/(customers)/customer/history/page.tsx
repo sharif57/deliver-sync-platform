@@ -1048,7 +1048,6 @@ export default function DeliveryHistory() {
   const { data, isLoading, isError } = useGetCustomerOrdersQuery(undefined);
   console.log(data?.data, "history=========>");
 
-  // Map API data to DeliveryItem format
   const deliveryData: DeliveryItem[] = data?.data?.map((order: any) => {
     const createdAt = new Date(order.created_at);
     let status: DeliveryItem["status"];
