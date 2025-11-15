@@ -98,7 +98,7 @@ export default function AutoLocationTracker() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      toast.error("Geolocation is not supported by your browser.");
+      // toast.error("Geolocation is not supported by your browser.");
       return;
     }
 
@@ -145,10 +145,10 @@ export default function AutoLocationTracker() {
               );
             }
 
-            toast.success(response?.message || "Location updated successfully");
+            // toast.success(response?.message || "Location updated successfully");
           } catch (error: any) {
             console.error("❌ API Error:", error);
-            toast.error(error?.data?.message || "Failed to update location");
+            // toast.error(error?.data?.message || "Failed to update location");
           } finally {
             // Unlock update after delay
             setTimeout(() => {
@@ -158,7 +158,7 @@ export default function AutoLocationTracker() {
         },
         (error) => {
           console.error("⚠️ Geolocation error:", error);
-          toast.error("Please allow location access to continue.");
+          // toast.error("Please allow location access to continue.");
           isUpdating.current = false;
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
