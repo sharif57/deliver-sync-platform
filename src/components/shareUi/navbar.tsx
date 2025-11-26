@@ -359,7 +359,13 @@ export default function ResponsiveNavbar() {
               </button>
             </li>
           ))}
-          <li><Link href={`/${localRole}`} className="relative capitalize hover:text-primary transition-colors duration-300">{localRole}</Link></li>
+          {/* <li><Link href={`/${localRole}`} className="relative capitalize hover:text-primary transition-colors duration-300">{localRole}</Link></li> */}
+          {
+            localRole && (
+              <li><Link href={`/${localRole}`} className="relative capitalize  transition-colors duration-300 bg-primary p-1 px-2 rounded-lg text-white hover:text-black">{localRole}</Link></li>
+            )
+          }
+
         </ul>
 
         {/* Action Buttons or Profile Dropdown */}
