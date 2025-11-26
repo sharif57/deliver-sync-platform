@@ -3,10 +3,32 @@
 import Image from 'next/image';
 import VideoModal from '../video-modal';
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function HeroSection() {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
+  const [role, setRole] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("userRole");
+    if (userRole) {
+      setRole(userRole);
+    }
+  }, []);
+
+  const handleStart = () => {
+    if (role === "driver") {
+      router.push("/driver");
+    } else if (role === "company") {
+      router.push("/company");
+    } else if (role === "customer") {
+      router.push("/customer");
+    } else {
+      router.push("/auth/signin"); // fallback if no role found
+    }
+  };
 
   return (
     <>
@@ -25,13 +47,14 @@ export default function HeroSection() {
               </p>
 
               <div className="flex mt-20 flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+
                 <Button
+                  onClick={handleStart}
                   size="lg"
-                  className="bg-gradient-to-r from-[#EFB639]  to-[#C59325]  text-white px-8  text-xl py-6 font-medium rounded-sm hover:shadow-xl transition-all duration-200"
+                  className="bg-gradient-to-r from-[#EFB639] to-[#C59325] text-white px-8 text-xl py-6 font-medium rounded-sm hover:shadow-xl transition-all duration-200"
                 >
                   Get Started
                 </Button>
-
                 <Button
                   variant="outline"
                   size="lg"

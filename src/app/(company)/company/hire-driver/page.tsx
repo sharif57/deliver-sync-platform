@@ -490,11 +490,11 @@ export default function DriverRequestForm() {
 
     const pickupAutocomplete = new mapsInstance.places.Autocomplete(pickupInputRef.current, {
       types: ["address"],
-      componentRestrictions: { country: "bd" }, // Restrict to Bangladesh
+      // componentRestrictions: { country: "bd" }, // Restrict to Bangladesh
     });
     const deliveryAutocomplete = new mapsInstance.places.Autocomplete(deliveryInputRef.current, {
       types: ["address"],
-      componentRestrictions: { country: "bd" },
+      // componentRestrictions: { country: "bd" },
     });
 
     pickupAutocomplete.addListener("place_changed", () => {
