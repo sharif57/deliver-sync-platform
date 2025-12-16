@@ -625,7 +625,8 @@ export default function DriverRequestForm() {
     if (formData.deliveryLocationLat && formData.deliveryLocationLong) {
       return { lat: formData.deliveryLocationLat, lng: formData.deliveryLocationLong };
     }
-    return { lat: 23.8103, lng: 90.4125 }; // Default to Dhaka, Bangladesh
+    return { lat: 39.8283, lng: -98.5795 }; // USA center
+
   };
 
   return (
@@ -801,7 +802,7 @@ export default function DriverRequestForm() {
                 libraries: ["places"], // Include Places API
               }}
               defaultCenter={getMapCenter()}
-              defaultZoom={12}
+              defaultZoom={5}
               onClick={handleMapClick}
               onGoogleApiLoaded={handleApiLoaded}
               yesIWantToUseGoogleMapApiInternals
