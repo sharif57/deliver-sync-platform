@@ -19,22 +19,21 @@ import { toast } from 'sonner';
 export default function Driver() {
     const router = useRouter()
 
-    const { data,  isLoading } = useGetPendingOrdersQuery(undefined, {
-        pollingInterval: 1000,      
-        refetchOnFocus: true,        
+    const { data, isLoading } = useGetPendingOrdersQuery(undefined, {
+        pollingInterval: 1000,
+        refetchOnFocus: true,
         refetchOnReconnect: true
     });
-    console.log(data?.data)
     const [acceptDeliveryRequest] = useAcceptDeliveryRequestMutation();
 
     const { data: dashboardData } = useDashboardQuery(undefined, {
-        pollingInterval: 1000,      
-        refetchOnFocus: true,        
+        pollingInterval: 1000,
+        refetchOnFocus: true,
         refetchOnReconnect: true
     });
     const dashboard = dashboardData?.data
 
-    const {data: user} = useUserProfileQuery(undefined);
+    const { data: user } = useUserProfileQuery(undefined);
 
     const items = [
         { title: "Total Earnings", count: dashboard?.total_earning, icon: <Money /> },

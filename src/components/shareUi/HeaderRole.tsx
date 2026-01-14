@@ -41,7 +41,7 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
 
     const router = useRouter();
     const { data } = useGetAllNotificationQuery(undefined);
-    const { data: profile ,refetch } = useUserProfileQuery(undefined);
+    const { data: profile, refetch } = useUserProfileQuery(undefined);
 
     const [updateProfile] = useUpdateProfileMutation();
 
@@ -53,40 +53,16 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
     const featuresDropdownRef = useRef<HTMLDivElement>(null);
     const avatarDropdownRef = useRef<HTMLDivElement>(null);
     const notificationsDropdownRef = useRef<HTMLDivElement>(null);
-    const [isOnline, setIsOnline] = useState(mode === "online");
-    const [, setCurrentTime] = useState(new Date());
-
-    useEffect(() => {
-        let timer: NodeJS.Timeout;
-        if (isOnline) {
-            timer = setTimeout(() => {
-                setIsOnline(false);
-            }, 30000);
-        }
-        return () => clearTimeout(timer);
-    }, [isOnline]);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date());
-        }, 1000);
-        return () => clearInterval(timer);
-    }, []);
-
-    const toggleOnline = () => {
-        setIsOnline((prev) => !prev);
-    };
 
     const handleSwitchChange = async (checked: boolean) => {
         try {
-            setIsOnline(checked);
             const res = await updateProfile({
                 id: profile?.data?.id,
-                data: { is_online: checked }, // ✅ send boolean, not string
+                data: { is_online: checked },
             }).unwrap();
 
             toast.success(`You are now ${checked ? "Online 🟢" : "Offline 🔴"}`);
-            refetch();
+            await refetch();
             console.log("Status updated:", res);
         } catch (error: any) {
             console.error("Failed to update status:", error);
@@ -155,15 +131,15 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                                 {useSwitch ? (
                                     <div className="flex items-center space-x-2">
                                         <Switch
-                                            id="airplane-mode"
-                                            checked={isOnline}
+                                            id="airplane-mode-desktop"
+                                            checked={profile?.data?.is_online === true}
                                             onCheckedChange={handleSwitchChange}
-                                            className="w-10 h-6 bg-gray-300 rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none  "
+                                            className="w-10 h-6 bg-gray-300 rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none"
                                         >
                                             <span className="block w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ease-in-out data-[state=checked]:translate-x-4" />
                                         </Switch>
-                                        <Label htmlFor="airplane-mode" className="text-sm font-medium text-gray-700">
-                                            {isOnline ? "Online" : "Offline"}
+                                        <Label htmlFor="airplane-mode-desktop" className="text-sm font-medium text-gray-700">
+                                            {profile?.data?.is_online === true ? "Online" : "Offline"}
                                         </Label>
                                     </div>
                                 ) : (
@@ -288,15 +264,15 @@ const HeaderRole = ({ mode, useSwitch }: { mode: string; useSwitch?: boolean }) 
                                 {useSwitch ? (
                                     <div className="flex items-center space-x-2">
                                         <Switch
-                                            id="airplane-mode"
-                                            checked={isOnline}
-                                            onCheckedChange={toggleOnline}
-                                            className="w-10 h-6 bg-gray-300 rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none  "
+                                            id="airplane-mode-mobile"
+                                            checked={profile?.data?.is_online === true}
+                                            onCheckedChange={handleSwitchChange}
+                                            className="w-10 h-6 bg-gray-300 rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none"
                                         >
                                             <span className="block w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ease-in-out data-[state=checked]:translate-x-4" />
                                         </Switch>
-                                        <Label htmlFor="airplane-mode" className="text-sm font-medium text-gray-700">
-                                            {isOnline ? "Online" : "Offline"}
+                                        <Label htmlFor="airplane-mode-mobile" className="text-sm font-medium text-gray-700">
+                                            {profile?.data?.is_online === true ? "Online" : "Offline"}
                                         </Label>
                                     </div>
                                 ) : (
