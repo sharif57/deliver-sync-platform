@@ -213,7 +213,7 @@ function StartTrip() {
         );
 
         setRouteInfo({
-            distance: `${distance} km`,
+            distance: `${distance} Miles`,
             duration: "Route not available",
         });
     };

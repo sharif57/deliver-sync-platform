@@ -786,7 +786,7 @@ export default function SignUp() {
                       <div>
                         <label htmlFor="vehicleRegistration" className="cursor-pointer">Select Vehicle</label>
                         <div className="grid grid-cols-3 gap-2 mt-2">
-                          {['Bike', 'Pickup Van', 'Truck'].map((vehicle) => (
+                          {[ 'Pickup Van', 'Truck'].map((vehicle) => (
                             <Button
                               key={vehicle}
                               type="button"

@@ -181,7 +181,7 @@ export default function Driver() {
                                                                     </div>
                                                                     <div className="flex justify-between items-center">
                                                                         <span className="text-lg">Distance</span>
-                                                                        <span className="font-semibold text-xl">{order?.distance_km || ''} KM</span>
+                                                                        <span className="font-semibold text-xl">{order?.distance_km || ''} Miles</span>
                                                                     </div>
                                                                     <div className="flex justify-between items-center">
                                                                         <span className="text-lg">Estimate Payment</span>

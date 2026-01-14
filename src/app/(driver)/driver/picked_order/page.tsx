@@ -69,7 +69,7 @@ import { Suspense } from "react"
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-700">Distance:</span>
-                                <span className="font-semibold text-gray-800">{orderDetails?.distance_km} KM</span>
+                                <span className="font-semibold text-gray-800">{orderDetails?.distance_km} Miles</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-700">Delivery Fee:</span>
